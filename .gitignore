@@ -1,1 +1,9 @@
-Test/Asd
+frontend/node_modules
+backend/node_modules
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz

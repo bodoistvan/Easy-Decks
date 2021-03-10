@@ -1,0 +1,55 @@
+<navbar></navbar>
+
+<div class="container-fluid">
+  <h2>Create a new Deck</h2>
+  
+  <form [formGroup]=deckForm>
+
+    <div class="form-group">
+      <label for="name"></label>
+      <input type="text" formControlName="name" name="name" id="name" class="form-control" placeholder="" aria-describedby="deckId">
+      <small id="name" class="text-muted d-none">Deck name is required</small>
+    </div>
+
+    <div class="form-group">
+      <label for="lang1Select">Example select</label>
+      <select class="form-control" formControlName="lang1" id="lang1Select">
+        <option>USA</option>
+        <option>HUN</option>
+        <option>GER</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label  for="lang2Select">Example select</label>
+      <select class="form-control" formControlName="lang2" id="lang2Select">
+        <option>USA</option>
+        <option>HUN</option>
+        <option>GER</option>
+      </select>
+    </div>
+
+    <div class="form-check">
+      <input  type="checkbox" class="form-check-input" formControlName="public" id="publicCheckBox">
+      <label  class="form-check-label" for="publicCheckBox">Public</label>
+    </div>
+
+        
+    <div formArrayName="cards">
+      
+        <div *ngFor="let cardGroup of cards.controls; let i=index">
+   
+            <div [formGroupName]=i>
+
+                <input type="text" formControlName="lang1" (ngModelChange)=modelChanged(i)>
+                <input type="text" formControlName="lang2" (ngModelChange)=modelChanged(i)>
+
+            </div>
+        </div>
+    </div>
+  </form>
+  
+  <pre>{{ deckForm.value | json }}</pre>
+</div>
+
+
