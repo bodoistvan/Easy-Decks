@@ -1,10 +1,13 @@
 const { filterProperties, checkProperties } = require('../utils/objFilter');
 const catchAsync = require('../utils/catchAsync');
+const { create } = require('../models/userModel');
 
 exports.createDeck = Model => 
     catchAsync(async(req, res, next) => {
         
-        let filter = ["owner", "name", "lang1", "lang2", "level", "cards"];
+        req.body.owner = "6048db21b6668241745421b3";
+
+        let filter = ["owner", "name", "lang1", "lang2", "level", "cards", "public"];
 
         if ( checkProperties(req.body, filter) === false )
             return next("param err...");
@@ -17,10 +20,20 @@ exports.createDeck = Model =>
                 lang1 : req.body.lang1,
                 lang2 : req.body.lang2,
                 level :  req.body.level,
+                public: req.body.public
             });
+        
+        //filter empty cards
+        req.body.cards = req.body.cards.filter( card => card.lang1 != "" && card.lang2 != "")
 
         //creating cards
-        const createdCards = await Model.Card.insertMany(req.body.cards.map( card => ({...card, _deck: createdDeck._id})) );
+        const createdCards = await Model.Card
+            .insertMany(req.body.cards.map( card => ({ 
+                _id: card.id,
+                lang1: card.lang1, 
+                lang2: card.lang2,
+                _deck: createdDeck._id
+            })) );
 
         //add references to deck
         if (createdCards != null && createdDeck != null) {
@@ -31,3 +44,95 @@ exports.createDeck = Model =>
         res.json(createdDeck);    
         
     });
+
+exports.getDecks = Model => 
+    catchAsync(async(req, res, next) => {
+
+        const decks = await Model.Deck.find({ _owner: "6048db21b6668241745421b3"}).exec();
+
+        if (decks === undefined){
+            res.status(404);
+            res.send("Not Found any decks");
+        } else {
+
+            res.status(200);
+            res.json( decks.map( deck=> ( { 
+                id:deck._id,
+                name: deck.name,
+                lang1: deck.lang1,
+                lang2: deck.lang2,
+                level: deck.level,
+                count: deck._cards.length
+            }) ))
+
+        }
+});
+
+exports.getDeckById = Model => catchAsync( async(req,res,next) => {
+
+    //userId should be in jwt
+    const userId = "6048db21b6668241745421b3";
+
+    console.log(req.params);
+
+    const filter=["id"];
+
+    if ( checkProperties(req.params, filter) === false )
+        return next("param error, no id");
+    
+    const deck = await Model.Deck.findOne( { _id: req.params.id } )
+
+   
+    if (deck != undefined){
+        res.json({
+            id: deck._id,
+            name: deck.name,
+            lang1: deck.lang1,
+            lang2: deck.lang2,
+            level: deck.level
+        })
+    } else {
+        res.status(404);
+        res.json({message: "deck not found"})
+    }
+
+    
+});
+
+exports.getDeckByIdAll = Model =>
+    catchAsync( async(req, res, next) => {
+
+        const deckId = req.params.id;
+
+        if (deckId === undefined)
+            return next("no deck id")
+
+        const deck = await Model.Deck.findOne({ _id: deckId});
+
+        if (deck === undefined){
+            res.status(404);
+            res.json({message: "deck is not found"})
+        }
+
+        
+        let cards = await Model.Card.find( { _deck : deckId } );
+
+        if (cards != undefined){
+            cards = cards.map(card => ({ id: card._id, lang1: card.lang1, lang2: card.lang2 }))
+        }
+
+        res.status(200);
+        res.json({
+            id: deck._id,
+            name: deck.name,
+            lang1: deck.lang1,
+            lang2: deck.lang2,
+            level: deck.level,
+            public: deck.public,
+            cards: cards
+        })
+            
+
+    });
+
+

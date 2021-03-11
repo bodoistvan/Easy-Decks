@@ -1,11 +1,12 @@
 <div class="card mb-4">
         <div class="card-header">
-          {{name}}
+          <a href="/decks/info?id={{id}}">{{name}}</a>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">{{level}}</li>
           <li class="list-group-item">{{lang1}}</li>
           <li class="list-group-item">{{lang2}}</li>
+          <li class="list-group-item">{{level}}</li>
+          <li class="list-group-item">Cards: {{count}}</li>
         </ul>
 </div>
 

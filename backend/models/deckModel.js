@@ -23,7 +23,10 @@ const Deck = db.model('Deck', {
         type: String,
         required: true
     },
-
+    public: {
+        type: Boolean,
+        require: true
+    },
     _cards: [{
         type: Schema.Types.ObjectId,
         ref: 'Card'

@@ -1,11 +1,13 @@
-<div class="container">
-    <a href="/newdeck"><button><i class="far fa-plus-square"></i>New Deck</button></a>
+
+    
     <div class="row">
         <app-deck class="col-sm-12 col-md-6 col-lg-3" *ngFor="let deck of decks"  
             name={{deck.name}} 
             level={{deck.level}} 
             lang1={{deck.lang1}} 
-            lang2={{deck.lang2}}>
+            lang2={{deck.lang2}}
+            id={{deck.id}}
+            [count] = "deck.count" >
         </app-deck>
     </div>
-</div>
+

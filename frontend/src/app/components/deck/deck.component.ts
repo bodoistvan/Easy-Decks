@@ -11,6 +11,9 @@ export class DeckComponent implements OnInit {
   @Input() lang1: string = "";
   @Input() lang2: string = "";
   @Input() level: string = "";
+  @Input() count: number = 0;
+  @Input() id: string = "";
+
 
   constructor() { }
 

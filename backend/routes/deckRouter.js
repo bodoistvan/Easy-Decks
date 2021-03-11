@@ -11,7 +11,19 @@ const Model = {
 
 const router = express.Router();
 
+
+
+router.route("/:id")
+    .get(deckController.getDeckById(Model)
+    ); 
+
+router.route("/:id/all")
+    .get(deckController.getDeckByIdAll(Model))
+
 router.route('/')
+    .get(deckController.getDecks(Model))
     .post(deckController.createDeck(Model));
+
+
 
 module.exports = router;

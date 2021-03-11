@@ -12,6 +12,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { DecklistComponent } from './components/decklist/decklist.component';
 import { NewDeckComponent } from './components/new-deck/new-deck.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DeckSearchComponent } from './components/deck-search/deck-search.component';
+import { DeckInfoComponent } from './components/deck-info/deck-info.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ModifyDeckComponent } from './components/modify-deck/modify-deck.component';
+import { CreateDeckComponent } from './components/create-deck/create-deck.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +26,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NavbarComponent,
     DeckComponent,
     DecklistComponent,
-    NewDeckComponent
+    NewDeckComponent,
+    DeckSearchComponent,
+    DeckInfoComponent,
+    FooterComponent,
+    ModifyDeckComponent,
+    CreateDeckComponent
 
 
   ],
