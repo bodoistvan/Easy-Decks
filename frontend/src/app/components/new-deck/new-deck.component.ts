@@ -1,6 +1,7 @@
 import {  Component, OnInit } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { groupBy, retry } from 'rxjs/operators';
 import { DecksService } from 'src/app/services/decks.service';
 import { DeckSearchComponent } from '../deck-search/deck-search.component';
 
@@ -19,7 +20,7 @@ export class NewDeckComponent implements OnInit  {
       let id = params["id"];
       
       if (id !=null){
-        this.deckService.getDeckInfoByIdAll(id).subscribe(data => this.deckForm.patchValue(data), err => console.error(err));
+        this.deckService.getDeckInfoByIdAll(id).subscribe(data => {this.deckForm.patchValue(data); this.addCards()}, err => console.error(err));
     }
    })
 
@@ -31,20 +32,70 @@ export class NewDeckComponent implements OnInit  {
     this.testBool = !this.testBool;
   }
 
+
   deleteButtonClick(i:number){
+
+
     let fg = this.cards.at(i) as FormGroup;
 
     let card = fg.value;
-    if ( card.delete === undefined){
-      fg.addControl('delete', new FormControl(true));
+
+    console.log(card);
+    if ( card.action === undefined){
+
+      fg.addControl('action', new FormControl("delete"));
+
     } else {
-      card.delete = !card.delete
+      if (card.action == "delete"){
+
+        if (this.cards.at(i).get(`lang1`)?.dirty || this.cards.at(i).get(`lang2`)?.dirty) {
+
+          card.action = "update";
+
+        } else {
+
+          card.action = "none";
+
+        }
+ 
+      } else{
+          card.action="delete";
+        }
       fg.patchValue(card)
     } 
   }
 
-  isCardShouldBeDeleted(i:number):boolean{
-    return this.cards.at(i).value.delete === undefined ? false : this.cards.at(i).value.delete;
+  isCardShouldBeDeleted(index:number):boolean{
+
+    const action = this.cards.at(index).value.action || "";
+    if (action == "delete")
+      return true; 
+
+    return false;
+
+  }
+
+  getCardActionAt(index:number, lang?:number):number {
+    //0 none
+    //1 delete
+    //2 update
+    //3 create
+    
+    const action = this.cards.at(index).value.action || "";
+
+    if (action == "delete")
+      return 1;
+
+    if ( this.cards.at(index).value.id == "")
+      return 3;
+
+    if (lang != undefined) {
+      if ( this.cards.at(index).get(`lang${lang}`)?.dirty )
+        return 2;
+    }
+   
+    return 0;
+    
   }
 
   get isModify():boolean{
@@ -61,7 +112,7 @@ export class NewDeckComponent implements OnInit  {
     public: ['false'],
     cards: this.fb.array([
       this.fb.group({
-        id: "60493b306abfd846e02c10fb",
+        id: "",
         lang1: "kutya",
         lang2: "dog",
       }),
@@ -82,7 +133,8 @@ export class NewDeckComponent implements OnInit  {
       this.fb.group({
         id: "",
         lang1: "",
-        lang2: ""
+        lang2: "",
+        action: "create"
       })
     )
   }
@@ -102,10 +154,27 @@ export class NewDeckComponent implements OnInit  {
   }
 
   modelChanged(i:number){
+    console.log("changed")
     let count = this.cards.length;
     if (count - 1 === i) {
       this.addCards();
     }
+
+    let fg = this.cards.at(i) as FormGroup;
+
+    let card = fg.value;
+
+    if( card.action === undefined){
+      fg.addControl('action', new FormControl("update"));
+    } else {
+      if (card.id == ""){
+        card.action = "create"
+      } else {
+        card.action = "update";
+      }
+      
+    }
+    fg.patchValue(card);
   }
 
   onSubmit():void {

@@ -16,7 +16,6 @@ export class DeckInfoComponent implements OnInit {
 
   ngOnInit(): void {
     
-   
     this.route.queryParams.subscribe(params => {
       let id = params["id"];
       

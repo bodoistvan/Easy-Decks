@@ -8,9 +8,10 @@
  
   <div nfIf=testBool><h1>Modify a deck</h1></div>
 
-  <button class="btn" [ngClass]="{'btn-warning': testBool}" (click)="testbutton()">Test</button>
+  <button class="btn" [ngClass]="{'0':'btn-danger','1':'btn-warning'}[1]" (click)="testbutton()">Test</button>
   
   <hr>
+  
 
   <form [formGroup]=deckForm>
     <div class="row">
@@ -59,12 +60,12 @@
           
             <tr [formGroupName]=i>
                 <th scope="row">{{i + 1}}</th>
-                <td><input class="form-control" [ngClass]="{'btn-danger': isCardShouldBeDeleted(i)}" type="text" formControlName="lang1" (ngModelChange)=modelChanged(i)></td>
-                <td><input class="form-control" [ngClass]="{'btn-danger': isCardShouldBeDeleted(i)}" type="text" formControlName="lang2" (ngModelChange)=modelChanged(i)></td>
+                <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 1)]" type="text" formControlName="lang1" (change)=modelChanged(i)></td>
+                <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 2)]" type="text" formControlName="lang2" (change)=modelChanged(i)></td>
                 <td><div style="width: 2.5rem;" (click)=deleteButtonClick(i) 
-                          class="btn" [ngClass]="(isCardShouldBeDeleted(i))?'btn-warning':'btn-danger'">
+                          class="btn" [ngClass]="(isCardShouldBeDeleted(i))?'btn-warning':'btn-danger'" >
                             <i [ngClass]="(isCardShouldBeDeleted(i))?'fa-undo':'fa-times'" class="fas"></i>
-                      </div>
+                    </div>
                 </td>
             </tr>
         
@@ -76,7 +77,6 @@
 
   </form>
   
- 
 
   <pre>{{ deckForm.value | json }}</pre>
   
