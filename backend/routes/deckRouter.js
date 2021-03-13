@@ -14,8 +14,10 @@ const router = express.Router();
 
 
 router.route("/:id")
-    .get(deckController.getDeckById(Model)
-    ); 
+    .get(deckController.getDeckById(Model))
+    .patch(deckController.patchDeckById(Model));
+    
+    
 
 router.route("/:id/all")
     .get(deckController.getDeckByIdAll(Model))
@@ -23,6 +25,7 @@ router.route("/:id/all")
 router.route('/')
     .get(deckController.getDecks(Model))
     .post(deckController.createDeck(Model));
+    
 
 
 

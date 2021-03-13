@@ -1,13 +1,13 @@
 const { filterProperties, checkProperties } = require('../utils/objFilter');
 const catchAsync = require('../utils/catchAsync');
-const { create } = require('../models/userModel');
 
 exports.createDeck = Model => 
     catchAsync(async(req, res, next) => {
         
-        req.body.owner = "6048db21b6668241745421b3";
+     
+        const ownerId = "604ca45fc2fe7b1bd4cfecab";
 
-        let filter = ["owner", "name", "lang1", "lang2", "level", "cards", "public"];
+        let filter = ["name", "lang1", "lang2", "level", "cards", "public"];
 
         if ( checkProperties(req.body, filter) === false )
             return next("param err...");
@@ -15,7 +15,7 @@ exports.createDeck = Model =>
         //creatingDeck
         let createdDeck = await Model.Deck
             .create({
-                _owner : req.body.owner,
+                _owner : ownerId,
                 name : req.body.name,
                 lang1 : req.body.lang1,
                 lang2 : req.body.lang2,
@@ -24,23 +24,27 @@ exports.createDeck = Model =>
             });
         
         //filter empty cards
-        req.body.cards = req.body.cards.filter( card => card.lang1 != "" && card.lang2 != "")
+        req.body.cards = req.body.cards.filter( card => card.lang1 != "" && card.lang2 != "" && card.action == "create");
 
         //creating cards
         const createdCards = await Model.Card
             .insertMany(req.body.cards.map( card => ({ 
-                _id: card.id,
                 lang1: card.lang1, 
                 lang2: card.lang2,
                 _deck: createdDeck._id
             })) );
 
+        
         //add references to deck
         if (createdCards != null && createdDeck != null) {
             createdDeck._cards = createdCards.map(card => card.id);
             createdDeck = await createdDeck.save();
         }
+        
 
+
+
+        res.status(200);
         res.json(createdDeck);    
         
     });
@@ -48,7 +52,7 @@ exports.createDeck = Model =>
 exports.getDecks = Model => 
     catchAsync(async(req, res, next) => {
 
-        const decks = await Model.Deck.find({ _owner: "6048db21b6668241745421b3"}).exec();
+        const decks = await Model.Deck.find({ _owner: "604ca45fc2fe7b1bd4cfecab"}).exec();
 
         if (decks === undefined){
             res.status(404);
@@ -135,4 +139,58 @@ exports.getDeckByIdAll = Model =>
 
     });
 
+exports.patchDeckById = Model => 
+    catchAsync( async (req, res, next)=>{
 
+      
+        
+        const ownerId = "604ca45fc2fe7b1bd4cfecab";
+
+        const myfilter = ["id", "name", "lang1", "lang2", "level", "public", "cards"];
+
+        if ( checkProperties(req.body, myfilter) === false )
+            return next("bad params");
+
+        const deck = await Model.Deck.findOne({ _id : req.body.id })
+
+        if (deck === undefined )
+            return next("no deck found")
+
+        
+        if ( deck._owner != ownerId)
+            return next("auth error")
+        
+        const cardsShouldBeDeletedIdArray = req.body.cards.filter(card => card.action=="delete" && card.id != undefined && card.id != "").map(card => card.id);
+        const deletedCards = await Model.Card.deleteMany( { _id: { $in: cardsShouldBeDeletedIdArray }, _deck: deck._id });
+
+        deck._cards = deck._cards.filter(card => !cardsShouldBeDeletedIdArray.includes(card) );
+
+        const cardsShouldBeUpdatedData = req.body.cards.filter(card => card.action=="update" && card.id != undefined && card.id != "");
+        const cardsShouldBeUpdatedIdArray = cardsShouldBeUpdatedData.map(card => card.id);
+
+        const shouldBeUpdatedCardsModel = await Model.Card.find( {_id: {$in: cardsShouldBeUpdatedIdArray}, _deck: deck._id});
+
+        shouldBeUpdatedCardsModel.forEach(cardModel => {
+            const updateData = cardsShouldBeUpdatedData.filter(data => data.id == cardModel._id)[0];
+            
+            cardModel.lang1 = updateData.lang1;
+            cardModel.lang2 = updateData.lang2;
+
+        });
+
+        shouldBeUpdatedCardsModel.forEach(model=>model.save());
+
+        var cardsShouldBeCreated = req.body.cards.filter(card => card.action=="create" && checkProperties(card,["lang1", "lang2"]));
+
+        const createdCards = await Model.Card
+            .insertMany(cardsShouldBeCreated.map( card => ({ 
+                lang1: card.lang1, 
+                lang2: card.lang2,
+                _deck: deck._id
+         })) );
+
+        deck._cards = [ ...deck._cards, ...createdCards.map(card => card.id)];
+
+        res.json( { shouldBeUpdatedCardsModel});
+
+    });

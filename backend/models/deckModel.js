@@ -8,7 +8,7 @@ const Deck = db.model('Deck', {
         required: true
     },
     name: {
-        type: String,
+        type: String, 
         required: true
     },
     lang1: {

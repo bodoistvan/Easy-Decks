@@ -20,7 +20,14 @@ export class NewDeckComponent implements OnInit  {
       let id = params["id"];
       
       if (id !=null){
-        this.deckService.getDeckInfoByIdAll(id).subscribe(data => {this.deckForm.patchValue(data); this.addCards()}, err => console.error(err));
+        this.deckService.getDeckInfoByIdAll(id).subscribe(data => {
+          for(let i = 0; i < data.cards.length; i++){
+            this.addCards();
+          }
+          this.deckForm.patchValue(data); 
+        
+        
+        }, err => console.error(err));
     }
    })
 
@@ -113,13 +120,9 @@ export class NewDeckComponent implements OnInit  {
     cards: this.fb.array([
       this.fb.group({
         id: "",
-        lang1: "kutya",
-        lang2: "dog",
-      }),
-      this.fb.group({
-        id: "",
         lang1: "",
         lang2: "",
+        action: "none"
       })
     ])
   });
@@ -134,7 +137,7 @@ export class NewDeckComponent implements OnInit  {
         id: "",
         lang1: "",
         lang2: "",
-        action: "create"
+        action: "none"
       })
     )
   }
