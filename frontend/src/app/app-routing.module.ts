@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { NewDeckComponent } from './components/new-deck/new-deck.component'
 import { DeckInfoComponent } from './components/deck-info/deck-info.component';
-import { ModifyDeckComponent } from './components/modify-deck/modify-deck.component';
+import { DeckCreateComponent } from './components/deck-create/deck-create.component';
+import { DeckModifyComponent } from './components/deck-modify/deck-modify.component';
+import { DeckLearnComponent } from './components/deck-learn/deck-learn.component';
 
 const routes: Routes = [
   {path: "", redirectTo:"home", pathMatch: 'full' },
@@ -15,13 +16,17 @@ const routes: Routes = [
         path: "info", component: DeckInfoComponent
       },
       {
-        path: "create", component: NewDeckComponent
+        path: "create", component: DeckCreateComponent
       },
       {
-        path: "modify", component: NewDeckComponent
+        path: "modify", component: DeckModifyComponent
+      },
+      {
+        path: "learn", component: DeckLearnComponent
       }
     ]
   }
+  
 ];
 
 @NgModule({

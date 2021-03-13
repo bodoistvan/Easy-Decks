@@ -1,0 +1,94 @@
+<div class="container">
+  <br />
+
+    <div *ngIf="formType == 'create'; else elseBlockHeader">
+      <h1>Create a new deck</h1>
+    </div>
+    <ng-template #elseBlockHeader>
+        <h1>Modify a deck</h1>
+    </ng-template>
+  <hr>
+  
+    
+  <form [formGroup]=deckForm>
+    <div class="row">
+      <div class="form-group col-12 col-md-6">
+        <label for="name">Name</label>
+        <input type="text" formControlName="name" name="name" id="name" class="form-control" placeholder="" aria-describedby="deckId">
+        <small id="name" class="text-muted d-none">Deck name is required</small>
+      </div>
+
+      <div class="form-group col-6 col-md-3">
+        <label for="lang1Select">Frist Language</label>
+        <select class="form-control" formControlName="lang1" id="lang1Select">
+          <option>USA</option>
+          <option>HUN</option>
+          <option>GER</option>
+        </select>
+      </div>
+
+      <div class="form-group col-6 col-md-3">
+        <label  for="lang2Select">Second Language</label>
+        <select class="form-control" formControlName="lang2" id="lang2Select">
+          <option>USA</option>
+          <option>HUN</option>
+          <option>GER</option>
+        </select>
+      </div>
+
+      <div class="custom-control custom-checkbox col-sm-12 ml-3">
+        <input type="checkbox" formControlName="public" class="custom-control-input" id="publicCheckBox">
+        <label class="custom-control-label" for="publicCheckBox">Public</label>
+      </div>
+
+    </div>
+    <br />
+    <table class="table" formArrayName="cards">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">{{lang1}}</th>
+          <th scope="col">{{lang2}}</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let cardGroup of cards.controls; let i=index">
+          
+            <tr [formGroupName]=i>
+                <th scope="row">{{i + 1}}</th>
+                <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 1)]" type="text" formControlName="lang1" (change)=modelChanged(i)></td>
+                <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 2)]" type="text" formControlName="lang2" (change)=modelChanged(i)></td>
+                <td><div style="width: 2.5rem;" (click)=deleteButtonClick(i) 
+                          class="btn" [ngClass]="(isCardShouldBeDeleted(i))?'btn-warning':'btn-danger'" >
+                            <i [ngClass]="(isCardShouldBeDeleted(i))?'fa-undo':'fa-times'" class="fas"></i>
+                    </div>
+                </td>
+            </tr>
+        
+          </ng-container>
+      </tbody>
+    </table >
+
+    
+    <div *ngIf="formType == 'create'; else elseBlockSubmit">
+        <button type="submit" (click)="onSubmitCreate()" class="btn btn-primary">Submit</button>
+    </div>
+    <ng-template #elseBlockSubmit>
+        <div class="row">
+            <div class="col-11 d-flex justify-content-around align-items-center">
+                <button (click)="onSubmitDelete()" class="btn btn-outline-danger">Delete Deck</button>
+                <button (click)="onSubmitPatch()" class="btn btn-success p-3 pr-4 pl-4">Update Deck<i class="ml-2 fas fa-yin-yang fa-spin"></i></button>
+            </div>
+        </div> 
+        
+        
+    </ng-template>
+
+  </form>
+  
+  <pre>{{ deckForm.value | json }}</pre>
+  
+</div>
+
+

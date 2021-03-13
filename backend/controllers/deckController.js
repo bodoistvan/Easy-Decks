@@ -159,14 +159,25 @@ exports.patchDeckById = Model =>
         
         if ( deck._owner != ownerId)
             return next("auth error")
+
+        //delete cards
+        deck.name = req.body.name;
+        deck.lang1 = req.body.lang1;
+        deck.lang2 = req.body.lang2;
+        deck.level = req.body.level;
+        deck.public = req.body.public;
         
-        const cardsShouldBeDeletedIdArray = req.body.cards.filter(card => card.action=="delete" && card.id != undefined && card.id != "").map(card => card.id);
-        const deletedCards = await Model.Card.deleteMany( { _id: { $in: cardsShouldBeDeletedIdArray }, _deck: deck._id });
+        
+        const cardsShouldBeDeletedIdArray = req.body.cards.filter(card => (card.action=="delete" && card.id != undefined && card.id != "")).map(card => card.id);
+        
+        await Model.Card.deleteMany( { _id: { $in: cardsShouldBeDeletedIdArray }, _deck: deck._id });
 
-        deck._cards = deck._cards.filter(card => !cardsShouldBeDeletedIdArray.includes(card) );
-
-        const cardsShouldBeUpdatedData = req.body.cards.filter(card => card.action=="update" && card.id != undefined && card.id != "");
+        deck._cards = deck._cards.filter(cardid => !cardsShouldBeDeletedIdArray.includes(cardid + ""));
+        
+        const cardsShouldBeUpdatedData = req.body.cards.filter(card => (card.action=="update" && card.lang1 != "" && card.lang2 != "" && card.id != "" && checkProperties(card, ["lang1", "lang2","id"]) === true ));
         const cardsShouldBeUpdatedIdArray = cardsShouldBeUpdatedData.map(card => card.id);
+
+        //update cards
 
         const shouldBeUpdatedCardsModel = await Model.Card.find( {_id: {$in: cardsShouldBeUpdatedIdArray}, _deck: deck._id});
 
@@ -177,10 +188,15 @@ exports.patchDeckById = Model =>
             cardModel.lang2 = updateData.lang2;
 
         });
+        
+        if (shouldBeUpdatedCardsModel.length > 0)
+            shouldBeUpdatedCardsModel.forEach(model=>model.save());
 
-        shouldBeUpdatedCardsModel.forEach(model=>model.save());
+        //create cards
 
-        var cardsShouldBeCreated = req.body.cards.filter(card => card.action=="create" && checkProperties(card,["lang1", "lang2"]));
+        var cardsShouldBeCreated = req.body.cards.filter(card => (card.action=="create" && card.lang1 != "" && card.lang2 != "" && checkProperties(card, ["lang1", "lang2"])))
+
+        
 
         const createdCards = await Model.Card
             .insertMany(cardsShouldBeCreated.map( card => ({ 
@@ -190,6 +206,9 @@ exports.patchDeckById = Model =>
          })) );
 
         deck._cards = [ ...deck._cards, ...createdCards.map(card => card.id)];
+    
+
+        await deck.save();
 
         res.json( { shouldBeUpdatedCardsModel});
 

@@ -33,6 +33,18 @@ export class DecksService {
     ))
   }
 
+  patchDeckById(id:string, deck:DeckWithCards){
+    return this.http.patch<DeckWithCards>(`${this.baseUrl}/decks/${id}`, deck ).pipe(
+      catchError(this.handleError<DeckWithCards>("patchingcard")
+    ))
+  }
+
+  deleteDeckById(id:string){
+    return this.http.delete<any>(`${this.baseUrl}/decks/${id}`).pipe(
+      catchError(this.handleError<any>("deletingCard")
+    ))
+  }
+
   createDeck(deck: Deck) {
     return this.http.post<any>("http://localhost:3000/api/decks", deck);
   }

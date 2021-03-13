@@ -19,8 +19,8 @@
             </div>
 
             <div class="col-6 col-sm-4 d-flex flex-column">
-                <a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" (click)="onClick()" class="btn btn-primary m-2">MODIFY</a>
-                <button (click)="onClick()" class="btn btn-warning m-2">LEARN</button>
+                <a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-primary m-2">MODIFY</a>
+                <a href="/decks/learn?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-warning m-2">LEARN</a>
                 <button (click)="onClick()" class="btn btn-primary m-2">QUIZ</button>
             </div>
         </div>

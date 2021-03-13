@@ -17,6 +17,11 @@ import { DeckInfoComponent } from './components/deck-info/deck-info.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ModifyDeckComponent } from './components/modify-deck/modify-deck.component';
 import { CreateDeckComponent } from './components/create-deck/create-deck.component';
+import { DeckModifyComponent } from './components/deck-modify/deck-modify.component';
+import { DeckCreateComponent } from './components/deck-create/deck-create.component';
+import { DeckFormComponent } from './components/deck-form/deck-form.component';
+import { DeckLearnComponent } from './components/deck-learn/deck-learn.component';
+import { LearnCardComponent } from './components/learn-card/learn-card.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +36,12 @@ import { CreateDeckComponent } from './components/create-deck/create-deck.compon
     DeckInfoComponent,
     FooterComponent,
     ModifyDeckComponent,
-    CreateDeckComponent
+    CreateDeckComponent,
+    DeckModifyComponent,
+    DeckCreateComponent,
+    DeckFormComponent,
+    DeckLearnComponent,
+    LearnCardComponent
 
 
   ],

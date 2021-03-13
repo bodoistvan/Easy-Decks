@@ -1,0 +1,32 @@
+<navbar></navbar>
+
+<div class="container">
+    <h1>Learning deck...</h1>
+
+    <div class="mt-5 mb-3" style="height: 25rem; background-color: rgb(172, 172, 172);">
+            
+       <div class="row d-flex justify-content-around">
+        <app-learn-card class="col-5" [word]="getWord(1)" ></app-learn-card>
+        <app-learn-card class="col-5" [word]="getWord(2)"></app-learn-card>
+       </div> 
+        
+        
+    </div>
+        
+    
+        <form [formGroup]="learnForm" class="container-fluid">
+            <div class="d-flex justify-content-center align-items-center">
+                <button (click)="mofidyRange(-1)" class="mr-1 btn btn-outline-primary"><i class="fa fa-arrow-circle-left p-2" aria-hidden="true"></i></button>
+                
+                <div class="">
+                    <input type="range" class="form-range" min="0" [max]="maxRange" id="customRange2" formControlName = "range">
+         
+                    {{range + 1}}
+                </div>
+                <button (click)="mofidyRange(1)" class="ml-1 btn btn-outline-primary"><i class="fa fa-arrow-circle-right p-2" aria-hidden="true"></i></button>
+            </div>
+        </form>
+    
+        <pre>{{ deck | json}}</pre>
+
+</div>
