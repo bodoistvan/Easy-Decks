@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const deckRouter = require('./routes/deckRouter');
 const userRouter = require('./routes/userRouter');
+const quizRouter = require('./routes/quizRouter');
 const PORT = 3000;
 
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json())
 
 app.use('/api/users', userRouter)
 app.use('/api/decks', deckRouter)
+app.use('/api/quizes', quizRouter)
 
 
 

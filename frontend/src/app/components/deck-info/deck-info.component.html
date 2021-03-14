@@ -21,7 +21,32 @@
             <div class="col-6 col-sm-4 d-flex flex-column">
                 <a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-primary m-2">MODIFY</a>
                 <a href="/decks/learn?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-warning m-2">LEARN</a>
-                <button (click)="onClick()" class="btn btn-primary m-2">QUIZ</button>
+                <div class="p-2 m-2 border">
+                    <form action="">
+                        <div class="form-group d-flex justify-content-around align-items-center mb-0">
+                          
+                          <div class="form-check form-check-inline col-4 pt-2 ">
+                                <label class="form-check-label mx-2">
+                                    <input class="form-check-input" type="radio" name="amountSelector" id="" value="5">5
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input class="form-check-input" checked type="radio" name="amountSelector" id="" value="10">10
+                                </label>
+                                <label class="form-check-label mx-2">
+                                    <input class="form-check-input" type="radio" name="amountSelector" id="" value="20">20
+                                </label>  
+                          </div>
+
+                         
+                          <select class="form-control col-4" name="langSelector" id="langSelector">
+                            <option>HUN</option>
+                            <option>USA</option>
+                            <option>GER</option>
+                          </select>
+                          <button type="submit" class="btn btn-primary">QUIZ</button>
+                        </div>  
+                    </form>
+                </div>
             </div>
         </div>
     </div>

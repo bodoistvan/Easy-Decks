@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { DeckWithCards } from 'src/app/interfaces/deck-with-cards';
 import { DecksService } from 'src/app/services/decks.service';
@@ -29,6 +29,13 @@ export class DeckLearnComponent implements OnInit {
         });
        
     })
+
+    const fc = this.learnForm.get('range') as FormControl;
+    fc.registerOnChange(this.rangeChange);
+  }
+
+  rangeChange(){
+    console.log("range has been chahnged!");
   }
 
   public learnForm = this.fb.group({

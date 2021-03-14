@@ -16,14 +16,14 @@
     
         <form [formGroup]="learnForm" class="container-fluid">
             <div class="d-flex justify-content-center align-items-center">
-                <button (click)="mofidyRange(-1)" class="mr-1 btn btn-outline-primary"><i class="fa fa-arrow-circle-left p-2" aria-hidden="true"></i></button>
+                <button (click)="mofidyRange(-1)" class="mr-1 btn btn-outline-primary p-2 pl-3 pr-3"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
                 
-                <div class="">
-                    <input type="range" class="form-range" min="0" [max]="maxRange" id="customRange2" formControlName = "range">
+                <div class="d-flex col-5 row pt-4">
+                    <input type="range" style="width: 100%;" (change)="rangeChange()" class="form-range" min="0" [max]="maxRange" id="customRange2" formControlName = "range">
          
-                    {{range + 1}}
+                    <div style="width: 100%; text-align: center;" >{{range + 1}}</div>
                 </div>
-                <button (click)="mofidyRange(1)" class="ml-1 btn btn-outline-primary"><i class="fa fa-arrow-circle-right p-2" aria-hidden="true"></i></button>
+                <button (click)="mofidyRange(1)" class="ml-1 btn btn-outline-primary p-2 pl-3 pr-3"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
             </div>
         </form>
     
