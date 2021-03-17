@@ -6,6 +6,7 @@ import { DeckInfoComponent } from './components/deck-info/deck-info.component';
 import { DeckCreateComponent } from './components/deck-create/deck-create.component';
 import { DeckModifyComponent } from './components/deck-modify/deck-modify.component';
 import { DeckLearnComponent } from './components/deck-learn/deck-learn.component';
+import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
 
 const routes: Routes = [
   {path: "", redirectTo:"home", pathMatch: 'full' },
@@ -23,6 +24,9 @@ const routes: Routes = [
       },
       {
         path: "learn", component: DeckLearnComponent
+      },
+      {
+        path: "quiz", component: DeckQuizComponent
       }
     ]
   }

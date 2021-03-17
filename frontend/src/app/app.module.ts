@@ -22,6 +22,7 @@ import { DeckCreateComponent } from './components/deck-create/deck-create.compon
 import { DeckFormComponent } from './components/deck-form/deck-form.component';
 import { DeckLearnComponent } from './components/deck-learn/deck-learn.component';
 import { LearnCardComponent } from './components/learn-card/learn-card.component';
+import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { LearnCardComponent } from './components/learn-card/learn-card.component
     DeckCreateComponent,
     DeckFormComponent,
     DeckLearnComponent,
-    LearnCardComponent
+    LearnCardComponent,
+    DeckQuizComponent
 
 
   ],

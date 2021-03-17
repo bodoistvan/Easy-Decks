@@ -147,7 +147,7 @@ exports.createQuiz = () => catchAsync( async (req,res,next) => {
         new Card( { cardId:"cardid3", lang1: "madár", lang2: "bird" } )
     ]
 
-    const deck = new Deck( {deckId: "deckId1", selectedLang:"lang2", cards: cards, } )
+    const deck = new Deck( {deckId: "604d29a47f72352b38c6219a", selectedLang:"lang2", cards: cards, } )
 
     const userQuiz = new UserQuiz({ userId: "604ca45fc2fe7b1bd4cfecab"}); 
     userQuiz.pushDeck(deck);

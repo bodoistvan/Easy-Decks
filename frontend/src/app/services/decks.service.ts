@@ -13,43 +13,42 @@ export class DecksService {
 
   constructor(private http: HttpClient) {}
 
-  private baseUrl: string = "http://localhost:3000/api"
+  private baseUrl: string = "http://localhost:3000/api/decks"
 
   getDecks(): Observable<Deck[]>{
-    return this.http.get<Deck[]>(`${this.baseUrl}/decks`).pipe(
+    return this.http.get<Deck[]>(`${this.baseUrl}`).pipe(
       catchError(this.handleError<Deck[]>("getDecks", [])
     ))
   }
 
   getDeckInfoById(id:string){
-    return this.http.get<DeckInfo>(`${this.baseUrl}/decks/${id}`).pipe(
+    return this.http.get<DeckInfo>(`${this.baseUrl}/${id}`).pipe(
       catchError(this.handleError<DeckInfo>("getDeckInfoByIderror")
     ))
   }
   
   getDeckInfoByIdAll(id:string){
-    return this.http.get<DeckWithCards>(`${this.baseUrl}/decks/${id}/all`).pipe(
+    return this.http.get<DeckWithCards>(`${this.baseUrl}/${id}/all`).pipe(
       catchError(this.handleError<DeckWithCards>("getDeckInfoByIdAll")
     ))
   }
 
   patchDeckById(id:string, deck:DeckWithCards){
-    return this.http.patch<DeckWithCards>(`${this.baseUrl}/decks/${id}`, deck ).pipe(
+    return this.http.patch<DeckWithCards>(`${this.baseUrl}/${id}`, deck ).pipe(
       catchError(this.handleError<DeckWithCards>("patchingcard")
     ))
   }
 
   deleteDeckById(id:string){
-    return this.http.delete<any>(`${this.baseUrl}/decks/${id}`).pipe(
+    return this.http.delete<any>(`${this.baseUrl}/${id}`).pipe(
       catchError(this.handleError<any>("deletingCard")
     ))
   }
 
   createDeck(deck: Deck) {
-    return this.http.post<any>("http://localhost:3000/api/decks", deck);
+    return this.http.post<any>(this.baseUrl, deck);
   }
 
-  
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

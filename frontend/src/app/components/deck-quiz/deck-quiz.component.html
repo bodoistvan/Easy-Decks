@@ -1,0 +1,82 @@
+<navbar></navbar>
+
+<div class="container">
+
+    <div style="height: 30rem; background-color:beige;">
+
+        <app-learn-card class="col-12" [word]="currentQuestin.word" ></app-learn-card>
+
+        <ng-template [ngIf]="action=='question'">
+
+            <form (ngSubmit)="onQuestionSubmit()" [formGroup]="answerForm" >
+                
+                <div class="row d-flex align-items-center justify-content-center">
+                    
+                    <div class="form-group col-4 mb-0">
+                        <!-- <label for="answer">Answer</label> -->
+                        <input type="text" name="answer" id="answer" class="form-control" formControlName="answer" placeholder="Your answer here..." aria-describedby="helpId" autofocus >
+                        
+                      </div>
+          
+                      <button type="submit" class="btn btn-primary col-1">Submit</button>
+
+                      <!-- <div class="form-check col-1 ml-3">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" name="" id="" value="checkedValue" checked>
+                          Auto
+                        </label>
+                      </div> -->
+
+                </div>
+
+                
+    
+            </form>
+
+        </ng-template>
+
+        <ng-template [ngIf]="action=='answered'">
+
+            <form (ngSubmit)="onAnsweredSubmit()" [formGroup]="answerForm" >
+
+                <div class="row d-flex align-items-center justify-content-center">
+                    
+                    <div class="form-group col-4 mb-0">
+                        <!-- <label for="answer">Answer</label> -->
+                        <input [ngClass]="['btn-outline-success','btn-outline-danger'][getResultStatus]" type="text" name="answer" id="answeredInput" class="form-control" formControlName="answer" placeholder="Your answer here..." aria-describedby="helpId" autofocus>
+                        
+                    </div>
+          
+                    <button type="submit" class="btn btn-primary col-1">Next</button>
+
+                      <!-- <div class="form-check col-1 ml-3">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" name="" id="" value="checkedValue" checked>
+                          Auto
+                        </label>
+                      </div> -->
+                </div>
+
+            </form>
+
+            <div class="d-flex justify-content-center mt-2">
+                <div class="col-4 p-2 rounded" [ngClass]="['btn-success','btn-danger'][getResultStatus]">
+
+                    <ng-template  [ngIf]="result!.status=='correct'">
+                      Your answer is correct!
+                    </ng-template>
+
+                    <ng-template [ngIf]="result!.status=='wrong'">
+                      Correct Answer is: {{ result!.word }}
+                    </ng-template>
+                    
+                </div>
+            </div>  
+
+        </ng-template>
+
+    </div>
+
+    <pre>{{ answerForm.value | json }}</pre>
+
+</div>

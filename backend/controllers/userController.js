@@ -1,7 +1,8 @@
+const catchAsync = require('../utils/catchAsync');
 const { filterProperties, checkProperties } = require('../utils/objFilter');
 
 exports.createUser = Model => 
-    async(req, res, next) =>{
+    catchAsync( async(req, res, next) =>{
 
         let filter = ["name", "password", "mail"]
         
@@ -14,7 +15,17 @@ exports.createUser = Model =>
         
         console.log(User);
 
+        User.password = undefined;
+
         res.status(201);
         res.json(User);
 
-}
+})
+
+exports.getAllUser = Model => catchAsync( async (req,res,next) => {
+
+    const users = await Model.User.find();
+
+    res.json({users});
+
+})
