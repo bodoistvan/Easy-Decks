@@ -4,8 +4,8 @@ const catchAsync = require('../utils/catchAsync');
 exports.createDeck = Model => 
     catchAsync(async(req, res, next) => {
         
-     
-        const ownerId = "604ca45fc2fe7b1bd4cfecab";
+        const userId = req.user._id + "";
+        const ownerId = userId;
 
         let filter = ["name", "lang1", "lang2", "level", "cards", "public"];
 
@@ -52,7 +52,9 @@ exports.createDeck = Model =>
 exports.getDecks = Model => 
     catchAsync(async(req, res, next) => {
 
-        const decks = await Model.Deck.find({ _owner: "604ca45fc2fe7b1bd4cfecab"}).exec();
+        const userId = req.user._id + "";
+
+        const decks = await Model.Deck.find({ _owner: userId}).exec();
 
         if (decks === undefined){
             res.status(404);
@@ -75,7 +77,7 @@ exports.getDecks = Model =>
 exports.getDeckById = Model => catchAsync( async(req,res,next) => {
 
     //userId should be in jwt
-    const userId = "6048db21b6668241745421b3";
+   //const userId = req.user._id + "";
 
     console.log(req.params);
 

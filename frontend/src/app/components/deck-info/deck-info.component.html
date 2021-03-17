@@ -22,35 +22,37 @@
                 <a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-primary m-2">MODIFY</a>
                 <a href="/decks/learn?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-warning m-2">LEARN</a>
                 <div class="p-2 m-2 border">
-                    <form action="">
+                    <form [formGroup]=quizStartForm>
                         <div class="form-group d-flex justify-content-around align-items-center mb-0">
                           
                           <div class="form-check form-check-inline col-4 pt-2 ">
                                 <label class="form-check-label mx-2">
-                                    <input class="form-check-input" type="radio" name="amountSelector" id="" value="5">5
+                                    <input class="form-check-input" formControlName="amount" type="radio" name="amount" id="amount5" value="5">5
                                 </label>
                                 <label class="form-check-label mx-2">
-                                    <input class="form-check-input" checked type="radio" name="amountSelector" id="" value="10">10
+                                    <input class="form-check-input" formControlName="amount" checked type="radio" name="amount" id="amount10" value="10">10
                                 </label>
                                 <label class="form-check-label mx-2">
-                                    <input class="form-check-input" type="radio" name="amountSelector" id="" value="20">20
+                                    <input class="form-check-input" formControlName="amount" type="radio" name="amount" id="amount20" value="20">20
                                 </label>  
                           </div>
 
-                         
-                          <select class="form-control col-4" name="langSelector" id="langSelector">
-                            <option>HUN</option>
-                            <option>USA</option>
-                            <option>GER</option>
-                          </select>
-                          <a href="/decks/quiz?id={{ deckInfo? deckInfo.id : 0}}" type="submit" class="btn btn-primary">QUIZ</a>
+                          <div class="form-check form-check-inline col-4 pt-2 ">
+                            <label class="form-check-label mx-2">
+                                <input class="form-check-input" formControlName="language" type="radio" name="language" id="selLang1" value="lang1">{{deckInfo? deckInfo.lang1 : 'lang1'}}
+                            </label>
+                            <label class="form-check-label mx-2">
+                                <input class="form-check-input" formControlName="language" checked type="radio" name="language" id="selLang1" value="lang2">{{deckInfo? deckInfo.lang2 : 'lang2'}}
+                            </label>
+                         </div>
+
+                          <button (click)="onQuizSubmit()" type="submit" class="btn btn-primary">QUIZ</button>
                         </div>  
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
 
     <div class="border mt-2" style="background-color: rgb(245, 244, 244);">
         <div class="d-flex justify-content-around">

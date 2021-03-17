@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
 import { QuizQuestion } from '../interfaces/quiz-question';
 import { QuizQuestionResult } from '../interfaces/quiz-question-result';
 
@@ -24,6 +24,12 @@ export class QuizService {
     return this.http.post<QuizQuestionResult>( `${this.baseUrl}/${id}`, answer ).pipe(
       catchError(this.handleError<QuizQuestionResult>("answer quiz questions"))
     )
+  }
+
+  createQuiz(deckId: string, amount: number, language: string){
+    return this.http.post<any>(this.baseUrl, {id : deckId, amount, language}).pipe(
+      catchError(this.handleError<any>("creating quiz"))
+    ) 
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

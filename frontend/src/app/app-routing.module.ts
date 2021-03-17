@@ -7,14 +7,18 @@ import { DeckCreateComponent } from './components/deck-create/deck-create.compon
 import { DeckModifyComponent } from './components/deck-modify/deck-modify.component';
 import { DeckLearnComponent } from './components/deck-learn/deck-learn.component';
 import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
+import { LoginComponent } from './components/login/login.component';
+import { AuthGuardService as AuthGruard} from './services/auth-guard.service';
+
 
 const routes: Routes = [
   {path: "", redirectTo:"home", pathMatch: 'full' },
-  {path: "home", component: HomeComponent},
-  {path: "profile", component: ProfileComponent},
-  {path: "decks", children:[ 
+  {path: "home", canActivate: [AuthGruard],  component: HomeComponent},
+  {path: "profile", canActivate: [AuthGruard], component: ProfileComponent},
+  {path: "login", component: LoginComponent},
+  {path: "decks", canActivate: [AuthGruard], children:[ 
       {
-        path: "info", component: DeckInfoComponent
+        path: "info", component: DeckInfoComponent, 
       },
       {
         path: "create", component: DeckCreateComponent

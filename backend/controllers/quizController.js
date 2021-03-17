@@ -1,8 +1,8 @@
-const { User } = require('../models');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const { checkProperties } = require('../utils/objFilter');
 
-class Card {
+class QuizCard {
     constructor( {cardId, lang1, lang2} ) {
         this.cardId = cardId;
         this.lang1 = lang1;
@@ -33,7 +33,7 @@ class Card {
     }
 }
 
-class Deck {
+class QuizDeck {
     constructor( {deckId, selectedLang, cards }){
         this.deckId = deckId;
         this.selectedLang = selectedLang;
@@ -41,7 +41,7 @@ class Deck {
     }
 }
 
-class UserQuiz {
+class QuizUser {
     constructor( { userId }){
         this.userId = userId;
         this.decks = [];
@@ -58,13 +58,13 @@ class QuizStorage {
     }
 
     pushQuiz( newUserQuiz ) {
-        const foundUserQuiz = this.userQuizes.find(userQuizItem => userQuizItem.userId == newUserQuiz.userId);
+        const foundUserQuiz = this.userQuizes.find(userQuizItem => userQuizItem.userId + "" == newUserQuiz.userId + "");
 
         //if user exist
         if ( foundUserQuiz != undefined){
 
             //if the deck is already being quized, then replace with the new one
-            const foundDeck = foundUserQuiz.decks.find(item => item.deckId == newUserQuiz.decks[0].deckId);
+            const foundDeck = foundUserQuiz.decks.find(item => item.deckId + "" == newUserQuiz.decks[0].deckId + "");
             
             if (foundDeck != undefined){
                 console.log(foundDeck);
@@ -106,15 +106,15 @@ class QuizStorage {
     }
 
     answerQuestion( {userId, deckId, cardId, answer} ){
-        const user = this.userQuizes.find(item => item.userId == userId);
+        const user = this.userQuizes.find(item => item.userId == userId + "");
 
         if (user != undefined){
             
-            const deck = user.decks.find(item => item.deckId == deckId)
+            const deck = user.decks.find(item => item.deckId == deckId + "")
 
             if (deck != undefined) {
                 
-                const card = deck.cards.find(item => item.cardId == cardId);
+                const card = deck.cards.find(item => item.cardId == cardId + "");
 
                 if (card !=undefined ){
                         
@@ -137,35 +137,71 @@ class QuizStorage {
 
 var quizStorage = new QuizStorage();
 
-exports.createQuiz = () => catchAsync( async (req,res,next) => {
+exports.createQuiz = (Model) => catchAsync( async (req,res,next) => {
 
     //quizStorage = new QuizStorage();
 
+    //check params
+
+    const userId = req.user._id + "";
+
+    if ( !req.body.id )
+        return next(
+            new AppError('param error: no id found', 403)
+    );
+
+    const deckId = req.body.id + "";
+
+    const amount = req.body.amount || 10;
+
+    const deck = await Model.Deck.findOne({ $and: [ 
+                                                {_id: deckId}, 
+                                                { $or: [{public:true}, {_owner: userId}] } 
+                                            ]  
+                                        });
+
+    if ( !deck)
+        return next( new AppError('no deck found at id'),404);
+    
+    //TODO cards should be active as well
+    const dbCards = await Model.Card.find( { _deck: deck._id }).limit(amount);
+
+    if (!dbCards){
+        return ( new AppError("no cards found at deck id", 404))
+    }
+
+    const quizCards = dbCards.map(card => new QuizCard ({cardId: card._id, lang1: card.lang1, lang2: card.lang2}) );
+
+    /*
     const cards = [
-        new Card( { cardId:"cardid1", lang1: "kutya", lang2: "dog" } ),
-        new Card( { cardId:"cardid2", lang1: "macska", lang2: "cat" } ),
-        new Card( { cardId:"cardid3", lang1: "madár", lang2: "bird" } )
-    ]
+        new QuizCard( { cardId:"cardid1", lang1: "kutya", lang2: "dog" } ),
+        new QuizCard( { cardId:"cardid2", lang1: "macska", lang2: "cat" } ),
+        new QuizCard( { cardId:"cardid3", lang1: "madár", lang2: "bird" } )
+    ]*/
 
-    const deck = new Deck( {deckId: "604d29a47f72352b38c6219a", selectedLang:"lang2", cards: cards, } )
+    const quizDeck =  new QuizDeck( {deckId: deck._id, selectedLang:"lang2", cards: quizCards } )
 
-    const userQuiz = new UserQuiz({ userId: "604ca45fc2fe7b1bd4cfecab"}); 
-    userQuiz.pushDeck(deck);
+    //const deck = new QuizDeck( {deckId: "604d29a47f72352b38c6219a", selectedLang:"lang2", cards: cards } )
+
+    const userQuiz = new QuizUser({ userId: userId}); 
+    userQuiz.pushDeck(quizDeck);
     quizStorage.pushQuiz(userQuiz);
    
-    res.json({ quizStorage, cards });
+    res.json({message: "quiz created successfully", quizStorage});
     
-
 });
 
 exports.getQuestions = () => catchAsync( async(req,res,next)=>{
-    const userId = "604ca45fc2fe7b1bd4cfecab";
+    const userId = req.user._id;
     const deckId = req.params.id;
 
     if (deckId == undefined)
-        return next("no deck id found");
+        return next("no param deck id found");
 
-    const cards = quizStorage.getQuestions(userId, deckId);
+    const cards = quizStorage.getQuestions(userId + "", deckId);
+
+    if (cards.error)
+        return next(new AppError(cards.error + ""), 404);
 
     res.json(cards);
 
@@ -174,7 +210,7 @@ exports.getQuestions = () => catchAsync( async(req,res,next)=>{
 
 exports.sendAnswer = () => catchAsync( async(req,res,next)=>{
 
-    const userId = "604ca45fc2fe7b1bd4cfecab";
+    const userId = req.user._id;
     const deckId = req.params.id;
     
     if (deckId == undefined)

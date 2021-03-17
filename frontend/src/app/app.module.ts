@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -23,6 +24,13 @@ import { DeckFormComponent } from './components/deck-form/deck-form.component';
 import { DeckLearnComponent } from './components/deck-learn/deck-learn.component';
 import { LearnCardComponent } from './components/learn-card/learn-card.component';
 import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
+import { LoginComponent } from './components/login/login.component';
+import { AuthInterceptorService } from './auth-interceptor.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -43,7 +51,8 @@ import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
     DeckFormComponent,
     DeckLearnComponent,
     LearnCardComponent,
-    DeckQuizComponent
+    DeckQuizComponent,
+    LoginComponent
 
 
   ],
@@ -55,7 +64,9 @@ import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
     ReactiveFormsModule
    
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

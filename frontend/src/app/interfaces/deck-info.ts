@@ -1,5 +1,5 @@
 export interface DeckInfo {
-    id: number,
+    id: string,
     name: string,
     lang1: string,
     lang2: string,

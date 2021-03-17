@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DeckInfo } from 'src/app/interfaces/deck-info';
 import { DecksService } from 'src/app/services/decks.service';
+import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
   selector: 'app-deck-info',
@@ -10,7 +12,7 @@ import { DecksService } from 'src/app/services/decks.service';
 })
 export class DeckInfoComponent implements OnInit {
 
-  constructor(private deckService:DecksService, private route: ActivatedRoute) { }
+  constructor(private deckService:DecksService, private route: ActivatedRoute, private fb:FormBuilder, private quizService: QuizService, private router:Router) { }
 
   public deckInfo?:DeckInfo;
 
@@ -25,15 +27,28 @@ export class DeckInfoComponent implements OnInit {
       //TODO on error should route /decks
       
     })
-
-
-      
-    
-
   }
 
   onClick():void {
     console.log(this.deckInfo)
+  }
+
+  public quizStartForm = this.fb.group({
+    language: [""],
+    amount: [""]
+  });
+
+  onQuizSubmit(){
+
+    console.log(this.deckInfo);
+    console.log(this.quizStartForm.value);
+
+    this.quizService.createQuiz(this.deckInfo!.id, this.quizStartForm.value.amount * 1, this.quizStartForm.value.langugae)
+      .subscribe(res => 
+        {
+          const deckId = this.deckInfo!.id;
+          this.router.navigate(["decks", "quiz"], {queryParams : { id: deckId } });
+        });
   }
 
 
