@@ -1,5 +1,13 @@
 const { filterProperties, checkProperties } = require('../utils/objFilter');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
+
+
+const getBookMarkedCardsIdByDeckIdandUserId = async ({Model, userId, deckId}) => {
+    const cards = await Model.CardStat.find( { _deck: deckId, _user: userId, bookmarked: true } ).exec();
+    return cards.map(card =>  card._card + "");
+}
+
 
 exports.createDeck = Model => 
     catchAsync(async(req, res, next) => {
@@ -78,7 +86,7 @@ exports.getDeckById = Model => catchAsync( async(req,res,next) => {
 
     //userId should be in jwt
    //const userId = req.user._id + "";
-
+    //TODO check deck auth
     console.log(req.params);
 
     const filter=["id"];
@@ -108,24 +116,41 @@ exports.getDeckById = Model => catchAsync( async(req,res,next) => {
 exports.getDeckByIdAll = Model =>
     catchAsync( async(req, res, next) => {
 
+        const userId = req.user.id;
         const deckId = req.params.id;
 
-        if (deckId === undefined)
-            return next("no deck id")
+        if (!deckId)
+            return next(new AppError("param error: no deckId", 403))
 
-        const deck = await Model.Deck.findOne({ _id: deckId});
+        const deck = await Model.Deck.findOne({ $and: [ 
+                                            {_id: deckId}, 
+                                            { $or: [{public:true}, {_owner: userId}] } 
+                                        ]  
+                                    });
 
-        if (deck === undefined){
-            res.status(404);
-            res.json({message: "deck is not found"})
-        }
+        if (!deck)
+            return next(new AppError("deck is not found or auth error", 400))
 
-        
         let cards = await Model.Card.find( { _deck : deckId } );
 
         if (cards != undefined){
             cards = cards.map(card => ({ id: card._id, lang1: card.lang1, lang2: card.lang2 }))
         }
+
+        let bookedCardsIds;
+        if (req.query.with!= undefined){
+            const qlist = req.query.with.split(',');
+            if( qlist.indexOf('bookmark') != -1){
+                bookedCardsIds = await getBookMarkedCardsIdByDeckIdandUserId( { deckId: deckId, userId: userId, Model: Model} ); 
+  
+                cards = cards.map(card => ({
+                    bookmarked: bookedCardsIds.indexOf(card.id + "") != -1,
+                    ...card
+                }));
+            }
+        }
+        
+            
 
         res.status(200);
         res.json({
@@ -143,10 +168,8 @@ exports.getDeckByIdAll = Model =>
 
 exports.patchDeckById = Model => 
     catchAsync( async (req, res, next)=>{
-
-      
         
-        const ownerId = "604ca45fc2fe7b1bd4cfecab";
+        const ownerId = req.user._id;
 
         const myfilter = ["id", "name", "lang1", "lang2", "level", "public", "cards"];
 

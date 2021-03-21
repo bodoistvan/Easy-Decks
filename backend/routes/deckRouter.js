@@ -1,14 +1,8 @@
 const express = require('express');
 const deckController = require('../controllers/deckController');
 const authController = require('../controllers/authController')
-const { Deck, Card, User } = require('../models');
+const Model = require('../models');
 
-
-const Model = {
-    Deck: Deck,
-    Card: Card,
-    User: User
-}
 
 const router = express.Router();
 

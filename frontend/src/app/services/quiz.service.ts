@@ -27,7 +27,7 @@ export class QuizService {
   }
 
   createQuiz(deckId: string, amount: number, language: string){
-    return this.http.post<any>(this.baseUrl, {id : deckId, amount, language}).pipe(
+    return this.http.post<any>(`${this.baseUrl}/create`, {deckId : deckId, amount, language}).pipe(
       catchError(this.handleError<any>("creating quiz"))
     ) 
   }

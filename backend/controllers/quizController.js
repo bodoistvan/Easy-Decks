@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const { checkProperties } = require('../utils/objFilter');
+const uniqid = require('uniqid');
 
 class QuizCard {
     constructor( {cardId, lang1, lang2} ) {
@@ -10,7 +11,13 @@ class QuizCard {
         this.status="none";
     }
 
-    answer( {selectedLang, answer} ){
+    //check answer, if it is correct returns status : 'correct' 
+    //
+    // returns: 
+    // {status : 'correct'} --> ok
+    // {status : 'wrong', word: correctWord}
+    // {error : errMsg } if already answered
+    answerQuestion( {selectedLang, answerWord} ){
         if (this.status == "none"){
 
             let word;
@@ -19,7 +26,7 @@ class QuizCard {
             } else {
                 word = this.lang2;
             }
-            if (answer == word){
+            if (answerWord == word){
                 this.status = "correct";
                 return { status : this.status }
             } else {
@@ -31,128 +38,120 @@ class QuizCard {
             return {error: "question already answered"}
         }
     }
-}
 
-class QuizDeck {
-    constructor( {deckId, selectedLang, cards }){
-        this.deckId = deckId;
-        this.selectedLang = selectedLang;
-        this.cards = cards;
+    //should returns whether card has been answered
+    //returns:
+    // true : already answered
+    isAnswered(){
+        return this.status != "none"
+    }
+
+    getQuestion( {selectedLang} ) {
+        let question = { id : this.cardId };
+        if (selectedLang == "lang1"){
+            question.word = this.lang2;
+        } else {
+            question.word = this.lang1;
+        }
+        return question;
     }
 }
 
-class QuizUser {
-    constructor( { userId }){
+class Quiz {
+    constructor( { userId, dekcId, cards, selectedLang} ){
+        this.id = this.genUid();
         this.userId = userId;
-        this.decks = [];
+        this.dekcId = dekcId;
+        this.cards = cards;
+        this.selectedLang = selectedLang;
     }
-    
-    pushDeck( deck ){
-        this.decks.push(deck);
+
+    genUid(){
+        return uniqid();
+    }
+
+    getUnAnsCards(){
+        const unAnsCards = this.cards.filter(card => !card.isAnswered()).map(card => (card.getQuestion( { selectedLang: this.selectedLang } )) );
+        return unAnsCards;
+    }
+
+    //answer -> { id, word }
+    answerQuestion( {answer} ){
+        const card = this.cards.find(c => c.cardId + "" == answer.id + "");
+        if (card != undefined)
+            return card.answerQuestion( {selectedLang: this.selectedLang, answerWord : answer.word} ) 
+
+        return { error: "no card find by cardId" }
     }
 }
 
 class QuizStorage {
-    constructor () {
-        this.userQuizes = [];
+    constructor(){
+        this.quizes = [];
     }
 
-    pushQuiz( newUserQuiz ) {
-        const foundUserQuiz = this.userQuizes.find(userQuizItem => userQuizItem.userId + "" == newUserQuiz.userId + "");
+    pushQuiz( quiz ){
+        this.quizes.push(quiz);
+    }
 
-        //if user exist
-        if ( foundUserQuiz != undefined){
-
-            //if the deck is already being quized, then replace with the new one
-            const foundDeck = foundUserQuiz.decks.find(item => item.deckId + "" == newUserQuiz.decks[0].deckId + "");
-            
-            if (foundDeck != undefined){
-                console.log(foundDeck);
-                const index = foundUserQuiz.decks.indexOf(foundDeck);
-                foundUserQuiz.decks.splice(index,1);
-            }
-
-            foundUserQuiz.pushDeck(newUserQuiz.decks[0]);
-        } else {
-            this.userQuizes.push(newUserQuiz);
+    getQuestionsByQuizId( {quizId, userId} ){
+        const quiz = this.findQuizById( quizId );
+        if ( quiz != undefined){
+            if (quiz.userId + "" != userId + "")
+                return { error : "autherror"};
+            return quiz.getUnAnsCards();
         }
-       
-    }
-
-    getQuestions( uid, did ) {
-        const user = this.userQuizes.find(item => item.userId == uid);
-
-        if (user != undefined){
             
-            const deck = user.decks.find(item => item.deckId == did)
 
-            if (deck != undefined) {
-                
-                if (deck.selectedLang == "lang1") {
-                    return deck.cards.filter(card=> card.status == "none").map(card => ({id: card.cardId, word: card.lang2}));
-                }
-
-                if (deck.selectedLang == "lang2") {
-                    return deck.cards.filter(card=> card.status == "none").map(card => ({id: card.cardId, word: card.lang1}));
-                }
-                
-            } else {
-                return { error: "no deck found"};
-            }
-
-        } else { 
-            return {error: "no user find"};
-        }
+        return {error: "no quiz found by id"};
     }
 
-    answerQuestion( {userId, deckId, cardId, answer} ){
-        const user = this.userQuizes.find(item => item.userId == userId + "");
+    //answer -> { id, word }
 
-        if (user != undefined){
+    //should auth
+    answerQuestionByQuizId( {quizId, answer, userId} ){
+        const quiz = this.findQuizById( quizId );
+        if ( quiz != undefined){
+            if (quiz.userId + "" != userId + "")
+                return { error : "autherror"};
+
+            return quiz.answerQuestion( {answer} );
+        }
             
-            const deck = user.decks.find(item => item.deckId == deckId + "")
 
-            if (deck != undefined) {
-                
-                const card = deck.cards.find(item => item.cardId == cardId + "");
-
-                if (card !=undefined ){
-                        
-                    return card.answer({ selectedLang: deck.selectedLang, answer}) 
-
-                } else {
-                    return { error: "no card found" }
-                }   
-                
-            } else {
-                return { error: "no deck found"};
-            }
-
-        } else { 
-            return {error: "no user find"};
-        }
+        return {error: "no quiz found by id"};
     }
-    
+
+    findQuizById( id ){
+        return this.quizes.find( q => q.id + "" == id + "" ); 
+    }
+
 }
 
-var quizStorage = new QuizStorage();
+const quizStorage = new QuizStorage();
+
 
 exports.createQuiz = (Model) => catchAsync( async (req,res,next) => {
 
-    //quizStorage = new QuizStorage();
+    //check params: userId and deckId
+    const userId = req.user._id;
 
-    //check params
+    if ( !userId )
+        return next(new AppError('param error: no userid found', 403));
 
-    const userId = req.user._id + "";
+    const deckId = req.body.deckId;
 
-    if ( !req.body.id )
-        return next(
-            new AppError('param error: no id found', 403)
-    );
+    if ( !deckId )
+        return next(new AppError('param error: no deckid found', 403));
 
-    const deckId = req.body.id + "";
+    const selectedLang = req.body.language;
 
-    const amount = req.body.amount || 10;
+    if (!selectedLang)
+        return next(new AppError('param error: no language found', 403));
+
+    if (selectedLang != "lang1" && selectedLang != "lang2"){
+        return next(new AppError('param error: selected language not valid', 403));
+    }
 
     const deck = await Model.Deck.findOne({ $and: [ 
                                                 {_id: deckId}, 
@@ -162,7 +161,9 @@ exports.createQuiz = (Model) => catchAsync( async (req,res,next) => {
 
     if ( !deck)
         return next( new AppError('no deck found at id'),404);
-    
+
+    const amount = req.body.amount || 10;
+
     //TODO cards should be active as well
     const dbCards = await Model.Card.find( { _deck: deck._id }).limit(amount);
 
@@ -172,60 +173,56 @@ exports.createQuiz = (Model) => catchAsync( async (req,res,next) => {
 
     const quizCards = dbCards.map(card => new QuizCard ({cardId: card._id, lang1: card.lang1, lang2: card.lang2}) );
 
-    /*
-    const cards = [
-        new QuizCard( { cardId:"cardid1", lang1: "kutya", lang2: "dog" } ),
-        new QuizCard( { cardId:"cardid2", lang1: "macska", lang2: "cat" } ),
-        new QuizCard( { cardId:"cardid3", lang1: "madár", lang2: "bird" } )
-    ]*/
+    const quiz = new Quiz( {userId: userId, deckId: deckId, cards: quizCards, selectedLang: selectedLang } );
 
-    const quizDeck =  new QuizDeck( {deckId: deck._id, selectedLang:"lang2", cards: quizCards } )
+    quizStorage.pushQuiz(quiz);
 
-    //const deck = new QuizDeck( {deckId: "604d29a47f72352b38c6219a", selectedLang:"lang2", cards: cards } )
+    res.status(200);
+    res.json( {id : quiz.id} );
 
-    const userQuiz = new QuizUser({ userId: userId}); 
-    userQuiz.pushDeck(quizDeck);
-    quizStorage.pushQuiz(userQuiz);
-   
-    res.json({message: "quiz created successfully", quizStorage});
-    
 });
 
 exports.getQuestions = () => catchAsync( async(req,res,next)=>{
     const userId = req.user._id;
-    const deckId = req.params.id;
 
-    if (deckId == undefined)
-        return next("no param deck id found");
+    if (!userId)
+        return next(new AppError("No userId found", 400));
 
-    const cards = quizStorage.getQuestions(userId + "", deckId);
+    const quizId = req.params.id;
 
-    if (cards.error)
-        return next(new AppError(cards.error + ""), 404);
+    if (!quizId)
+        return next(new AppError("No quiz found by id", 404));
+
+    const cards = quizStorage.getQuestionsByQuizId( {quizId: quizId, userId: userId} );
+
+    if (cards.error != undefined)
+        return next(new AppError(cards.error), 404);
 
     res.json(cards);
 
 });
 
-
-exports.sendAnswer = () => catchAsync( async(req,res,next)=>{
+exports.answerQuiestion = () => catchAsync( async(req,res,next)=>{
 
     const userId = req.user._id;
-    const deckId = req.params.id;
+    const quizId = req.params.id;
     
-    if (deckId == undefined)
-        return next("no deck id found");
+    if (quizId == undefined)
+        return next(new AppError("no deck id found", 404));
 
     const filter = ["id", "word"];
     
     if ( checkProperties(req.body, filter) === false) 
-        return next("bad properties")
+        return next(new AppError("bad properties", 400));
 
+    const cardId = req.body.id;
+    const cardWord = req.body.word;
+    
+    const result = quizStorage.answerQuestionByQuizId({ quizId: quizId, answer: { id: cardId, word: cardWord }, userId: userId})
 
-    const result = quizStorage.answerQuestion({ userId, deckId, cardId: req.body.id, answer: req.body.word })
+    if (result.error)
+        return next(new AppError(error), 400);
 
     res.json(result);
 
 });
-
-

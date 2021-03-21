@@ -43,11 +43,11 @@ export class DeckInfoComponent implements OnInit {
     console.log(this.deckInfo);
     console.log(this.quizStartForm.value);
 
-    this.quizService.createQuiz(this.deckInfo!.id, this.quizStartForm.value.amount * 1, this.quizStartForm.value.langugae)
+    this.quizService.createQuiz(this.deckInfo!.id, this.quizStartForm.value.amount * 1, this.quizStartForm.value.language)
       .subscribe(res => 
         {
-          const deckId = this.deckInfo!.id;
-          this.router.navigate(["decks", "quiz"], {queryParams : { id: deckId } });
+          const quizId = res.id;
+          this.router.navigate(["decks", "quiz"], {queryParams : { id: quizId } });
         });
   }
 

@@ -1,24 +1,22 @@
 const express = require('express');
-const { Deck, Card, User } = require('../models');
+const Model = require('../models');
 const quizController = require('../controllers/quizController');
 const authController = require('../controllers/authController')
 
-const Model = {
-    Deck: Deck,
-    Card: Card,
-    User: User
-}
+
 
 const router = express.Router();
 
 router.use(authController.protect(Model));
 
-router.route('/:id')
-    .get(quizController.getQuestions())
-    .post(quizController.sendAnswer());
-
-router.route('/')
+router.route('/create')
+   // .get(quizController.getQuestions())
     .post(quizController.createQuiz(Model));
+
+router.route('/:id')
+    .get(quizController.getQuestions(Model))
+    .post(quizController.answerQuiestion(Model));
+
 
 
 module.exports = router;

@@ -1,14 +1,7 @@
 const express = require('express');
-const { Deck, Card, User } = require('../models');
+const Model = require('../models');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
-const { route } = require('./deckRouter');
-
-const Model = {
-    Deck: Deck,
-    Card: Card,
-    User: User
-}
 
 const router = express.Router();
 
