@@ -26,6 +26,10 @@
                 <button (click)="mofidyRange(1)" class="ml-1 btn btn-outline-primary p-2 pl-3 pr-3"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
             </div>
         </form>
+
+        <div style="width: 2.5rem;" (click)=onBookMarkButtonClick() 
+                          class="btn border"><i [ngClass]="(isBookMarked())?'fas':'far'" class="fa-bookmark"></i>
+        </div>
     
         <pre>{{ deck | json}}</pre>
 

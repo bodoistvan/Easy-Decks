@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -27,8 +27,9 @@ export class DecksService {
     ))
   }
   
-  getDeckInfoByIdAll(id:string){
-    return this.http.get<DeckWithCards>(`${this.baseUrl}/${id}/all`).pipe(
+  getDeckInfoByIdAll(id:string, params?: HttpParams){
+    console.log(params); 
+    return this.http.get<DeckWithCards>(`${this.baseUrl}/${id}/all`, { params:params }).pipe(
       catchError(this.handleError<DeckWithCards>("getDeckInfoByIdAll")
     ))
   }
