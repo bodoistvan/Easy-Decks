@@ -1,5 +1,4 @@
 import { HttpParams } from '@angular/common/http';
-import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -49,14 +48,6 @@ export class DeckLearnComponent implements OnInit {
 
   get range():number{
     return this.learnForm.get('range')?.value;
-  }
-  
-  getWord(lang:number):any {
-
-    const index = this.learnForm.get('range')?.value;
-    if (index != undefined)
-      return lang == 1 ? this.deck?.cards[index].lang1 : this.deck?.cards[index].lang2;
-    
   }
 
   get maxRange(){

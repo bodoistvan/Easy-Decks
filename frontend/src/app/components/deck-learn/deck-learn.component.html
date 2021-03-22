@@ -6,10 +6,13 @@
     <div class="mt-5 mb-3" style="height: 25rem; background-color: rgb(172, 172, 172);">
             
        <div class="row d-flex justify-content-around">
-        <app-learn-card class="col-5" [word]="getWord(1)" ></app-learn-card>
-        <app-learn-card class="col-5" [word]="getWord(2)"></app-learn-card>
+        <app-learn-card class="col-5" [word]="getCard().lang1" ></app-learn-card>
+        <app-learn-card class="col-5" [word]="getCard().lang2"></app-learn-card>
        </div> 
-        
+    
+        <div (click)=onBookMarkButtonClick() 
+            class="btn border myBookMark"><i [ngClass]="(isBookMarked())?'fas':'far'" class="fa-bookmark"></i>
+        </div>
         
     </div>
         
@@ -17,7 +20,8 @@
         <form [formGroup]="learnForm" class="container-fluid">
             <div class="d-flex justify-content-center align-items-center">
                 <button (click)="mofidyRange(-1)" class="mr-1 btn btn-outline-primary p-2 pl-3 pr-3"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
-                
+
+
                 <div class="d-flex col-5 row pt-4">
                     <input type="range" style="width: 100%;" (change)="rangeChange()" class="form-range" min="0" [max]="maxRange" id="customRange2" formControlName = "range">
          
@@ -27,9 +31,7 @@
             </div>
         </form>
 
-        <div style="width: 2.5rem;" (click)=onBookMarkButtonClick() 
-                          class="btn border"><i [ngClass]="(isBookMarked())?'fas':'far'" class="fa-bookmark"></i>
-        </div>
+       
     
         <pre>{{ deck | json}}</pre>
 

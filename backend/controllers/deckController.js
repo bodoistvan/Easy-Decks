@@ -174,16 +174,16 @@ exports.patchDeckById = Model =>
         const myfilter = ["id", "name", "lang1", "lang2", "level", "public", "cards"];
 
         if ( checkProperties(req.body, myfilter) === false )
-            return next("bad params");
+            return next(new AppError("bad params", 403));
 
         const deck = await Model.Deck.findOne({ _id : req.body.id })
 
         if (deck === undefined )
-            return next("no deck found")
+            return next(new AppError("no deck found by id", 404));
 
         
-        if ( deck._owner != ownerId)
-            return next("auth error")
+        if ( deck._owner + "" != ownerId + "")
+            return next(new AppError("auth error", 403));
 
         //delete cards
         deck.name = req.body.name;
