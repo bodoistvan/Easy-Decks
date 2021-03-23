@@ -1,0 +1,27 @@
+<div>
+    <div class="quizresult-header" (click)="onButtonClick()">
+        <h1>{{result.resultPercent}}%</h1>
+        <h1>{{result.startedAt | date:'yyyy-MM-dd HH:mm'}}</h1>
+        <i class="arrow fas" [ngClass]="{ 'fa-chevron-up' : Active, 'fa-chevron-down' : !Active }"></i>
+    </div>
+
+    <ng-template [ngIf]=Active>
+        <div class="quizresult-body px-2">
+            <div class="row">
+                <div class="col-3">
+                    <h1>{{ timer | date:'mm:ss'}}</h1>
+                    {{result.amount}} Cards
+                    
+                </div>
+                <div class="col-9 cards">
+                    <div *ngFor="let card of result.results" >
+                        <div class="result-card" [ngClass]="{ 'result-correct' : card.status=='correct', 'result-wrong' : card.status=='wrong' }" >
+                            <div>{{ card.lang1 }}</div>
+                            <div>{{ card.lang2 }}</div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

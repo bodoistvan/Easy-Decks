@@ -27,6 +27,9 @@ import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthInterceptorService } from './auth-interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { QuizResultComponent } from './components/quiz-result/quiz-result.component';
+import { QuizResultInfoComponent } from './components/quiz-result-info/quiz-result-info.component';
+import { QuizResultListComponent } from './components/quiz-result-list/quiz-result-list.component';
 
 
 
@@ -52,7 +55,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     DeckLearnComponent,
     LearnCardComponent,
     DeckQuizComponent,
-    LoginComponent
+    LoginComponent,
+    QuizResultComponent,
+    QuizResultInfoComponent,
+    QuizResultListComponent
 
 
   ],

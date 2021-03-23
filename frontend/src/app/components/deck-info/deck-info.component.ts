@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeckInfo } from 'src/app/interfaces/deck-info';
+import { QuizResult } from 'src/app/interfaces/quiz-result';
 import { DecksService } from 'src/app/services/decks.service';
+import { QuizResultService } from 'src/app/services/quiz-result.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -12,9 +14,12 @@ import { QuizService } from 'src/app/services/quiz.service';
 })
 export class DeckInfoComponent implements OnInit {
 
-  constructor(private deckService:DecksService, private route: ActivatedRoute, private fb:FormBuilder, private quizService: QuizService, private router:Router) { }
+  constructor(private deckService:DecksService, private route: ActivatedRoute,
+     private fb:FormBuilder, private quizService: QuizService, private quizResultServive:QuizResultService,
+     private router:Router) { }
 
   public deckInfo?:DeckInfo;
+  public lastResult?: QuizResult;
 
   ngOnInit(): void {
     
@@ -23,6 +28,7 @@ export class DeckInfoComponent implements OnInit {
       
       if (id !=null){
         this.deckService.getDeckInfoById(id).subscribe(data => this.deckInfo = data, err => console.error(err));
+        this.quizResultServive.getLastQuizResultByDeckId(id).subscribe(data => this.lastResult=data, err => console.error(err));
     }
       //TODO on error should route /decks
       
@@ -48,7 +54,16 @@ export class DeckInfoComponent implements OnInit {
         {
           const quizId = res.id;
           this.router.navigate(["decks", "quiz"], {queryParams : { id: quizId } });
+
         });
+
+    
+  }
+
+  onShowAllResult(){
+    console.log("asd");
+    if (this.deckInfo)
+      this.router.navigate(["quizresults"], {queryParams: { id: this.deckInfo.id }});
   }
 
 

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Quiz } from '../interfaces/quiz';
 import { QuizQuestion } from '../interfaces/quiz-question';
 import { QuizQuestionResult } from '../interfaces/quiz-question-result';
 
@@ -10,13 +11,13 @@ import { QuizQuestionResult } from '../interfaces/quiz-question-result';
 })
 export class QuizService {
 
-  constructor(private http: HttpClient) {  }
+  constructor(private http: HttpClient) {   }
 
   private baseUrl: string = "http://localhost:3000/api/quizes"
 
   getQuizQuestionsById(id:string){
-    return this.http.get<QuizQuestion[]>( `${this.baseUrl}/${id}`  ).pipe(
-      catchError(this.handleError<QuizQuestion[]>("getting quiz questions", []))
+    return this.http.get<Quiz>( `${this.baseUrl}/${id}`  ).pipe(
+      catchError(this.handleError<Quiz>("getting quiz questions"))
     )
   }
 

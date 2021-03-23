@@ -58,10 +58,12 @@ class QuizCard {
 }
 
 class Quiz {
-    constructor( { userId, dekcId, cards, selectedLang} ){
+    constructor( { userId, deckId, cards, selectedLang} ){
         this.id = this.genUid();
+        this.startedAt = Date.now();
+        this.amount = cards.length;
         this.userId = userId;
-        this.dekcId = dekcId;
+        this.deckId = deckId;
         this.cards = cards;
         this.selectedLang = selectedLang;
     }
@@ -101,10 +103,9 @@ class QuizStorage {
                 return { error : "autherror"};
             return quiz.getUnAnsCards();
         }
-            
-
         return {error: "no quiz found by id"};
     }
+
 
     //answer -> { id, word }
 
@@ -124,6 +125,26 @@ class QuizStorage {
 
     findQuizById( id ){
         return this.quizes.find( q => q.id + "" == id + "" ); 
+    }
+
+    async saveQuizResultById({ userId, quizId, Model }) {
+        const quiz = this.findQuizById( quizId );
+        if ( quiz != undefined){
+            if (quiz.userId + "" != userId + "")
+                return { error : "autherror"};
+
+            const resultPercent = quiz.cards.filter(c => c.status + "" == "correct").length * 100 / quiz.amount;
+
+            await Model.QuizResult.create({
+                _user : quiz.userId,
+                _deck : quiz.deckId,
+                startedAt : quiz.startedAt,
+                selectedLang: quiz.selectedLang,
+                resultPercent: resultPercent,
+                amount: quiz.amount,
+                results : quiz.cards
+            })
+        }
     }
 
 }
@@ -191,18 +212,24 @@ exports.getQuestions = () => catchAsync( async(req,res,next)=>{
     const quizId = req.params.id;
 
     if (!quizId)
-        return next(new AppError("No quiz found by id", 404));
+        return next(new AppError("param error: no quizId", 404));
 
     const cards = quizStorage.getQuestionsByQuizId( {quizId: quizId, userId: userId} );
 
     if (cards.error != undefined)
         return next(new AppError(cards.error), 404);
 
-    res.json(cards);
+    const quiz = {...quizStorage.findQuizById(quizId)}
+    quiz.cards = undefined;
+    if (quiz != undefined){
+        quiz.questions = cards;
+    }
+
+    res.json(quiz);
 
 });
 
-exports.answerQuiestion = () => catchAsync( async(req,res,next)=>{
+exports.answerQuiestion = (Model) => catchAsync( async(req,res,next)=>{
 
     const userId = req.user._id;
     const quizId = req.params.id;
@@ -223,6 +250,21 @@ exports.answerQuiestion = () => catchAsync( async(req,res,next)=>{
     if (result.error)
         return next(new AppError(error), 400);
 
+    const finished = quizStorage.getQuestionsByQuizId( {quizId: quizId, userId: userId});
+    console.log(finished.length)
+    if (finished.length === 0){
+        console.log("most ment!!!");
+        quizStorage.saveQuizResultById( {quizId, userId, Model} );
+    }
+
+
     res.json(result);
+
+});
+
+
+exports.getAllQuizes = () => catchAsync(async (req,res,next) =>{
+
+    res.json(quizStorage);
 
 });

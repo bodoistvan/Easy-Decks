@@ -3,5 +3,6 @@ module.exports = {
     Deck: require('./deckModel'),
     Card: require('./cardModel'),
     CardStat: require('./cardStatModel'),
-    Report: require('./reportModel')
+    Report: require('./reportModel'),
+    QuizResult: require('./quizResultModel')
 }

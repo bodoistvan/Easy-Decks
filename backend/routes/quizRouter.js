@@ -9,6 +9,9 @@ const router = express.Router();
 
 router.use(authController.protect(Model));
 
+router.route('/')
+    .get(quizController.getAllQuizes());
+
 router.route('/create')
    // .get(quizController.getQuestions())
     .post(quizController.createQuiz(Model));

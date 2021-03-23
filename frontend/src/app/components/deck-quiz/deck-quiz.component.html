@@ -3,8 +3,8 @@
 <div class="container">
 
     <div style="height: 30rem; background-color:beige;">
-
-        <app-learn-card class="col-12" [word]="currentQuestin.word" ></app-learn-card>
+        <div class="durationTime">{{ durationTime | date:'mm:ss' }}</div>
+        <app-learn-card class="col-12" style="display: block;" [word]="currentQuestion.word" ></app-learn-card>
 
         <ng-template [ngIf]="action=='question'">
 
@@ -77,6 +77,7 @@
 
     </div>
 
-    <pre>{{ answerForm.value | json }}</pre>
+    
+    
 
 </div>

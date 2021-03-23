@@ -54,13 +54,30 @@
         </div>
     </div>
 
-    <div class="border mt-2" style="background-color: rgb(245, 244, 244);">
-        <div class="d-flex justify-content-around">
-            <button class="btn btn-outline-primary col-5 mr-1">Statistic</button>
-            <button class="btn btn-outline-primary col-5 ml-1">Words</button>
+    <div class="border mt-4" >
+        <div class="d-flex justify-content-between p-2">
+            <h1>Last Quiz Result:</h1>
+            <button (click)=onShowAllResult() class="my-2 btn btn-outline-success">Show all quiz results</button>
         </div>
+        <div *ngIf="lastResult != undefined; then showResult else noResult"></div>
+        <ng-template #showResult><app-quiz-result [result]=lastResult! ></app-quiz-result></ng-template>
 
-        <div style="height: 40rem; "></div>
+        <pre> {{ lastResult | json}} </pre>
+
+        <ng-template #noResult>No result found</ng-template>
+        
     </div>
+
+    <div class="border mt-2">
+        <h1>Cards</h1>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary col-3">Statistic</button>
+            <button class="btn btn-outline-primary col-3">Bookmarked</button>
+            <button class="btn btn-outline-primary col-3">All</button>
+        </div>
+    </div>
+
+    
+
 </div>
 
