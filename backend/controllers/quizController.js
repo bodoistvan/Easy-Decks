@@ -147,6 +147,33 @@ class QuizStorage {
         }
     }
 
+    async saveCardStat( { userId, Model, status, cardId } ){
+
+        let cardStat = await Model.CardStat.findOne({ _user : userId, _card: cardId});
+        const card = await Model.Card.findOne({ _id: cardId })
+
+        if (!card)
+            return;
+        
+        if (cardStat == undefined){
+      
+            cardStat = await Model.CardStat.create({
+                _card: cardId,
+                _user: userId,
+                _deck: card._deck
+            })
+        }
+  
+        if (status +'' == 'correct')
+            cardStat.correctpp();
+        
+        if (status+ '' == 'wrong')
+            cardStat.wrongpp();
+
+        cardStat.save();
+      
+    }
+
 }
 
 const quizStorage = new QuizStorage();
@@ -250,10 +277,16 @@ exports.answerQuiestion = (Model) => catchAsync( async(req,res,next)=>{
     if (result.error)
         return next(new AppError(error), 400);
 
+    //statistic
+    quizStorage.saveCardStat({
+        Model: Model,
+        cardId: cardId,
+        userId : userId,
+        status : result.status
+    })
     const finished = quizStorage.getQuestionsByQuizId( {quizId: quizId, userId: userId});
     console.log(finished.length)
     if (finished.length === 0){
-        console.log("most ment!!!");
         quizStorage.saveQuizResultById( {quizId, userId, Model} );
     }
 

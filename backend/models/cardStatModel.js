@@ -19,14 +19,27 @@ const cardStatSchema = new Schema({
         required: true
     },
     lastSeen : Date,
-    seenTimes : Number,
     bookmarked: {
         type: Boolean,
-        default: true
+        default: false
     },
-    answerRatio : Number,
-    
+    correctCounter : {
+        type : Number,
+        default: 0
+    },
+    wrongCounter: {
+        type: Number,
+        default: 0
+    }
 });
+
+cardStatSchema.methods.correctpp = function() {
+    this.correctCounter = this.correctCounter + 1;
+}
+
+cardStatSchema.methods.wrongpp = function() {
+   this.wrongCounter = this.wrongCounter + 1; 
+}
 
 const CardStat = db.model('CardStat', cardStatSchema );
 module.exports = CardStat;
