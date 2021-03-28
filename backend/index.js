@@ -8,6 +8,7 @@ const userRouter = require('./routes/userRouter');
 const quizRouter = require('./routes/quizRouter');
 const quizResultRouter = require('./routes/quizResultRouter')
 const cardStatRouter = require('./routes/cardStatRouter');
+const reportRouter = require('./routes/reportRouter');
 const PORT = 3000;
 
 
@@ -20,6 +21,7 @@ app.use('/api/decks', deckRouter)
 app.use('/api/quizes', quizRouter)
 app.use('/api/cardStat', cardStatRouter)
 app.use('/api/quizResults', quizResultRouter)
+app.use('/api/reports', reportRouter)
 
 app.use(globalErrorHandler);
 

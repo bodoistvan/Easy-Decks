@@ -12,12 +12,23 @@ const reportSchema = new Schema({
         ref: 'User',
         required: true
     },
+    _deck: {
+        type: Schema.Types.ObjectId,
+        ref: 'Deck',
+        required: true
+    },
+    
     _card: {
         type: Schema.Types.ObjectId,
         ref: 'Card',
         required: true
     },
-    comment: String
+    type: String,
+    text: String,
+    createdAt: {
+        type : Date,
+        default: Date.now
+    }
 
 });
 
