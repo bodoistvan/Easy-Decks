@@ -17,7 +17,6 @@ const reportSchema = new Schema({
         ref: 'Deck',
         required: true
     },
-    
     _card: {
         type: Schema.Types.ObjectId,
         ref: 'Card',
@@ -28,6 +27,10 @@ const reportSchema = new Schema({
     createdAt: {
         type : Date,
         default: Date.now
+    },
+    status: {
+        type: String,
+        default: "active" //accepted, ignored
     }
 
 });

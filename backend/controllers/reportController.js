@@ -1,4 +1,3 @@
-const { report } = require('../routes/reportRouter');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
@@ -64,6 +63,7 @@ exports.findReportsByOwner = (Model) => catchAsync( async (req,res,next) => {
         text: report.text,
         createdAt: report.createdAt,
         type: report.type,
+        status: report.status
      }))
 
 
@@ -86,6 +86,7 @@ exports.findReportsByreportedBy = (Model) => catchAsync( async (req,res,next) =>
         text: report.text,
         createdAt: report.createdAt,
         type: report.type,
+        status: report.status
      }))
 
      res.json(foundReports);

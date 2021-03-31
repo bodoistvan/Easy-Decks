@@ -9,8 +9,10 @@ const quizRouter = require('./routes/quizRouter');
 const quizResultRouter = require('./routes/quizResultRouter')
 const cardStatRouter = require('./routes/cardStatRouter');
 const reportRouter = require('./routes/reportRouter');
+const soundRouter = require('./routes/soundRouter');
 const PORT = 3000;
 
+app.use(express.static('static'))
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -22,6 +24,7 @@ app.use('/api/quizes', quizRouter)
 app.use('/api/cardStat', cardStatRouter)
 app.use('/api/quizResults', quizResultRouter)
 app.use('/api/reports', reportRouter)
+app.use('/api/sounds', soundRouter)
 
 app.use(globalErrorHandler);
 

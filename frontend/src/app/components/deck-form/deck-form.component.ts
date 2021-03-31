@@ -143,8 +143,7 @@ export class DeckFormComponent implements OnInit {
       })
     )
   }
-
-
+  
   get lang1(){
     return this.deckForm.get('lang1')?.value;
   }
@@ -194,6 +193,4 @@ export class DeckFormComponent implements OnInit {
     console.log(this.deckId!);
     this.deckService.patchDeckById(this.deckId!, this.deckForm.value).subscribe(rep => console.log(rep));
   }
-
-
 }

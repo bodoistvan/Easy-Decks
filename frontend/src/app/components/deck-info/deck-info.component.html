@@ -1,7 +1,6 @@
 <navbar></navbar>
 
 <div class="container">
-
     <div class="border">
         <div class="row">
 
@@ -19,7 +18,7 @@
             </div>
 
             <div class="col-6 col-sm-4 d-flex flex-column">
-                <a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-primary m-2">MODIFY</a>
+                <a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-primary m-2"><i class="fas fa-cogs"></i></a>
                 <a href="/decks/learn?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-warning m-2">LEARN</a>
                 <div class="p-2 m-2 border">
                     <form [formGroup]=quizStartForm>
@@ -62,22 +61,13 @@
         <div *ngIf="lastResult != undefined; then showResult else noResult"></div>
         <ng-template #showResult><app-quiz-result [result]=lastResult! ></app-quiz-result></ng-template>
 
-        <pre> {{ lastResult | json}} </pre>
+        <!-- <pre> {{ lastResult | json}} </pre> -->
 
         <ng-template #noResult>No result found</ng-template>
         
     </div>
 
-    <div class="border mt-2">
-        <h1>Cards</h1>
-        <div class="d-flex justify-content-between">
-            <button class="btn btn-primary col-3">Statistic</button>
-            <button class="btn btn-outline-primary col-3">Bookmarked</button>
-            <button class="btn btn-outline-primary col-3">All</button>
-        </div>
-    </div>
-
-    
+    <app-deck-info-cards *ngIf="deckInfo != undefined;" [deckId]=deckInfo.id></app-deck-info-cards>
 
 </div>
 

@@ -15,8 +15,20 @@ router.route("/:id")
 router.route("/:id/all")
     .get(deckController.getDeckByIdAll(Model))
 
+router.route("/:id/cards/bookmarked")
+    .get(deckController.getDeckCardsBookMarked(Model))
+
+    
+router.route("/:id/cards/all")
+    .get(deckController.getDeckCardsAll(Model))
+
+        
+router.route("/:id/cards/statistic")
+    .get(deckController.getDeckCardsStatistic(Model))
+
 router.route('/')
     .get(deckController.getDecks(Model))
     .post(deckController.createDeck(Model));
+
 
 module.exports = router;

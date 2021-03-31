@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Card } from '../interfaces/card';
 import { Deck } from '../interfaces/deck' 
 import { DeckInfo } from '../interfaces/deck-info';
 import { DeckWithCards } from '../interfaces/deck-with-cards';
@@ -48,6 +49,19 @@ export class DecksService {
 
   createDeck(deck: Deck) {
     return this.http.post<any>(this.baseUrl, deck);
+  }
+
+  getDeckCards(id:string, filter:string, limit?:number){
+    return this.http.get<Card[]>(`${this.baseUrl}/${id}/cards/${filter}`).pipe(
+      catchError(this.handleError<Card[]>("getting deck cards", []))
+    )
+  }
+
+
+  getDeckCardsStatistic(id:string, limit?:number){
+    return this.http.get<Card[]>(`${this.baseUrl}/${id}/cards/statistic`).pipe(
+      catchError(this.handleError<Card[]>("getting deck cards", []))
+    )
   }
 
 

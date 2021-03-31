@@ -30,6 +30,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { QuizResultComponent } from './components/quiz-result/quiz-result.component';
 import { QuizResultInfoComponent } from './components/quiz-result-info/quiz-result-info.component';
 import { QuizResultListComponent } from './components/quiz-result-list/quiz-result-list.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DeckInfoCardsComponent } from './components/deck-info-cards/deck-info-cards.component';
 
 
 
@@ -58,7 +60,8 @@ import { QuizResultListComponent } from './components/quiz-result-list/quiz-resu
     LoginComponent,
     QuizResultComponent,
     QuizResultInfoComponent,
-    QuizResultListComponent
+    QuizResultListComponent,
+    DeckInfoCardsComponent
 
 
   ],
@@ -67,7 +70,8 @@ import { QuizResultListComponent } from './components/quiz-result-list/quiz-resu
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
    
   ],
   providers: [

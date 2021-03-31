@@ -89,13 +89,32 @@ exports.getDeckById = Model => catchAsync( async(req,res,next) => {
     //TODO check deck auth
     console.log(req.params);
 
+    const userId = req.user.id;
+
     const filter=["id"];
 
     if ( checkProperties(req.params, filter) === false )
         return next("param error, no id");
     
     const deck = await Model.Deck.findOne( { _id: req.params.id } )
+    
+    let status = "";
 
+    if (deck._owner + "" == userId + ""){
+        status = "owner"
+    }
+
+    else {
+        const user = await Model.User.findOne( { _id: userId });
+
+        status = "unsubscribed";
+
+        for (let subscribedDeck in user._public){
+            if ( subscribedDeck + "" == deck._id + "" )
+                status = "subscribed";
+        }
+    }
+    
    
     if (deck != undefined){
         res.json({
@@ -103,7 +122,8 @@ exports.getDeckById = Model => catchAsync( async(req,res,next) => {
             name: deck.name,
             lang1: deck.lang1,
             lang2: deck.lang2,
-            level: deck.level
+            level: deck.level,
+            status
         })
     } else {
         res.status(404);
@@ -238,3 +258,52 @@ exports.patchDeckById = Model =>
         res.json( { shouldBeUpdatedCardsModel});
 
     });
+
+exports.getDeckCardsBookMarked = (Model) => catchAsync( async (req,res,next) => {
+
+    const limit = req.query.limit | 0;
+    const userId = req.user.id;
+    const deckId = req.params.id;
+
+    const deck = await Model.Deck.findOne({ _id: deckId });
+
+    if (!deck)
+        return next(new AppError("no deck found by id", 404));
+
+    const cardStats = await Model.CardStat.find({ _user: userId, _deck: deckId, bookmarked: true}).limit(limit);
+
+    const cardIds = cardStats.map( stat => stat._card);
+
+    const cards = await Model.Card.find({ _id : cardIds })
+
+    res.json(cards);
+});
+
+exports.getDeckCardsAll = (Model) => catchAsync( async (req,res,next) => {
+    
+    const limit = req.query.limit | 0;
+    const userId = req.user.id;
+    const deckId = req.params.id;
+
+    const cards = await Model.Card.find( { _deck: deckId }).limit(limit);
+    
+    res.json(cards);
+
+});
+
+
+exports.getDeckCardsStatistic = (Model) => catchAsync( async (req,res,next) => {
+
+    const limit = req.query.limit | 0;
+    const userId = req.user.id;
+    const deckId = req.params.id;
+
+    const cardStat = await Model.CardStat.find( { _user: userId, _deck: deckId } ).limit(limit);
+
+    const cardIds = cardStat.filter(stat => stat.wrongCounter > stat.correctCounter).map(stat => stat._card)
+
+    const cards = await Model.Card.find({ _id : cardIds });
+
+    res.json(cards);
+
+})

@@ -1,0 +1,27 @@
+<div class="container">
+
+    <div class="row d-flex align-items-center">
+        <h1 class="mr-4">Cards</h1>
+        <form [formGroup]="CardSelect">
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="selected" >
+              <label ngbButtonLabel class="btn-outline-dark">
+                <input ngbButton type="radio" value="statistic" (change)="onSelectedClick()"> Statistic
+              </label>
+              <label ngbButtonLabel class="btn-outline-dark">
+                <input ngbButton type="radio" value="bookmarked" (change)="onSelectedClick()">Bookmarked
+              </label>
+              <label ngbButtonLabel class="btn-outline-dark">
+                <input ngbButton type="radio" value="all" (change)="onSelectedClick()"> Show All
+              </label>
+            </div>
+          </form>
+    </div>
+
+    <div>
+
+      <div *ngFor="let card of ShowList">{{card.lang1 + " " + card.lang2 }}</div>
+
+    </div>
+
+
+</div>
