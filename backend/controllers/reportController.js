@@ -22,24 +22,23 @@ exports.createReport = (Model) => catchAsync( async (req,res,next) => {
     if ( !deck )
         next(new AppError("no deck found on deckId", 404));
 
-    console.log("card: "+  {card})
 
     const report = await Model.Report.create( 
         { _reportedBy: userId, 
-            _card: card._id, 
+            card: card, 
             _deck: deck._id,
             _owner: deck._owner,
             type: "spelling",
             text: text
         })
 
-    
+    const savedCard = { id: card._id, lang1: card.lang1, lang2: card.lang2};
     res.status(201);
     res.json({
         id : report._id,
         owner: report._owner,
         deck: report._deck,
-        card: report._card,
+        card: savedCard,
         reportedBy: report._reportedBy,
         text: report.text,
         createdAt: report.createdAt,
@@ -58,7 +57,7 @@ exports.findReportsByOwner = (Model) => catchAsync( async (req,res,next) => {
     const foundReports = reports.map( report => ({ id : report._id,
         owner: report._owner,
         deck: report._deck,
-        card: report._card,
+        card: {id: report.card._id, lang1: report.card.lang1, lang2: report.card.lang2},
         reportedBy: report._reportedBy,
         text: report.text,
         createdAt: report.createdAt,

@@ -1,0 +1,36 @@
+<div class="mb-1">
+    <div class="report-header" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+        <div class="px-3 d-flex justify-content-between align-items-center">
+            <p class="d-none d-md-block">{{ report!.type | uppercase }} | {{ report!.card.lang1}}</p>
+            <p>{{ report!.createdAt | date:'yyyy.MM.dd HH:mm'}}</p>
+            <i class="arrow fas" [ngClass]="{ 'fa-chevron-up' : !isCollapsed, 'fa-chevron-down' : isCollapsed }"></i>
+        </div>
+        
+    </div>
+
+    <div class="report-body" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+        <div class="row p-2 px-4">
+            <p class="col-6 col-sm-7 col-md-9 report-type">type: {{report!.type | uppercase }} </p>
+            <button class="col-6 col-sm-5 col-md-3 btn btn-outline-info float-right">See Deck</button>
+            <p class="col-12 report-text">comment: {{report!.text}} </p>
+           
+            
+        </div>
+      
+        <form class="row px-2" [formGroup]=cardForm>
+            <div class="form-group col-6">
+              <input type="text" class="form-control" formControlName="lang1">
+              <span class="form-control-feedback" [ngClass]="{'redoActive' : statusLang(1) }" (click)="redoClicked(1)"  ><i class="fas fa-redo"></i></span>
+            </div>
+            <div class="form-group col-6">
+                <input type="text" class="form-control"  formControlName="lang2">
+                <span class="form-control-feedback" [ngClass]="{'redoActive' : statusLang(2) }" (click)="redoClicked(2)"><i class="fas fa-redo"></i></span>
+            </div>
+        </form>
+        <div class="d-flex justify-content-around mb-3">
+            <button class="btn btn-danger">Ignore</button>
+            <button class="btn btn-outline-success">Save And Submit</button>
+        </div>
+    </div>
+
+</div>

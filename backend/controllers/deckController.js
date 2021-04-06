@@ -282,7 +282,7 @@ exports.getDeckCardsBookMarked = (Model) => catchAsync( async (req,res,next) => 
 exports.getDeckCardsAll = (Model) => catchAsync( async (req,res,next) => {
     
     const limit = req.query.limit | 0;
-    const userId = req.user.id;
+   // const userId = req.user.id;
     const deckId = req.params.id;
 
     const cards = await Model.Card.find( { _deck: deckId }).limit(limit);

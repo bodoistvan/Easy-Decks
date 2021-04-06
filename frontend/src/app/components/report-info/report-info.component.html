@@ -1,0 +1,20 @@
+<navbar></navbar>
+
+<div class="container">
+    <div class="col-12 p-0 m-0 border btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectedReport">
+        <label ngbButtonLabel class="col-6 btn-outline-primary">
+          <input ngbButton type="radio" value="received">Received
+        </label>
+        <label ngbButtonLabel class="col-6 btn-outline-primary">
+          <input ngbButton type="radio" value="sent"> Sent
+        </label>
+      </div>
+
+    <app-reports-info-received *ngIf="selectedReport == 'received'"></app-reports-info-received>
+
+    <app-reports-info-sent *ngIf="selectedReport == 'sent'"></app-reports-info-sent>
+</div>
+
+
+
+

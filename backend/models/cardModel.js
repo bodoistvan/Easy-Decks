@@ -1,7 +1,9 @@
 const Schema = require('mongoose').Schema;
 const db = require('../db');
 
-const Card = db.model('Card', {
+
+const cardSchema = {
+    _id: Schema.Types.ObjectId,
     _deck: {
         type: Schema.Types.ObjectId,
         ref: 'Deck',
@@ -15,8 +17,10 @@ const Card = db.model('Card', {
         type: String,
         required: true
     },
-});
+}
+
+const Card = db.model('Card', cardSchema);
 
 
 
-module.exports = Card;
+module.exports = {Card, cardSchema};

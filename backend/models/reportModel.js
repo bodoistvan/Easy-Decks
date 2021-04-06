@@ -1,4 +1,5 @@
 const Schema = require('mongoose').Schema;
+const {cardSchema} = require('../models/cardModel')
 const db = require('../db');
 
 const reportSchema = new Schema({
@@ -17,11 +18,7 @@ const reportSchema = new Schema({
         ref: 'Deck',
         required: true
     },
-    _card: {
-        type: Schema.Types.ObjectId,
-        ref: 'Card',
-        required: true
-    },
+    card: cardSchema,
     type: String,
     text: String,
     createdAt: {
@@ -34,6 +31,11 @@ const reportSchema = new Schema({
     }
 
 });
+
+reportSchema.post(/^find/, function() {
+    console.log(this._id)
+    //next();
+  });
 
 const Report = db.model('Report', reportSchema );
 module.exports = Report;

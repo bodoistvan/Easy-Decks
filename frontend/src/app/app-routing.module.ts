@@ -10,6 +10,7 @@ import { DeckQuizComponent } from './components/deck-quiz/deck-quiz.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuardService as AuthGruard} from './services/auth-guard.service';
 import { QuizResultInfoComponent } from './components/quiz-result-info/quiz-result-info.component';
+import { ReportInfoComponent } from './components/report-info/report-info.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: "home", canActivate: [AuthGruard],  component: HomeComponent},
   {path: "profile", canActivate: [AuthGruard], component: ProfileComponent},
   {path: "login", component: LoginComponent},
+  {path: "reports", component: ReportInfoComponent},
   {path: "quizresults", component: QuizResultInfoComponent},
   {path: "decks", canActivate: [AuthGruard], children:[ 
       {

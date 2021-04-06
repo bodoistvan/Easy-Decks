@@ -1,0 +1,3 @@
+<div *ngFor="let report of reports; index as i;">
+    <app-report-received class="mb-1" [report]="report" [active]="i == 0"></app-report-received>
+</div>

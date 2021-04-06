@@ -1,7 +1,9 @@
+const {Card} = require('./cardModel');
+
 module.exports = {
     User: require('./userModel'),
     Deck: require('./deckModel'),
-    Card: require('./cardModel'),
+    Card,
     CardStat: require('./cardStatModel'),
     Report: require('./reportModel'),
     QuizResult: require('./quizResultModel')

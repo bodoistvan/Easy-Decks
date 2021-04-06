@@ -32,6 +32,12 @@ import { QuizResultInfoComponent } from './components/quiz-result-info/quiz-resu
 import { QuizResultListComponent } from './components/quiz-result-list/quiz-result-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DeckInfoCardsComponent } from './components/deck-info-cards/deck-info-cards.component';
+import { ReportInfoComponent } from './components/report-info/report-info.component';
+import { ReporstInfoSentComponent } from './components/reporst-info-sent/reporst-info-sent.component';
+import { ReportsInfoReceivedComponent } from './components/reports-info-received/reports-info-received.component';
+import { ReportsInfoSentComponent } from './components/reports-info-sent/reports-info-sent.component';
+import { ReportReceivedComponent } from './components/report-received/report-received.component';
+import { ReportSentComponent } from './components/report-sent/report-sent.component';
 
 
 
@@ -61,7 +67,13 @@ import { DeckInfoCardsComponent } from './components/deck-info-cards/deck-info-c
     QuizResultComponent,
     QuizResultInfoComponent,
     QuizResultListComponent,
-    DeckInfoCardsComponent
+    DeckInfoCardsComponent,
+    ReportInfoComponent,
+    ReporstInfoSentComponent,
+    ReportsInfoReceivedComponent,
+    ReportsInfoSentComponent,
+    ReportReceivedComponent,
+    ReportSentComponent
 
 
   ],
