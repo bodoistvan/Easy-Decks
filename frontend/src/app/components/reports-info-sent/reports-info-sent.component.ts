@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Report } from 'src/app/interfaces/report';
+import { ReportServiceService } from 'src/app/services/report-service.service';
 
 @Component({
   selector: 'app-reports-info-sent',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportsInfoSentComponent implements OnInit {
 
-  constructor() { }
+  public reports:Report[] = [];
+  
+  constructor(private reportSevice:ReportServiceService) { }
 
   ngOnInit(): void {
+    this.reportSevice.getSentReports().subscribe(data => this.reports = data);
   }
 
 }

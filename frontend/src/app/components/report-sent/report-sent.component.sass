@@ -1,0 +1,58 @@
+$borderColor: #8f8f8f
+.report
+    &-header
+        user-select: none
+        cursor: pointer
+        padding: 4px
+        border: 1px solid $borderColor
+        border-radius: 0.2rem
+        font-size: 1.6rem
+        p
+            margin: 0
+            padding: 0
+        .arrow
+            color: black
+            font-size: 2rem
+            margin-right: 1rem
+
+    &-body
+        user-select: none
+        margin: 0 0.5rem
+        border: 0.1rem solid $borderColor
+        border-radius: 0.2rem
+        border-top: none
+       
+        p
+            font-size: 1.2rem
+            margin: 0
+            padding: 0
+            line-height: 2.2rem
+            
+        .report
+            &-text
+                font-size: 1rem
+                padding: 0.2rem
+                border: 0.1rem solid #d8d8d8
+                margin-top: 0.5rem
+                border-radius: 0.2rem
+
+input 
+    z-index: 0
+
+.form-control-feedback 
+    position: absolute
+    top: .5rem
+    right: 1.5rem
+    z-index: 2
+    display: block
+    text-align: center
+    pointer-events: none
+    pointer-events: initial
+    color:#bdbdbd
+
+.redoActive
+    cursor: pointer
+    color: #3192ec
+        
+
+                

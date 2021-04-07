@@ -16,8 +16,8 @@ export class DecksService {
 
   private baseUrl: string = "http://localhost:3000/api/decks"
 
-  getDecks(): Observable<Deck[]>{
-    return this.http.get<Deck[]>(`${this.baseUrl}`).pipe(
+  getDecks(objParams:any): Observable<Deck[]>{
+    return this.http.get<Deck[]>(`${this.baseUrl}`, { params : objParams }).pipe(
       catchError(this.handleError<Deck[]>("getDecks", [])
     ))
   }

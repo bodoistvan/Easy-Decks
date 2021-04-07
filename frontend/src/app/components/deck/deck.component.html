@@ -3,10 +3,15 @@
           <a href="/decks/info?id={{id}}">{{name}}</a>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">{{lang1}}</li>
-          <li class="list-group-item">{{lang2}}</li>
+         
           <li class="list-group-item">{{level}}</li>
-          <li class="list-group-item">Cards: {{count}}</li>
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+              <img class="col-4" src="/assets/images/flags/wide/{{lang1}}.svg">
+              <div class="col-4 text-center">{{count}}</div>
+              <img class="col-4" src="/assets/images/flags/wide/{{lang2}}.svg">
+            </div>
+          </li>
         </ul>
 </div>
 

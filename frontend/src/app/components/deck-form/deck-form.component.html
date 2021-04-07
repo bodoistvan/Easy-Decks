@@ -21,18 +21,14 @@
       <div class="form-group col-6 col-md-3">
         <label for="lang1Select">Frist Language</label>
         <select class="form-control" formControlName="lang1" id="lang1Select">
-          <option>USA</option>
-          <option>HUN</option>
-          <option>GER</option>
+          <option *ngFor="let flag of flagInfo" [value]=flag.dataName>{{flag.displayName}}</option>
         </select>
       </div>
 
       <div class="form-group col-6 col-md-3">
         <label  for="lang2Select">Second Language</label>
         <select class="form-control" formControlName="lang2" id="lang2Select">
-          <option>USA</option>
-          <option>HUN</option>
-          <option>GER</option>
+          <option *ngFor="let flag of flagInfo" [value]=flag.dataName>{{flag.displayName}}</option>
         </select>
       </div>
 
@@ -46,9 +42,9 @@
     <table class="table" formArrayName="cards">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">{{lang1}}</th>
-          <th scope="col">{{lang2}}</th>
+          <!-- <th scope="col">&nbsp;</th> -->
+          <th scope="col" class="text-center"><img class="formFlag" src="/assets/images/flags/wide/{{lang1}}.svg"></th>
+          <th scope="col"class="text-center"><img class="formFlag" src="/assets/images/flags/wide/{{lang2}}.svg"></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -56,7 +52,7 @@
         <ng-container *ngFor="let cardGroup of cards.controls; let i=index">
           
             <tr [formGroupName]=i>
-                <th scope="row">{{i + 1}}</th>
+                <!-- <th scope="row">{{i + 1}}</th> -->
                 <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 1)]" type="text" formControlName="lang1" (change)=modelChanged(i)></td>
                 <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 2)]" type="text" formControlName="lang2" (change)=modelChanged(i)></td>
                 <td><div style="width: 2.5rem;" (click)=deleteButtonClick(i) 

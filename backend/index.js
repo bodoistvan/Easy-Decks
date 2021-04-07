@@ -10,6 +10,7 @@ const quizResultRouter = require('./routes/quizResultRouter')
 const cardStatRouter = require('./routes/cardStatRouter');
 const reportRouter = require('./routes/reportRouter');
 const soundRouter = require('./routes/soundRouter');
+const flagInfoRouter = require('./routes/flagInfoRouter');
 const PORT = 3000;
 
 app.use(express.static('static'))
@@ -25,6 +26,7 @@ app.use('/api/cardStat', cardStatRouter)
 app.use('/api/quizResults', quizResultRouter)
 app.use('/api/reports', reportRouter)
 app.use('/api/sounds', soundRouter)
+app.use('/api/flagInfo', flagInfoRouter)
 
 app.use(globalErrorHandler);
 

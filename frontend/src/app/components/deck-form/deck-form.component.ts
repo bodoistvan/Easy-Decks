@@ -1,7 +1,9 @@
 import {  Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { FlagInfo } from 'src/app/interfaces/flag-info';
 import { DecksService } from 'src/app/services/decks.service';
+import { FlagInfoService } from 'src/app/services/flag-info.service';
 
 @Component({
   selector: 'app-deck-form',
@@ -12,7 +14,9 @@ export class DeckFormComponent implements OnInit {
 
   @Input() formType:string = "create";
 
-  constructor(private fb: FormBuilder, private deckService:DecksService, private route:ActivatedRoute) { }
+  public flagInfo:FlagInfo[] = [];
+
+  constructor(private fb: FormBuilder, private deckService:DecksService, private route:ActivatedRoute, private flagInfoService:FlagInfoService) { }
 
   private deckId?:string;
 
@@ -26,12 +30,16 @@ export class DeckFormComponent implements OnInit {
           for(let i = 0; i < data.cards.length; i++){
             this.addCards();
           }
-          this.deckForm.patchValue(data); 
-        
-        
+          this.deckForm.patchValue(data);
+          this.deckForm.get("name")?.disable(); 
+          this.deckForm.get("lang1")?.disable(); 
+          this.deckForm.get("lang2")?.disable(); 
+
         }, err => console.error(err));
     }
    })
+
+   this.flagInfoService.getFlagInfo().subscribe(data=> this.flagInfo = data);
 
   }
 
@@ -114,9 +122,9 @@ export class DeckFormComponent implements OnInit {
 
   public deckForm = this.fb.group({
     id: [''],
-    name: ['Gardening'],
-    lang1: ['HUN'],
-    lang2: ['USA'],
+    name: [''],
+    lang1: ['hu'],
+    lang2: ['gb'],
     level: ['ADVANCED'],
     public: ['false'],
     cards: this.fb.array([

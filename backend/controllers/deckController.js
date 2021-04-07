@@ -61,8 +61,30 @@ exports.getDecks = Model =>
     catchAsync(async(req, res, next) => {
 
         const userId = req.user._id + "";
+        const limit = req.query.limit || 0;
+        let lang1 = req.query.lang1;
+        let lang2 = req.query.lang2;
+        let name = req.query.name || ".*";
+        
+        if (lang1 == 'undefined')
+            lang1 = undefined;
 
-        const decks = await Model.Deck.find({ _owner: userId}).exec();
+        if (lang2 == 'undefined')
+            lang2 = undefined;
+        
+        if (name == 'undefined')
+            name = ".*";
+
+        const searhObject = 
+                { 
+                    _owner: userId, 
+                    lang1: lang1, 
+                    lang2:lang2 
+                };
+        Object.keys(searhObject).forEach(key => searhObject[key] === undefined && delete searhObject[key])
+        console.log(searhObject)
+
+        const decks = await Model.Deck.find({ ...searhObject, name: { $regex: name }}).limit(limit);
 
         if (decks === undefined){
             res.status(404);

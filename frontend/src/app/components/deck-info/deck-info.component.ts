@@ -18,6 +18,7 @@ export class DeckInfoComponent implements OnInit {
      private fb:FormBuilder, private quizService: QuizService, private quizResultServive:QuizResultService,
      private router:Router) { }
 
+  public active:number = 1;
   public deckInfo?:DeckInfo;
   public lastResult?: QuizResult;
 

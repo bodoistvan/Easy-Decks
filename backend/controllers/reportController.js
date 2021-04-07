@@ -80,7 +80,7 @@ exports.findReportsByreportedBy = (Model) => catchAsync( async (req,res,next) =>
     const foundReports = reports.map( report => ({ id : report._id,
         owner: report._owner,
         deck: report._deck,
-        card: report._card,
+        card: {id: report.card._id, lang1: report.card.lang1, lang2: report.card.lang2},
         reportedBy: report._reportedBy,
         text: report.text,
         createdAt: report.createdAt,
