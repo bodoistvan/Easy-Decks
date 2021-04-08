@@ -38,6 +38,7 @@ import { ReportsInfoReceivedComponent } from './components/reports-info-received
 import { ReportsInfoSentComponent } from './components/reports-info-sent/reports-info-sent.component';
 import { ReportReceivedComponent } from './components/report-received/report-received.component';
 import { ReportSentComponent } from './components/report-sent/report-sent.component';
+import { DifDotsComponent } from './components/dif-dots/dif-dots.component';
 
 
 
@@ -73,7 +74,8 @@ import { ReportSentComponent } from './components/report-sent/report-sent.compon
     ReportsInfoReceivedComponent,
     ReportsInfoSentComponent,
     ReportReceivedComponent,
-    ReportSentComponent
+    ReportSentComponent,
+    DifDotsComponent
 
 
   ],

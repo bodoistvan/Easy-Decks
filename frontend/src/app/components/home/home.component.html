@@ -1,8 +1,8 @@
-<navbar></navbar>
+<navbar shouldBeActive="home"></navbar>
 
 <div class="container">   
     <app-deck-search></app-deck-search>
-    <a class="btn btn-success" href="/decks/create" role="button">Create Deck</a>
+    <button class="btn btn-success" (click)="createOnClick()" role="button">Create Deck</button>
     <hr />
     <app-decklist></app-decklist>
 </div>

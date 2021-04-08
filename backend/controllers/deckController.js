@@ -213,10 +213,10 @@ exports.patchDeckById = Model =>
         
         const ownerId = req.user._id;
 
-        const myfilter = ["id", "name", "lang1", "lang2", "level", "public", "cards"];
+        const myfilter = ["id", "level", "public", "cards"];
 
         if ( checkProperties(req.body, myfilter) === false )
-            return next(new AppError("bad params", 403));
+            return next(new AppError("bad params", 400 ));
 
         const deck = await Model.Deck.findOne({ _id : req.body.id })
 
@@ -228,9 +228,7 @@ exports.patchDeckById = Model =>
             return next(new AppError("auth error", 403));
 
         //delete cards
-        deck.name = req.body.name;
-        deck.lang1 = req.body.lang1;
-        deck.lang2 = req.body.lang2;
+        
         deck.level = req.body.level;
         deck.public = req.body.public;
         

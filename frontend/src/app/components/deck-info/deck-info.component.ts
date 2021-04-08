@@ -41,9 +41,15 @@ export class DeckInfoComponent implements OnInit {
   }
 
   public quizStartForm = this.fb.group({
-    language: [""],
-    amount: [""]
+    language: ["lang1"],
+    type: ["all"],
+    amount: ["10"]
   });
+
+  
+  get selectedLang(){
+    return this.quizStartForm.get('language')?.value;
+  }
 
   onQuizSubmit(){
 

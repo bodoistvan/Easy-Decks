@@ -15,45 +15,73 @@
             <div class="">{{deckInfo? deckInfo.level : ""}}</div>
     </div>
 
-    <div class="mt-2 px-2">
+    <div class="mt-2  px-2">
         <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
             <li [ngbNavItem]="1">
             <a ngbNavLink>Learn</a>
             <ng-template ngbNavContent>
-                <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth
-                master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
-                keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat
-                salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+                <form [formGroup]=quizStartForm >
+                    <div class="form-group d-flex justify-content-around align-items-center mb-0 flex-wrap">
+
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="type">
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="all">All Cards
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="bookmarked">Bookmarked
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="statisctic">Statistic
+                            </label>
+                        </div>
+
+                      <button (click)="onQuizSubmit()" type="submit" class="btn btn-primary mb-2">Let's Learn</button>
+                    </div>  
+                </form>
             </ng-template>
             </li>
             <li [ngbNavItem]="2">
             <a ngbNavLink>Quiz</a>
             <ng-template ngbNavContent>
                 <form [formGroup]=quizStartForm>
-                    <div class="form-group d-flex justify-content-around align-items-center mb-0">
+                    <div class="form-group d-flex mb-0 justify-content-around align-items-center flex-wrap">
                       
-                      <div class="form-check form-check-inline col-4 pt-2 ">
-                            <label class="form-check-label mx-2">
-                                <input class="form-check-input" formControlName="amount" type="radio" name="amount" id="amount5" value="5">5
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="amount">
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="5">&nbsp;5&nbsp;
                             </label>
-                            <label class="form-check-label mx-2">
-                                <input class="form-check-input" formControlName="amount" checked type="radio" name="amount" id="amount10" value="10">10
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="10">10
                             </label>
-                            <label class="form-check-label mx-2">
-                                <input class="form-check-input" formControlName="amount" type="radio" name="amount" id="amount20" value="20">20
-                            </label>  
-                      </div>
-                      
-                      <div class="form-check form-check-inline col-4 pt-2 ">
-                        <label class="form-check-label mx-2">
-                            <input class="form-check-input" formControlName="language" type="radio" name="language" id="selLang1" value="lang1">{{deckInfo? deckInfo.lang1 : 'lang1'}}
-                        </label>
-                        <label class="form-check-label mx-2">
-                            <input class="form-check-input" formControlName="language" checked type="radio" name="language" id="selLang1" value="lang2">{{deckInfo? deckInfo.lang2 : 'lang2'}}
-                        </label>
-                     </div>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="20">20
+                            </label>
+                          </div>
 
-                      <button (click)="onQuizSubmit()" type="submit" class="btn btn-primary">QUIZ</button>
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="language">
+                            <label ngbButtonLabel class="btn-outline-secondary flagLabel">
+                              <input ngbButton type="radio" value="lang1"><img class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang1'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}">
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary flagLabel">
+                              <input ngbButton type="radio" value="lang2"><img class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang2'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}">
+                            </label>
+                        </div>
+
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="type">
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="all">All
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="bookmarked">Marked
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="statisctic">Statistic
+                            </label>
+                        </div>
+
+                        
+
+                      <button (click)="onQuizSubmit()" type="submit" class="btn btn-primary mb-2">Start Quiz</button>
                     </div>  
                 </form>
             </ng-template>
@@ -63,17 +91,6 @@
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
         </div>
     </div>
-    <div class="border">
-        <div class="row">
-
-            <div class="col-6 col-sm-4 d-flex flex-column">
-                  <a href="/decks/learn?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-warning m-2">LEARN</a>
-                <div class="p-2 m-2 border">
-                    
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="border mt-4" >
         <div class="d-flex justify-content-between p-2">
@@ -81,11 +98,11 @@
             <button (click)=onShowAllResult() class="my-2 btn btn-outline-success">Show all quiz results</button>
         </div>
         <div *ngIf="lastResult != undefined; then showResult else noResult"></div>
-        <ng-template #showResult><app-quiz-result [result]=lastResult! ></app-quiz-result></ng-template>
+        <ng-template #showResult><app-quiz-result [result]=lastResult! [shouldBeActive]="true" ></app-quiz-result></ng-template>
 
         <!-- <pre> {{ lastResult | json}} </pre> -->
 
-        <ng-template #noResult>No result found</ng-template>
+        <ng-template #noResult> <h5 class="text-center">No result found</h5> </ng-template>
         
     </div>
 

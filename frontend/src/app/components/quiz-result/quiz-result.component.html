@@ -1,24 +1,25 @@
-<div>
-    <div class="quizresult-header" (click)="collapse.toggle()" [attr.aria-expanded]="!Active" aria-controls="collapseExample">
-        <h1>{{result.resultPercent}}%</h1>
-        <h1>{{result.startedAt | date:'yyyy.MM.dd HH:mm'}}</h1>
-        <i class="arrow fas" [ngClass]="{ 'fa-chevron-up' : Active, 'fa-chevron-down' : !Active }"></i>
+<div class="quizresult">
+    <div class="quizresult-header" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+        <h2>{{result.resultPercent}}%</h2>
+        <h1 class="d-none d-md-block">{{result.startedAt | date:'yyyy.MM.dd HH:mm'}}</h1>
+        <h1 class="d-md-none">{{result.startedAt | date:'yyyy.MM.dd'}}</h1>
+        <i class="arrow fas" [ngClass]="{ 'fa-chevron-up' : isCollapsed, 'fa-chevron-down' : !isCollapsed }"></i>
     </div>
 
-    <div class="quizresult-body px-2" #collapse="ngbCollapse" [(ngbCollapse)]="Active">
+    <div class="quizresult-body px-2" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
         <div class="row">
-            <div class="col-3">
-                <h1>{{ timer | date:'mm:ss'}}</h1>
-                {{result.amount}} Cards
+            <div class="col-12 order-2 order-md-1 col-md-3">
+                <h2 class="mt-1"><i class="far fa-clock"></i>&nbsp;{{ timer | date:'mm:ss'}}</h2>
+                <h5>{{result.amount}} Cards</h5>
                     
             </div>
-            <div class="col-9 cards">
-                <div *ngFor="let card of result.results" >
-                    <div class="result-card" [ngClass]="{ 'result-correct' : card.status=='correct', 'result-wrong' : card.status=='wrong' }" >
-                        <div>{{ card.lang1 }}</div>
-                        <div>{{ card.lang2 }}</div>
+            <div class="col-12 order-1 order-md-2 col-md-9 cards">
+             
+                    <div *ngFor="let card of result.results" class="result-card row " [ngClass]="{ 'result-correct' : card.status=='correct', 'result-wrong' : card.status=='wrong' }" >
+                        <div class="col-12 col-md-6 m-0 pl-2">{{ card.lang1 }}</div>
+                        <div class="col-12 col-md-6 m-0 pl-2 pr-0"> {{ card.lang2 }}</div>
                     </div> 
-                </div>
+              
             </div>
         </div>
     </div>

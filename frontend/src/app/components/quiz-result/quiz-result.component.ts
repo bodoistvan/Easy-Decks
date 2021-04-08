@@ -8,7 +8,9 @@ import { QuizResult } from 'src/app/interfaces/quiz-result';
 })
 export class QuizResultComponent implements OnInit {
 
-  public Active = true;
+  @Input() shouldBeActive: boolean = false;
+
+  public isCollapsed = true;
   @Input() result: QuizResult = {
     id : "aaa",
     user: "bbb",
@@ -59,10 +61,13 @@ export class QuizResultComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    if (this.shouldBeActive == true){
+      this.isCollapsed = false;
+    }
   }
 
   onButtonClick(){
-    this.Active = !this.Active;
+    this.isCollapsed = !this.isCollapsed;
   }
 
 }

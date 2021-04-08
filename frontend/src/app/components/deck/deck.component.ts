@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-deck',
@@ -15,9 +16,14 @@ export class DeckComponent implements OnInit {
   @Input() id: string = "";
 
 
-  constructor() { }
+  constructor(private router:Router) { }
 
   ngOnInit(): void {
+
+  }
+
+  onNameClick(){
+    this.router.navigate(["decks","info"], {queryParams: {id: this.id}});
   }
 
 }

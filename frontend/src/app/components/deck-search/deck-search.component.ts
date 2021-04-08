@@ -24,15 +24,24 @@ export class DeckSearchComponent implements OnInit {
 
   ngOnInit(): void {
         this.flagInfoService.getFlagInfo().subscribe(data => this.flagInfo = data);
-        console.log("get: " + this.flagInfo);
+       
         this.route.queryParams.subscribe(params => {
 
-          const lang1 = params["lang1"];
-          const lang2 = params["lang2"];
-          const name = params["name"];
+          let lang1 = params["lang1"];
+          let lang2 = params["lang2"];
+          let name = params["name"];
+
+          if (lang1 == undefined)
+            lang1 = "hu"
+
+          if (lang2 == undefined)
+            lang2 = "gb"
+            
+          if (name == undefined)
+            name = ""
     
           const queryParams = {name: name, lang1: lang1, lang2:lang2 }
-          this.searchForm.setValue(queryParams);
+          this.searchForm.patchValue(queryParams);
           
         });
   }

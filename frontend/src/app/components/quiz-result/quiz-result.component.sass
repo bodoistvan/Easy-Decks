@@ -1,16 +1,17 @@
-$borderColor: #8f8f8f
+$borderColor: #d1d1d1
+
 .quizresult
+    border: 0.1rem solid $borderColor
     &-header
         padding: 4px
-        border: 1px solid $borderColor
-        border-radius: 0.4rem
+        padding-left: 1rem
         display: flex
         justify-content: space-between
         align-items: center
         &:hover
             background: #e9e9e9
             cursor: pointer
-        h1
+        h1,h2
             margin: 0
         .arrow
             color: black
@@ -18,16 +19,19 @@ $borderColor: #8f8f8f
             margin-right: 1rem
     &-body
         user-select: none
-          
+        border-top: 0.1px solid $borderColor
         .result-card
-            padding: 0.1rem
+            padding: 0
+            margin: 0
             border: 1px solid $borderColor
             border-top: none
-            justify-content: space-around
             font-size: 1.5rem
-            display: flex
+
+            &:last-child
+                margin-bottom: 0.5rem 
+            
         .result-correct
-            color: green
+            color: #0fb418
         .result-wrong
-            color: red
+            color: #eb0a0a
 
