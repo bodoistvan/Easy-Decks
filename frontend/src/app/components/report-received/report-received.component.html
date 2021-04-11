@@ -13,8 +13,6 @@
             <p class="col-6 col-sm-7 col-md-9 report-type">type: {{report!.type | uppercase }} </p>
             <button class="col-6 col-sm-5 col-md-3 btn btn-outline-info float-right">See Deck</button>
             <p class="col-12 report-text">comment: {{report!.text}} </p>
-           
-            
         </div>
       
         <form class="row px-2" [formGroup]=cardForm>
@@ -28,8 +26,8 @@
             </div>
         </form>
         <div class="d-flex justify-content-around mb-3">
-            <button class="btn btn-danger">Ignore</button>
-            <button class="btn btn-outline-success">Save And Submit</button>
+            <button class="btn btn-danger" (click)="ignoreReport()">Ignore</button>
+            <button class="btn btn-outline-success" (click)="acceptReport()">Save And Submit</button>
         </div>
     </div>
 

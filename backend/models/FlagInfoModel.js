@@ -28,7 +28,7 @@ const flagInfo =
         displayName: "France",
         dataName: "fr"
     }
-].sort((a,b) => a < b);
+].sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
 
 
 

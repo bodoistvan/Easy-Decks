@@ -18,6 +18,8 @@
   <div [ngbNavOutlet]="nav"></div>
 
 
-  <app-dif-dots></app-dif-dots>
+  <app-dif-dots [isInput]="true" (setValue)="setDifValue($event)" ></app-dif-dots>
+
+  {{ myForm.value | json }}
 
 <p>profile works!</p>

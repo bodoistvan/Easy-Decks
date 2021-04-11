@@ -23,7 +23,14 @@ export class ReportServiceService {
     return this.http.get<Report[]>(`${this.baseUrl}/reportedBy`).pipe(
       catchError(this.handleError<Report[]>("getReceivedRerports", [] ))
     )
-}
+  }
+
+  public submitReport(id:string, status:string){
+    console.log("report status: " + status);
+    return this.http.post<any>(`${this.baseUrl}/${id}/${status}`, {}).pipe(
+      catchError(this.handleError<any>("submitReport"))
+    )
+  }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

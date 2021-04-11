@@ -7,6 +7,11 @@ const router = express.Router();
 
 router.use(authController.protect(Model));
 
+router.route("/:id/accept")
+    .post(reportController.submitReport(Model, "accepted"))
+
+router.route("/:id/ignore")
+    .post(reportController.submitReport(Model, "ignored"))
 
 router.route('/')
     .post(reportController.createReport(Model));
@@ -17,5 +22,10 @@ router.route("/owner")
 
 router.route("/reportedBy")
     .get(reportController.findReportsByreportedBy(Model));
+
+
+
+    
+
 
 module.exports = router;

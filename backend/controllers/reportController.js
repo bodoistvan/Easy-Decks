@@ -52,7 +52,7 @@ exports.findReportsByOwner = (Model) => catchAsync( async (req,res,next) => {
 
     const userId = req.user.id;
 
-    const reports = await Model.Report.find( { _owner: userId } );
+    const reports = await Model.Report.find( { _owner: userId, status:"active" } );
 
     const foundReports = reports.map( report => ({ id : report._id,
         owner: report._owner,
@@ -90,3 +90,27 @@ exports.findReportsByreportedBy = (Model) => catchAsync( async (req,res,next) =>
 
      res.json(foundReports);
 })
+
+exports.submitReport = (Model, status) => catchAsync( async (req,res,next) => {
+    
+    const reportId = req.params.id;
+    const userId = req.user.id;
+
+    const report = await Model.Report.findOne( { _id: reportId} );
+
+    if (!report)
+        return next(new AppError("No report found at id!", 404));
+
+    if (report.status +"" != "active")
+        return next(new AppError("Report already submitted", 405));
+
+    if ( report._owner + "" != userId + "")
+        return next(new AppError("Auth err"), 405);
+
+    report.status = status;
+    report.save();
+
+    res.status(201);
+    res.send();
+
+});

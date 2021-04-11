@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Report } from 'src/app/interfaces/report';
+import { CardService } from 'src/app/services/card.service';
+import { ReportServiceService } from 'src/app/services/report-service.service';
 
 @Component({
   selector: 'app-report-received',
@@ -13,7 +15,7 @@ export class ReportReceivedComponent implements OnInit {
   @Input() report?:Report
   @Input() active?:boolean
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private reportService:ReportServiceService, private cardService:CardService) { }
 
   public cardForm = this.fb.group({
     id: [],
@@ -62,6 +64,14 @@ export class ReportReceivedComponent implements OnInit {
     return false;
   }
 
-  
+  ignoreReport(){
+    console.log(this.report!.id)
+    this.reportService.submitReport(this.report!.id,"ignore").subscribe((data) => {console.log(data)}, err=> console.log(err));
+  }
+
+  acceptReport(){
+    this.cardService.updateCard(this.report!.card.id, this.cardForm.value).subscribe((data) => {console.log(data)}, err=> console.log(err));
+    this.reportService.submitReport(this.report!.id,"accept").subscribe((data) => {console.log(data)}, err=> console.log(err));
+  }
 
 }
