@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { Card } from 'src/app/interfaces/card';
 import { DecksService } from 'src/app/services/decks.service';
 

@@ -1,3 +1,3 @@
 <div class="difDots" (mouseenter)="containerOver()" (mouseleave)="containerLeave()" [ngClass]="{'difInput' : isInput}">
-  <i *ngFor="let dot of maxDots; index as i" class="fa-circle" [ngClass]="currentValue > i ? 'fa' : 'far'" (mouseover)="dotOnMouseOver(i)" (click)="dotOnClick(i)"></i>
+  <em *ngFor="let dot of maxDots; index as i" class="fa-circle" [ngClass]="currentValue > i ? 'fa' : 'far'" (mouseover)="dotOnMouseOver(i)" (click)="dotOnClick(i)"></em>
 </div>

@@ -1,8 +1,7 @@
-import { ThrowStmt } from '@angular/compiler';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, interval } from 'rxjs';
+import { interval } from 'rxjs';
 import { Quiz } from 'src/app/interfaces/quiz';
 import { QuizQuestion } from 'src/app/interfaces/quiz-question';
 import { QuizQuestionResult } from 'src/app/interfaces/quiz-question-result';
@@ -110,7 +109,7 @@ export class DeckQuizComponent implements OnInit {
 
     
     const id = this.answerForm.value.id;
-    const fg = this.answerForm as FormGroup;
+    const fg = this.answerForm;
     const answer = fg.get("answer") as FormControl ;
 
     //answer.disable();
@@ -122,29 +121,27 @@ export class DeckQuizComponent implements OnInit {
       if (this.result.status == "correct")
         setTimeout(()=> this.onAnsweredSubmit(), 2000);
 
+      const answeringQuestionBlock = this.el.nativeElement.querySelector('#answeringQuestionBlock');
 
-        const answeringQuestionBlock = this.el.nativeElement.querySelector('#answeringQuestionBlock');
+      if (answeringQuestionBlock) {
+        answeringQuestionBlock.classList.remove('d-block');
+        answeringQuestionBlock.classList.add('d-none');
+      }
 
-        if (answeringQuestionBlock) {
-          answeringQuestionBlock.classList.remove('d-block');
-          answeringQuestionBlock.classList.add('d-none');
-        }
+      const answeredBlock = this.el.nativeElement.querySelector('#answeredBlock');
 
-        const answeredBlock = this.el.nativeElement.querySelector('#answeredBlock');
+      if (answeredBlock) {
+        answeredBlock.classList.remove('d-none');
+        answeredBlock.classList.add('d-block');
+      }
 
-        if (answeredBlock) {
-          answeredBlock.classList.remove('d-none');
-          answeredBlock.classList.add('d-block');
-        }
+      this.answerForm.patchValue({answer: answer.value});
 
-        this.answerForm.patchValue({answer: answer.value});
+      const answeredSubmit = this.el.nativeElement.querySelector('#answeredSubmit');
 
-        const answeredSubmit = this.el.nativeElement.querySelector('#answeredSubmit');
-
-        if (answeredSubmit) {
-          answeredSubmit.focus()
-        }
-        
+      if (answeredSubmit) {
+        answeredSubmit.focus()
+      }  
     })
 
     this.quizQuestion?.questions!.splice(0,1);

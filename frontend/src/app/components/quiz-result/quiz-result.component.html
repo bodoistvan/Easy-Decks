@@ -3,13 +3,13 @@
         <h4>{{result.resultPercent}}%</h4>
         <h4 class="d-none d-md-block">{{result.startedAt | date:'yyyy.MM.dd HH:mm'}}</h4>
         <h4 class="d-md-none">{{result.startedAt | date:'yyyy.MM.dd'}}</h4>
-        <i class="arrow fas" [ngClass]="{ 'fa-chevron-up' : isCollapsed, 'fa-chevron-down' : !isCollapsed }"></i>
+        <em class="arrow fas" [ngClass]="{ 'fa-chevron-up' : isCollapsed, 'fa-chevron-down' : !isCollapsed }"></em>
     </div>
 
     <div class="quizresult-body px-2" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
         <div class="row">
             <div class="col-12 order-2 order-md-1 col-md-3">
-                <h5 class="mt-1"><i class="far fa-clock"></i>&nbsp;{{ timer | date:'mm:ss'}}</h5>
+                <h5 class="mt-1"><em class="far fa-clock"></em>&nbsp;{{ timer | date:'mm:ss'}}</h5>
                 <h6>{{result.amount}} Cards</h6>
                     
             </div>

@@ -5,14 +5,13 @@
     <div class="d-flex justify-content-between px-2">
 
         <div class=""><h1>{{deckInfo? deckInfo.name : ""}}</h1></div>
-        <div class=""><a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-dark m-2"><i class="fas fa-cogs"></i></a></div>
+        <div class=""><a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-dark m-2"><em class="fas fa-cogs"></em></a></div>
         
     </div>
     
     <div class="d-flex justify-content-start align-items-center">
-            <div class="ml-2 mr-2"><img class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}"></div>
-            <div class="mr-2"><img class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}"></div>
-            <!-- <div class="">{{deckInfo? deckInfo.level : ""}}</div> -->
+            <div class="ml-2 mr-2"><img alt="" class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}"></div>
+            <div class="mr-2"><img alt="" class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}"></div>
             <app-dif-dots [currentValue]="3" ></app-dif-dots>
     </div>
 
@@ -61,10 +60,10 @@
 
                         <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="language">
                             <label ngbButtonLabel class="btn-outline-secondary flagLabel">
-                              <input ngbButton type="radio" value="lang1"><img class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang1'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}">
+                              <input ngbButton type="radio" value="lang1"><img alt=""  class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang1'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}">
                             </label>
                             <label ngbButtonLabel class="btn-outline-secondary flagLabel">
-                              <input ngbButton type="radio" value="lang2"><img class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang2'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}">
+                              <input ngbButton type="radio" value="lang2"><img alt=""  class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang2'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}">
                             </label>
                         </div>
 
@@ -99,8 +98,6 @@
         </div>
         <div *ngIf="lastResults != undefined; then showResult else noResult"></div>
         <ng-template #showResult><app-quiz-result-list [quizResults]="lastResults!" ></app-quiz-result-list></ng-template>
-
-        <!-- <pre> {{ lastResult | json}} </pre> -->
 
         <ng-template #noResult> <h5 class="text-center">No result found</h5> </ng-template>
         

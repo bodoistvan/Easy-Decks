@@ -25,7 +25,7 @@
                   <div class="row d-flex align-items-center justify-content-center">
                       <div class="form-group col-9 mb-0">
                           <input [ngClass]="['btn-outline-success','btn-outline-danger'][getResultStatus]" type="text" name="answer" id="answeredInput" class="form-control" formControlName="answer" placeholder="Your answer here..." aria-describedby="helpId" autofocus>
-                          <span class="form-control-feedback"><i class="fas " [ngClass]="getResultStatus ? ['fa-times', 'answer-wrong'] : ['fa-check', 'answer-correct']" ></i></span>
+                          <span class="form-control-feedback"><em class="fas " [ngClass]="getResultStatus ? ['fa-times', 'answer-wrong'] : ['fa-check', 'answer-correct']" ></em></span>
                         </div>
                       <button id="answeredSubmit" type="submit" class="btn btn-primary col-3">Next</button>  
                   </div>

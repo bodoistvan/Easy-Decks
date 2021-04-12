@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QuizResult } from 'src/app/interfaces/quiz-result';
-import { QuizResultService } from 'src/app/services/quiz-result.service';
 
 @Component({
   selector: 'app-quiz-result-list',

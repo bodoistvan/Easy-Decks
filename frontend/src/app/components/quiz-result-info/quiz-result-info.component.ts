@@ -19,7 +19,6 @@ export class QuizResultInfoComponent implements OnInit {
     this.route.queryParams.subscribe(res => this.deckId = res.id, err=> console.error(err));
 
     if (this.deckId != undefined){
-      console.log("deckId: " + this.deckId!)
       this.quizResultService.getQuizResultsByDeckId(this.deckId).subscribe(res => this.resultList = res, err=> console.error(err));
     }
   }
