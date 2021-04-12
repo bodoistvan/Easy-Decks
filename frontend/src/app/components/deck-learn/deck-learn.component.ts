@@ -1,11 +1,16 @@
 import { HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Card } from 'src/app/interfaces/card';
 import { DeckWithCards } from 'src/app/interfaces/deck-with-cards';
 import { CardStatService } from 'src/app/services/card-stat.service';
 import { DecksService } from 'src/app/services/decks.service';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CardReportComponent } from '../card-report/card-report.component';
+
+
 
 @Component({
   selector: 'app-deck-learn',
@@ -14,7 +19,13 @@ import { DecksService } from 'src/app/services/decks.service';
 })
 export class DeckLearnComponent implements OnInit {
 
-  constructor(private fb:FormBuilder, private route:ActivatedRoute, private deckService:DecksService, private cardStatService: CardStatService) { }
+  constructor(
+    private fb:FormBuilder, 
+    private route:ActivatedRoute, 
+    private deckService:DecksService, 
+    private cardStatService: CardStatService,
+    private modalService: NgbModal
+    ) { }
 
   private deckId?:string;
   public deck?:DeckWithCards;
@@ -89,6 +100,11 @@ export class DeckLearnComponent implements OnInit {
       .subscribe(res => {
         this.getCard().bookmarked = res.bookmarked;
       }, err=>console.error(err));
+  }
+
+  onRebortButtonClick(){
+    const modalRef = this.modalService.open(CardReportComponent, {centered: true});
+    modalRef.componentInstance.cardId = this.getCard().id;
   }
 
   mofidyRange(step:number):void{

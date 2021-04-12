@@ -11,17 +11,12 @@ import { QuizResultService } from 'src/app/services/quiz-result.service';
 export class QuizResultListComponent implements OnInit {
 
   @Input() deckId?:string;
-  public resultList:Array<QuizResult> = []
+  @Input() quizResults:Array<QuizResult> = []
 
-  constructor(private route:ActivatedRoute, private quizResultService:QuizResultService) { }
+  constructor(private route:ActivatedRoute) { }
 
   ngOnInit(): void {
 
-    if (this.deckId != undefined){
-      console.log("deckId: " + this.deckId!)
-      this.quizResultService.getQuizResultsByDeckId(this.deckId).subscribe(res => this.resultList = res, err=> console.error(err));
-
-    }
 
   }
 

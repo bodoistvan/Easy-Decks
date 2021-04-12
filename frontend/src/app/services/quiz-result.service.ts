@@ -19,9 +19,9 @@ export class QuizResultService {
   }
 
   getLastQuizResultByDeckId(id:string){
-    return this.http.get<QuizResult>(`${this.baseUrl}/deck/${id}/last`).pipe(
+    return this.http.get<QuizResult[]>(`${this.baseUrl}/deck/${id}/last`).pipe(
       
-      catchError(this.handleError<QuizResult>("getDeckInfoByIderror" )
+      catchError(this.handleError<QuizResult[]>("getDeckInfoByIderror" )
     ))
   }
 

@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h4 class="modal-title">Report Card: {{cardId! }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form [formGroup]="reportForm">
+
+        <p class="p-0 m-0 mb-1">Type: </p>
+       
+        <div class="btn-group btn-group-toggle" aria-label="typeGrp" ngbRadioGroup name="typeGrp" formControlName="type">
+            <label ngbButtonLabel class="btn-primary">
+                <input ngbButton type="radio" value="spelling">Spelling
+            </label>
+            <label ngbButtonLabel class="btn-primary">
+                <input ngbButton type="radio" value="other">Other
+            </label>
+        </div>
+ 
+        <div class="form-group mt-2">
+            <label class="mb-1" for="comment">Comment:</label>
+            <input type="text" name="commentc" id="comment" class="form-control" placeholder="" formControlName="text" aria-describedby="comment">
+        </div>
+     
+
+      </form>
+    
+  </div>
+  <div class="modal-footer d-flex justify-content-around">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="reportButtonClick()">Report</button>
+</div>

@@ -20,6 +20,24 @@
 
   <app-dif-dots [isInput]="true" (setValue)="setDifValue($event)" ></app-dif-dots>
 
-  {{ myForm.value | json }}
+  <div class="flagBg">
+    <img class="myFlag myFlag1" src="/assets/images/flags/wide/hu.svg">
+    <img class="myFlag myFlag2" src="/assets/images/flags/wide/gb.svg">
 
-<p>profile works!</p>
+    <p>This is a test</p>
+  </div>
+
+
+  <form [formGroup]="myForm">
+    <input type="number" formControlName="dif">
+  </form>
+
+  <form [formGroup]="myForm">
+    <input type="number" formControlName="dif">
+  </form>
+
+  {{ myForm.value | json}}
+  
+ 
+
+  <p>profile works!</p>

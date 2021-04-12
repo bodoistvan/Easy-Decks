@@ -1,3 +1,4 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +16,12 @@ import { QuizService } from 'src/app/services/quiz.service';
 })
 export class DeckQuizComponent implements OnInit {
 
-  constructor(private quizService:QuizService, private route:ActivatedRoute, private fb:FormBuilder) { }
+  constructor(
+    private quizService:QuizService, 
+    private route:ActivatedRoute, 
+    private fb:FormBuilder,
+    private el: ElementRef
+    ) { }
 
   public action:string = "question"; //question or answered
 
@@ -26,6 +32,7 @@ export class DeckQuizComponent implements OnInit {
   private myTimer = interval(1000);
 
   public durationTime:Date = new Date(0);
+  public result?:QuizQuestionResult = {status : 'correct'};
 
   get time(){
 
@@ -70,10 +77,23 @@ export class DeckQuizComponent implements OnInit {
     
   }
 
+  public getIndexInQuiz(){
+    if (this.quizQuestion != undefined)
+      return this.quizQuestion.amount - this.quizQuestion.questions!.length;
+    
+    return 0;
+  }
+
+  public getMaxPg(){
+    if (this.quizQuestion != undefined)
+      return this.quizQuestion.amount;
+    return 1;
+  }
+
   private updateDurationTime():void{
     if (this.quizQuestion){
-      const started = new Date( this.quizQuestion.startedAt );
-      const diffDate = new Date(Date.now()).getTime() - started.getTime();
+      const finished =  new Date( this.quizQuestion.finishAt );
+      const diffDate = new Date( finished.getTime() - Date.now());
       
       this.durationTime =  new Date( diffDate );
 
@@ -87,22 +107,51 @@ export class DeckQuizComponent implements OnInit {
   })
 
   onQuestionSubmit(){
+
+    
     const id = this.answerForm.value.id;
     const fg = this.answerForm as FormGroup;
     const answer = fg.get("answer") as FormControl ;
 
-    answer.disable();
+    //answer.disable();
 
     this.quizService.answerQuizQuestion(this.deckId!, { id, word: answer.value }).subscribe(res => {
       this.result = res;
-      console.log(res);
       this.action = "answered";
 
+      if (this.result.status == "correct")
+        setTimeout(()=> this.onAnsweredSubmit(), 2000);
+
+
+        const answeringQuestionBlock = this.el.nativeElement.querySelector('#answeringQuestionBlock');
+
+        if (answeringQuestionBlock) {
+          answeringQuestionBlock.classList.remove('d-block');
+          answeringQuestionBlock.classList.add('d-none');
+        }
+
+        const answeredBlock = this.el.nativeElement.querySelector('#answeredBlock');
+
+        if (answeredBlock) {
+          answeredBlock.classList.remove('d-none');
+          answeredBlock.classList.add('d-block');
+        }
+
+        this.answerForm.patchValue({answer: answer.value});
+
+        const answeredSubmit = this.el.nativeElement.querySelector('#answeredSubmit');
+
+        if (answeredSubmit) {
+          answeredSubmit.focus()
+        }
+        
     })
+
+    this.quizQuestion?.questions!.splice(0,1);
 
   }
 
-  public result?:QuizQuestionResult;
+ 
 
   get getResultStatus():number{
     if (this.result != undefined){
@@ -114,22 +163,47 @@ export class DeckQuizComponent implements OnInit {
   }
 
   onAnsweredSubmit(){
-    this.action = "question"
-    const answer = this.answerForm.get("answer") as FormControl ;
+    if(this.action != "question"){
+      this.action = "question"
+      const answer = this.answerForm.get("answer") as FormControl ;
+  
+      
+     
+      if (this.quizQuestion!.questions!.length > 0){
+        this.answerForm.setValue({ ...this.quizQuestion?.questions![0], answer: ""});
+        this.currentQuestion = this.quizQuestion!.questions![0];
+      }
+      answer.enable();
 
-    this.quizQuestion?.questions!.splice(0,1);
-   
+      const element = this.el.nativeElement.querySelector('#answeringQuestionBlock');
 
-    if (this.quizQuestion!.questions!.length > 0){
-      this.answerForm.setValue({ ...this.quizQuestion?.questions![0], answer: ""});
-      this.currentQuestion = this.quizQuestion!.questions![0];
+      if (element) {
+        element.classList.remove('d-none');
+        element.classList.add('d-block');
+      }
+
+      const answeredBlock = this.el.nativeElement.querySelector('#answeredBlock');
+      if (answeredBlock) {
+        answeredBlock.classList.remove('d-block');
+        answeredBlock.classList.add('d-none');
+      }
+        
+      this.setAnswerInputActive();
+
     }
-
-    answer.enable();
 
   }
 
+  setAnswerInputActive() {
+      const inputElement = this.el.nativeElement.querySelector('#answer');
+      console.log(inputElement)
+      if (inputElement) {
+        inputElement.focus();
+      }
+  }
 
-
+  onChange(){
+    console.log("chaged");
+  }
 
 }

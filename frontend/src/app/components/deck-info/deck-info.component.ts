@@ -20,7 +20,8 @@ export class DeckInfoComponent implements OnInit {
 
   public active:number = 1;
   public deckInfo?:DeckInfo;
-  public lastResult?: QuizResult;
+  public lastResults?: QuizResult[];
+  public lqActive:number = 0;
 
   ngOnInit(): void {
     
@@ -29,7 +30,7 @@ export class DeckInfoComponent implements OnInit {
       
       if (id !=null){
         this.deckService.getDeckInfoById(id).subscribe(data => this.deckInfo = data, err => console.error(err));
-        this.quizResultServive.getLastQuizResultByDeckId(id).subscribe(data => this.lastResult=data, err => console.error(err));
+        this.quizResultServive.getLastQuizResultByDeckId(id).subscribe(data => this.lastResults=data, err => console.error(err));
     }
       //TODO on error should route /decks
       
@@ -46,15 +47,16 @@ export class DeckInfoComponent implements OnInit {
     amount: ["10"]
   });
 
+  public learnStartForm = this.fb.group({
+    type: ["all"]
+  }) 
+
   
   get selectedLang(){
     return this.quizStartForm.get('language')?.value;
   }
 
   onQuizSubmit(){
-
-    console.log(this.deckInfo);
-    console.log(this.quizStartForm.value);
 
     this.quizService.createQuiz(this.deckInfo!.id, this.quizStartForm.value.amount * 1, this.quizStartForm.value.language)
       .subscribe(res => 
@@ -63,14 +65,20 @@ export class DeckInfoComponent implements OnInit {
           this.router.navigate(["decks", "quiz"], {queryParams : { id: quizId } });
 
         });
+  }
 
-    
+  onLearnSubmit(){
+    this.router.navigate(["decks", "learn"], {queryParams : { id: this.deckInfo!.id } });
   }
 
   onShowAllResult(){
     console.log("asd");
     if (this.deckInfo)
       this.router.navigate(["quizresults"], {queryParams: { id: this.deckInfo.id }});
+  }
+
+  onlqClick(index: number){
+    this.lqActive = index;
   }
 
 

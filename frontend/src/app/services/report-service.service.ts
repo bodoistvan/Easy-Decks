@@ -32,6 +32,12 @@ export class ReportServiceService {
     )
   }
 
+  public createReport(report:any) {
+    return this.http.post<any>(`${this.baseUrl}`, report).pipe(
+      catchError(this.handleError<any>("createReport"))
+    )
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
   

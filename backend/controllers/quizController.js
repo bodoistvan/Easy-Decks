@@ -62,6 +62,7 @@ class Quiz {
         this.id = this.genUid();
         this.startedAt = Date.now();
         this.amount = cards.length;
+        this.finishAt = new Date(this.startedAt + this.amount * 2 * 60 * 1000).getTime();
         this.userId = userId;
         this.deckId = deckId;
         this.cards = cards;

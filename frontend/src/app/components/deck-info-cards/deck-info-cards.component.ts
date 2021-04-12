@@ -16,9 +16,9 @@ export class DeckInfoCardsComponent implements OnInit {
   @Input() deckId?:string;
 
   ngOnInit(): void {
-    this.deckService.getDeckCards(this.deckId!, "statistic").subscribe(data => {
-      this.StaticList = data;
-      this.ShowList = this.StaticList;
+    this.deckService.getDeckCards(this.deckId!, "bookmarked").subscribe(data => {
+      this.BookMarkedList = data;
+      this.ShowList = this.BookMarkedList;
     })
   } 
 
@@ -32,7 +32,7 @@ export class DeckInfoCardsComponent implements OnInit {
   public ShowList?:Card[];
 
   public CardSelect = this.fb.group({
-    selected: ["statistic"]
+    selected: ["bookmarked"]
   })
 
   onSelectedClick(){
