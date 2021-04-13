@@ -27,6 +27,12 @@ export class QuizService {
     )
   }
 
+  getQuizInprogress(){
+    return this.http.get<Quiz>(`${this.baseUrl}/inprogress`).pipe(
+      catchError(this.handleError<Quiz>("getQuizInprogress"))
+    )
+  }
+
   createQuiz(deckId: string, amount: number, language: string){
     return this.http.post<any>(`${this.baseUrl}/create`, {deckId : deckId, amount, language}).pipe(
       catchError(this.handleError<any>("creating quiz"))

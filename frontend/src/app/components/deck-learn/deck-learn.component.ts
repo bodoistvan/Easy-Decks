@@ -34,9 +34,16 @@ export class DeckLearnComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.deckId = params["id"];
+
+      const type = params["type"];
     
       if (this.deckId !=null){
-        const queryParams: HttpParams = new HttpParams().append('with', 'bookmark');
+        let queryParams: HttpParams = new HttpParams().append('with', 'bookmark');
+
+        if (type != undefined){
+          queryParams = queryParams.append("type", type);
+        }
+
         this.deckService.getDeckInfoByIdAll(this.deckId, queryParams).subscribe(data => {
           this.deck = data; 
         });

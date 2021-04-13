@@ -2,6 +2,7 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const { checkProperties } = require('../utils/objFilter');
 const uniqid = require('uniqid');
+const model = require('../models');
 
 class QuizCard {
     constructor( {cardId, lang1, lang2} ) {
@@ -86,6 +87,20 @@ class Quiz {
 
         return { error: "no card find by cardId" }
     }
+
+    saveQuizResult(){
+        const resultPercent = this.cards.filter(c => c.status + "" == "correct").length * 100 / this.amount;
+        model.QuizResult.create({
+                _user : this.userId,
+                _deck : this.deckId,
+                startedAt : this.startedAt,
+                selectedLang: this.selectedLang,
+                resultPercent: resultPercent,
+                amount: this.amount,
+                results : this.cards
+        })
+    }
+
 }
 
 class QuizStorage {
@@ -94,7 +109,29 @@ class QuizStorage {
     }
 
     pushQuiz( quiz ){
+        const preQuiz = this.findQuizByUserId( quiz.userId );
+        if (preQuiz){
+            console.log("letezett");
+            this.deleteQuiz( preQuiz.id, preQuiz.startedAt );
+        }
+        
+        setTimeout(()=>{this.deleteQuiz( quiz.id, quiz.startedAt )}, quiz.finishAt - quiz.startedAt )
         this.quizes.push(quiz);
+    }
+
+    
+
+    deleteQuiz( id, startedAt ){
+        const quiz = this.findQuizById ( id );
+        if (!quiz)
+            return
+        if (quiz.startedAt + "" == startedAt + ""){
+            quiz.saveQuizResult();
+            const index = this.quizes.indexOf(quiz);
+            this.quizes.splice(index, 1);
+            console.log("deleted...")
+        }
+        
     }
 
     getQuestionsByQuizId( {quizId, userId} ){
@@ -107,6 +144,9 @@ class QuizStorage {
         return {error: "no quiz found by id"};
     }
 
+    findQuizByUserId( userId ){
+        return this.quizes.find( q => q.userId + "" == userId + "" ); 
+    }
 
     //answer -> { id, word }
 
@@ -286,9 +326,9 @@ exports.answerQuiestion = (Model) => catchAsync( async(req,res,next)=>{
         status : result.status
     })
     const finished = quizStorage.getQuestionsByQuizId( {quizId: quizId, userId: userId});
-    console.log(finished.length)
     if (finished.length === 0){
-        quizStorage.saveQuizResultById( {quizId, userId, Model} );
+        const quiz = quizStorage.findQuizById( quizId )
+        quizStorage.deleteQuiz( quiz.id, quiz.startedAt )
     }
 
 
@@ -300,5 +340,18 @@ exports.answerQuiestion = (Model) => catchAsync( async(req,res,next)=>{
 exports.getAllQuizes = () => catchAsync(async (req,res,next) =>{
 
     res.json(quizStorage);
+
+});
+
+exports.getInProgress = () => catchAsync(async (req,res,next) =>{
+
+    const userId = req.user.id;
+
+    const quiz = quizStorage.findQuizByUserId( userId );
+
+    if (!quiz)
+        return next(new AppError("no quiz found", 404));
+
+    res.json(quiz);
 
 });

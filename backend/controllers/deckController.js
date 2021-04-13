@@ -8,6 +8,19 @@ const getBookMarkedCardsIdByDeckIdandUserId = async ({Model, userId, deckId}) =>
     return cards.map(card =>  card._card + "");
 }
 
+const showBookMarks = async ({ cards: cards, deckId: deckId, userId: userId, Model: Model}) => {
+    let bookedCardsIds;
+        
+    bookedCardsIds = await getBookMarkedCardsIdByDeckIdandUserId( { deckId: deckId, userId: userId, Model: Model} ); 
+  
+    cards = cards.map(card => ({
+        bookmarked: bookedCardsIds.indexOf(card.id + "") != -1,
+        ...card
+    }));
+    return cards;
+                 
+}
+
 
 exports.createDeck = Model => 
     catchAsync(async(req, res, next) => {
@@ -169,30 +182,43 @@ exports.getDeckByIdAll = Model =>
                                             { $or: [{public:true}, {_owner: userId}] } 
                                         ]  
                                     });
-
+                            
         if (!deck)
             return next(new AppError("deck is not found or auth error", 400))
 
-        let cards = await Model.Card.find( { _deck : deckId } );
+        let cards;
+
+        if (req.query.type!= undefined){
+            const qlist = req.query.type.split(',');
+            console.log("qlits: " + qlist)
+            if( qlist.indexOf('statistic') != -1){
+
+                const cardStat = await Model.CardStat.find( { _user: userId, _deck: deckId } );
+                const cardIds = cardStat.filter(stat => stat.wrongCounter > stat.correctCounter).map(stat => stat._card)
+                cards = await Model.Card.find({ _id : cardIds });
+
+            } else if(qlist.indexOf('bookmarked') != -1 ){
+
+                const cardStats = await Model.CardStat.find({ _user: userId, _deck: deckId, bookmarked: true});
+                const cardIds = cardStats.map( stat => stat._card);
+                cards = await Model.Card.find({ _id : cardIds })
+            } else {
+                cards = await Model.Card.find({ _deck: deckId })
+            }
+        } else {
+            cards = await Model.Card.find({ _deck: deckId })
+        }
 
         if (cards != undefined){
             cards = cards.map(card => ({ id: card._id, lang1: card.lang1, lang2: card.lang2 }))
-        }
 
-        let bookedCardsIds;
-        if (req.query.with!= undefined){
-            const qlist = req.query.with.split(',');
-            if( qlist.indexOf('bookmark') != -1){
-                bookedCardsIds = await getBookMarkedCardsIdByDeckIdandUserId( { deckId: deckId, userId: userId, Model: Model} ); 
-  
-                cards = cards.map(card => ({
-                    bookmarked: bookedCardsIds.indexOf(card.id + "") != -1,
-                    ...card
-                }));
+            if (req.query.with!= undefined){
+                const qlist = req.query.with.split(',');
+                if( qlist.indexOf('bookmark') != -1){
+                    cards = await showBookMarks( { cards: cards, deckId: deckId, userId: userId, Model: Model} );
+                }
             }
         }
-        
-            
 
         res.status(200);
         res.json({

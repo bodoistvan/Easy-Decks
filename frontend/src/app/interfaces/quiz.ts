@@ -7,6 +7,7 @@ export interface Quiz {
     finishAt: Date,
     amount: number,
     userId: string,
+    deckId: string,
     selectedLang: string,
     cards?: Card[],
     questions?: QuizQuestion[]

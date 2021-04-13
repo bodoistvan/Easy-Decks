@@ -1,23 +1,37 @@
 <navbar></navbar>
 
 <div class="container">
-    <h1>Learning deck...</h1>
 
-    <div class="mt-5 mb-3" style="height: 25rem; background-color: rgb(172, 172, 172);">
+    <div class="row mb-5">
+        <h3 class="col-12 col-md-6">
+            {{ deck? deck.name : "" }}
+        </h3>
+        
+        <div class="col-12 col-md-6 d-flex align-items-center">
+            <img alt="" class="learnFlag" src="{{deck? '/assets/images/flags/wide/'+deck.lang1+'.svg' : '#'  }}">
+            <img alt="" class="learnFlag" src="{{deck? '/assets/images/flags/wide/'+deck.lang2+'.svg' : '#'  }}">
+            <app-dif-dots [currentValue]="3"></app-dif-dots>
+        </div>
+
+    </div>
+
+    <div class="mb-3">
+
+        <div class="row d-flex justify-content-end">
+            <div (click)=onBookMarkButtonClick() class="btn border myBookMark mr-4">
+                <em [ngClass]="(isBookMarked())?'fas':'far'" class="fa-bookmark"></em>
+            </div>
+
+            <div (click)=onRebortButtonClick() class="btn border myBookMark mr-4">
+                <em class="far fa-flag"></em>
+            </div>
+        </div>
             
        <div class="row d-flex justify-content-around">
-        <app-learn-card class="col-5" [word]="getCard().lang1" ></app-learn-card>
-        <app-learn-card class="col-5" [word]="getCard().lang2"></app-learn-card>
+        <app-learn-card class="col-12 col-md-5 mt-2" [word]="getCard().lang1" ></app-learn-card>
+        <app-learn-card class="col-12 col-md-5 mt-2" [word]="getCard().lang2"></app-learn-card>
        </div> 
-    
-        <div (click)=onBookMarkButtonClick() 
-            class="btn border myBookMark"><em [ngClass]="(isBookMarked())?'fas':'far'" class="fa-bookmark"></em>
-        </div>
-
-        <div (click)=onRebortButtonClick() 
-            class="btn border myBookMark"><em class="far fa-flag"></em>
-        </div>
-        
+      
     </div>
         
     
@@ -26,7 +40,7 @@
                 <button (click)="mofidyRange(-1)" class="mr-1 btn btn-outline-primary p-2 pl-3 pr-3"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
 
 
-                <div class="d-flex col-5 row pt-4">
+                <div class="d-flex col-10 col-sm-8 col-md-5 row pt-4">
                     <input type="range" style="width: 100%;" (change)="rangeChange()" class="form-range" min="0" [max]="maxRange" id="customRange2" formControlName = "range">
          
                     <div style="width: 100%; text-align: center;" >{{range + 1}}</div>
@@ -34,9 +48,5 @@
                 <button (click)="mofidyRange(1)" class="ml-1 btn btn-outline-primary p-2 pl-3 pr-3"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
             </div>
         </form>
-
-       
-    
-        <pre>{{ deck | json}}</pre>
 
 </div>

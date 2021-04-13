@@ -40,6 +40,7 @@ import { ReportReceivedComponent } from './components/report-received/report-rec
 import { ReportSentComponent } from './components/report-sent/report-sent.component';
 import { DifDotsComponent } from './components/dif-dots/dif-dots.component';
 import { CardReportComponent } from './components/card-report/card-report.component';
+import { QuizInprogressComponent } from './components/quiz-inprogress/quiz-inprogress.component';
 
 
 
@@ -77,7 +78,8 @@ import { CardReportComponent } from './components/card-report/card-report.compon
     ReportReceivedComponent,
     ReportSentComponent,
     DifDotsComponent,
-    CardReportComponent
+    CardReportComponent,
+    QuizInprogressComponent
 
 
   ],

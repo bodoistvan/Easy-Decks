@@ -1,0 +1,20 @@
+<div class="p-2 border">
+    <div *ngIf="quiz != undefined; else other" >
+       
+        <div class="d-flex">
+            <p class="pr-2">You have started a quiz at {{ quiz!.startedAt | date: 'HH:mm' }}. Would you like to continue it?
+                Or you can simple create a new quiz. This case the previous one will be saved in statistics as well, unanswered words won't be marked as incorrect but affect the ending results.
+            </p>    
+    
+            <button (click)="onContinueClick()" class="btn btn-outline-secondary px-2">Continue</button>
+        </div>
+        
+    </div>
+    
+    <ng-template #other>
+
+        <p>No quiz has been started yet. 
+            Would you like to be quized by the words of the deck? Start one by clicking on Quiz just above this article. Then choose your load and start the quiz.</p>
+
+    </ng-template>
+</div>

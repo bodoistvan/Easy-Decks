@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { interval } from 'rxjs';
 import { Quiz } from 'src/app/interfaces/quiz';
 import { QuizQuestion } from 'src/app/interfaces/quiz-question';
@@ -13,13 +13,14 @@ import { QuizService } from 'src/app/services/quiz.service';
   templateUrl: './deck-quiz.component.html',
   styleUrls: ['./deck-quiz.component.sass']
 })
-export class DeckQuizComponent implements OnInit {
+export class DeckQuizComponent implements OnInit, OnDestroy {
 
   constructor(
     private quizService:QuizService, 
     private route:ActivatedRoute, 
     private fb:FormBuilder,
-    private el: ElementRef
+    private el: ElementRef,
+    private router:Router
     ) { }
 
   public action:string = "question"; //question or answered
@@ -28,17 +29,18 @@ export class DeckQuizComponent implements OnInit {
   public quizQuestion?: Quiz;
   public currentQuestion: QuizQuestion = { id: "", word :""};
 
-  private myTimer = interval(1000);
+  private myTimer? : any;
 
   public durationTime:Date = new Date(0);
   public result?:QuizQuestionResult = {status : 'correct'};
 
   get time(){
 
-    if (this.quizQuestion){
+    if (this.quizQuestion != undefined){
       const started = new Date( this.quizQuestion.startedAt );
       const diffDate = new Date(Date.now()).getTime() - started.getTime();
       
+
       return new Date( diffDate );
 
     }
@@ -54,7 +56,6 @@ export class DeckQuizComponent implements OnInit {
 
       if ( id != undefined){
         this.deckId = id;
-        console.log(id);
         this.quizService.getQuizQuestionsById(this.deckId!).subscribe(data => {
           console.log(data);
           this.quizQuestion = data;
@@ -66,14 +67,20 @@ export class DeckQuizComponent implements OnInit {
 
           }
           this.updateDurationTime();
-
+          
         });
       }
 
     });
+    this.myTimer = setInterval(()=>{
+      this.updateDurationTime();
+    },1000)
     
-    this.myTimer.subscribe(() => this.updateDurationTime());
-    
+  }
+
+  ngOnDestroy():void {
+    console.log("destroy");
+    clearInterval(this.myTimer);
   }
 
   public getIndexInQuiz(){
@@ -92,8 +99,13 @@ export class DeckQuizComponent implements OnInit {
   private updateDurationTime():void{
     if (this.quizQuestion){
       const finished =  new Date( this.quizQuestion.finishAt );
-      const diffDate = new Date( finished.getTime() - Date.now());
-      
+
+      const diffTime = finished.getTime() - Date.now()
+      if (diffTime < 0)
+        this.finished();
+
+      const diffDate = new Date( diffTime );
+      console.log(diffTime);
       this.durationTime =  new Date( diffDate );
 
     }
@@ -106,13 +118,9 @@ export class DeckQuizComponent implements OnInit {
   })
 
   onQuestionSubmit(){
-
-    
     const id = this.answerForm.value.id;
     const fg = this.answerForm;
     const answer = fg.get("answer") as FormControl ;
-
-    //answer.disable();
 
     this.quizService.answerQuizQuestion(this.deckId!, { id, word: answer.value }).subscribe(res => {
       this.result = res;
@@ -135,7 +143,9 @@ export class DeckQuizComponent implements OnInit {
         answeredBlock.classList.add('d-block');
       }
 
+      
       this.answerForm.patchValue({answer: answer.value});
+      answer.disable();
 
       const answeredSubmit = this.el.nativeElement.querySelector('#answeredSubmit');
 
@@ -148,8 +158,6 @@ export class DeckQuizComponent implements OnInit {
 
   }
 
- 
-
   get getResultStatus():number{
     if (this.result != undefined){
       if (this.result.status == "correct")
@@ -160,12 +168,14 @@ export class DeckQuizComponent implements OnInit {
   }
 
   onAnsweredSubmit(){
+
+    if (this.getMaxPg() - this.getIndexInQuiz() == 0 )
+      this.finished();
+
     if(this.action != "question"){
       this.action = "question"
       const answer = this.answerForm.get("answer") as FormControl ;
   
-      
-     
       if (this.quizQuestion!.questions!.length > 0){
         this.answerForm.setValue({ ...this.quizQuestion?.questions![0], answer: ""});
         this.currentQuestion = this.quizQuestion!.questions![0];
@@ -201,6 +211,10 @@ export class DeckQuizComponent implements OnInit {
 
   onChange(){
     console.log("chaged");
+  }
+
+  finished(){
+    this.router.navigate(["decks", "info"], {queryParams: { id : this.quizQuestion!.deckId }});
   }
 
 }

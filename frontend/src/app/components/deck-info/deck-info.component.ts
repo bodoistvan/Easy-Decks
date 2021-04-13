@@ -68,11 +68,11 @@ export class DeckInfoComponent implements OnInit {
   }
 
   onLearnSubmit(){
-    this.router.navigate(["decks", "learn"], {queryParams : { id: this.deckInfo!.id } });
+    const params = this.learnStartForm.value;
+    this.router.navigate(["decks", "learn"], {queryParams : { id: this.deckInfo!.id, type: params.type } });
   }
 
   onShowAllResult(){
-    console.log("asd");
     if (this.deckInfo)
       this.router.navigate(["quizresults"], {queryParams: { id: this.deckInfo.id }});
   }
