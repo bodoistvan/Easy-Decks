@@ -29,7 +29,7 @@ const userSchema = new Schema(
             default: true,
             select: false
         },
-        _publicDecks: [{
+        _subscriptions: [{
             type: Schema.Types.ObjectId,
             ref: 'Deck',
         }]

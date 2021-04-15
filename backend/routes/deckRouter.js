@@ -15,6 +15,13 @@ router.route("/:id")
 router.route("/:id/all")
     .get(deckController.getDeckByIdAll(Model))
 
+router.route("/:id/subscribe")
+    .post(deckController.subsribeDeck(Model));
+
+    
+router.route("/:id/unsubscribe")
+.post(deckController.unsubsribeDeck(Model));
+
 router.route("/:id/cards/bookmarked")
     .get(deckController.getDeckCardsBookMarked(Model))
 

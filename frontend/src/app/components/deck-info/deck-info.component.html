@@ -2,20 +2,23 @@
 
 <div class="container">
     <div class="border">
-    <div class="d-flex justify-content-between px-2">
+    <div class="d-flex justify-content-between px-2 align-items-center">
 
         <div class=""><h1>{{deckInfo? deckInfo.name : ""}}</h1></div>
-        <div class=""><a href="/decks/modify?id={{ deckInfo? deckInfo.id : 0}}" class="btn btn-dark m-2"><em class="fas fa-cogs"></em></a></div>
-        
+        <div *ngIf="deckInfo != undefined ?  (deckInfo.status == 'owner' ? true : false) : false" (click)="onModifyButtonClick()"><a class="btn btn-dark m-2"><em class="fas fa-cogs"></em></a></div>
+        <div *ngIf="deckInfo != undefined ? deckInfo.status == 'subscribed' || deckInfo.status == 'unsubscribed' : false">
+          <app-deck-subscribe-button [isSubbed]="deckInfo != undefined ? deckInfo.status == 'subscribed' : false" [deckId]="deckInfo != undefined? deckInfo.id : undefined" (refresh)="getInfo($event)"></app-deck-subscribe-button>
+        </div> 
+        <div *ngIf="deckInfo != undefined ?  (deckInfo.status == 'private' ? true :false) : false" class="d-flex align-items-center"><p class="private">private</p></div>
     </div>
     
-    <div class="d-flex justify-content-start align-items-center">
+    <div class="d-flex justify-content-start align-items-center mb-2">
             <div class="ml-2 mr-2"><img alt="" class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}"></div>
             <div class="mr-2"><img alt="" class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}"></div>
             <app-dif-dots [currentValue]="3" ></app-dif-dots>
     </div>
 
-    <div class="mt-4 ">
+    <div *ngIf="deckInfo != undefined ? deckInfo.status == 'owner' || deckInfo.status == 'subscribed' : false" class="mt-2">
         <ul ngbNav #nav="ngbNav" id="lq-nav" [(activeId)]="active" class="nav-tabs">
             <li [ngbNavItem]="1" (click)="onlqClick(0)" >
             <a ngbNavLink class="lq-nav-active">Learn</a>
@@ -75,7 +78,7 @@
                               <input ngbButton type="radio" value="bookmarked">Marked
                             </label>
                             <label ngbButtonLabel class="btn-outline-secondary">
-                              <input ngbButton type="radio" value="statisctic">Statistic
+                              <input ngbButton type="radio" value="statistic">Statistic
                             </label>
                         </div>
 
@@ -90,7 +93,7 @@
         </div>
     </div>
    
-    <div class="row mt-4">
+    <div *ngIf="deckInfo != undefined ? deckInfo.status == 'owner' || deckInfo.status == 'subscribed' : false" class="row mt-4">
       <div class="col-12 col-lg-6">
         <div class="row">
           <div class="col-12 mb-2">
@@ -122,8 +125,13 @@
       </div>
     </div>
     
+    <div class="private-msg mt-4" *ngIf="deckInfo != undefined ? deckInfo.status == 'private' : false">
+        <p>This deck is currently private. Services are not available.</p>
+    </div>
 
-    
+    <div class="private-msg mt-4" *ngIf="deckInfo != undefined ? deckInfo.status == 'unsubscribed' : false">
+      <p>You haven't subscribed to this deck yet. Only subscribed users can access to services.</p>
+    </div>
 
 </div>
 

@@ -41,6 +41,7 @@ import { ReportSentComponent } from './components/report-sent/report-sent.compon
 import { DifDotsComponent } from './components/dif-dots/dif-dots.component';
 import { CardReportComponent } from './components/card-report/card-report.component';
 import { QuizInprogressComponent } from './components/quiz-inprogress/quiz-inprogress.component';
+import { DeckSubscribeButtonComponent } from './components/deck-subscribe-button/deck-subscribe-button.component';
 
 
 
@@ -79,7 +80,8 @@ import { QuizInprogressComponent } from './components/quiz-inprogress/quiz-inpro
     ReportSentComponent,
     DifDotsComponent,
     CardReportComponent,
-    QuizInprogressComponent
+    QuizInprogressComponent,
+    DeckSubscribeButtonComponent
 
 
   ],

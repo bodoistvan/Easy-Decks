@@ -125,14 +125,18 @@ exports.getDeckById = Model => catchAsync( async(req,res,next) => {
     console.log(req.params);
 
     const userId = req.user.id;
+    const deckId = req.params.id;
 
     const filter=["id"];
 
     if ( checkProperties(req.params, filter) === false )
         return next("param error, no id");
     
-    const deck = await Model.Deck.findOne( { _id: req.params.id } )
+    const deck = await Model.Deck.findOne( { _id: deckId } )
     
+    if (!deck)
+        return next(new AppError("no deck found by id", 404));
+
     let status = "";
 
     if (deck._owner + "" == userId + ""){
@@ -142,11 +146,15 @@ exports.getDeckById = Model => catchAsync( async(req,res,next) => {
     else {
         const user = await Model.User.findOne( { _id: userId });
 
-        status = "unsubscribed";
+        status = "subscribed";
 
-        for (let subscribedDeck in user._public){
-            if ( subscribedDeck + "" == deck._id + "" )
-                status = "subscribed";
+        const subbed = user._subscriptions.find(id => id == deckId)
+        if (!subbed){
+            status = "unsubscribed";
+        }
+
+        if (deck.public == false){
+            status = "private"
         }
     }
     
@@ -353,3 +361,53 @@ exports.getDeckCardsStatistic = (Model) => catchAsync( async (req,res,next) => {
     res.json(cards);
 
 })
+
+exports.subsribeDeck = (Model) => catchAsync( async (req,res,next) => {
+
+    const userId = req.user.id;
+    const deckId = req.params.id;
+
+    const deck = await Model.Deck.findOne({ _id: deckId, public: true, _owner: { $ne : userId } });
+
+    if (!deck)
+        return next(new AppError("no deck found, may deck is not public or belongs to user", 404));
+
+    const user = await Model.User.findOne({ _id : userId });
+    
+    const subbedDeckId = user._subscriptions.find(id => id == deckId);
+
+    if(subbedDeckId == undefined){
+        user._subscriptions.push(deckId);
+        await user.save();
+    } 
+
+    res.status(201);
+    res.json({subbedDeckId, deckId, userId,_subscriptions: user._subscriptions});
+
+});
+
+exports.unsubsribeDeck = (Model) => catchAsync( async (req,res,next) => {
+
+    const userId = req.user.id;
+    const deckId = req.params.id;
+
+    const deck = await Model.Deck.findOne({ _id: deckId, public: true, _owner: { $ne : userId } });
+
+    if (!deck)
+        return next(new AppError("no deck found, may deck is not public or belongs to user", 404));
+
+    const user = await Model.User.findOne({ _id : userId });
+    
+    const subbedDeckId = user._subscriptions.find(id => id == deckId);
+
+    if(subbedDeckId != undefined){
+        const index = user._subscriptions.indexOf(subbedDeckId);
+        user._subscriptions.splice(index, 1);
+        await user.save();
+    } 
+
+    res.status(201);
+    res.json({subbedDeckId, deckId, userId,_subscriptions: user._subscriptions});
+
+
+});

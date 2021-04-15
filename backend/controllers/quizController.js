@@ -224,6 +224,7 @@ exports.createQuiz = (Model) => catchAsync( async (req,res,next) => {
 
     //check params: userId and deckId
     const userId = req.user._id;
+    const type = req.body.type;
 
     if ( !userId )
         return next(new AppError('param error: no userid found', 403));
@@ -253,11 +254,42 @@ exports.createQuiz = (Model) => catchAsync( async (req,res,next) => {
 
     const amount = req.body.amount || 10;
 
-    //TODO cards should be active as well
-    const dbCards = await Model.Card.find( { _deck: deck._id }).limit(amount);
+    let cards;
 
-    if (!dbCards){
+    if (type!= undefined){
+       
+        if( type == 'statistic'){
+
+            const cardStat = await Model.CardStat.find( { _user: userId, _deck: deckId } );
+            const cardIds = cardStat.filter(stat => stat.wrongCounter > stat.correctCounter).map(stat => stat._card)
+            cards = await Model.Card.find({ _id : cardIds });
+
+        } else if( type == 'bookmarked'){
+
+            const cardStats = await Model.CardStat.find({ _user: userId, _deck: deckId, bookmarked: true});
+            const cardIds = cardStats.map( stat => stat._card);
+            cards = await Model.Card.find({ _id : cardIds })
+        } else {
+            cards = await Model.Card.find({ _deck: deckId })
+        }
+    } else {
+        cards = await Model.Card.find({ _deck: deckId })
+    }
+
+    if (!cards){
         return ( new AppError("no cards found at deck id", 404))
+    }
+
+    cards = cards.map(card => ({_id: card._id, lang1: card.lang1, lang2: card.lang2}));
+    console.log(cards);
+    //get randoms 
+    let dbCards = [];
+
+    while ( dbCards.length != amount && cards.length > 0){
+        const randomIndex =  Math.floor(Math.random() * cards.length);
+        const item = cards[randomIndex];    
+        dbCards.push(item);
+        cards.splice(randomIndex, 1);
     }
 
     const quizCards = dbCards.map(card => new QuizCard ({cardId: card._id, lang1: card.lang1, lang2: card.lang2}) );

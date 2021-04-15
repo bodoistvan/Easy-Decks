@@ -64,6 +64,14 @@ export class DecksService {
     )
   }
 
+  subscribeToDeck(id:string, action:string){
+    return this.http.post<any>(`${this.baseUrl}/${id}/${action}`, {}).pipe(
+      catchError(this.handleError<any>("subscribeToDeck"))
+    )
+  }
+
+  
+
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

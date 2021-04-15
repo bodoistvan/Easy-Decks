@@ -29,12 +29,16 @@ export class DeckInfoComponent implements OnInit {
       let id = params["id"];
       
       if (id !=null){
-        this.deckService.getDeckInfoById(id).subscribe(data => this.deckInfo = data, err => console.error(err));
-        this.quizResultServive.getLastQuizResultByDeckId(id).subscribe(data => this.lastResults=data, err => console.error(err));
-    }
+        this.getInfo(id);
+      }
       //TODO on error should route /decks
       
     })
+  }
+
+  getInfo(id:string){
+    this.deckService.getDeckInfoById(id).subscribe(data => this.deckInfo = data, err => console.error(err));
+    this.quizResultServive.getLastQuizResultByDeckId(id).subscribe(data => this.lastResults=data, err => console.error(err));
   }
 
   onClick():void {
@@ -57,14 +61,22 @@ export class DeckInfoComponent implements OnInit {
   }
 
   onQuizSubmit(){
-
-    this.quizService.createQuiz(this.deckInfo!.id, this.quizStartForm.value.amount * 1, this.quizStartForm.value.language)
+    const body = {
+      deckId :this.deckInfo!.id, 
+      amount : this.quizStartForm.value.amount * 1,
+      language : this.quizStartForm.value.language,
+      type: this.quizStartForm.value.type
+    }
+    this.quizService.createQuiz(body)
       .subscribe(res => 
         {
           const quizId = res.id;
           this.router.navigate(["decks", "quiz"], {queryParams : { id: quizId } });
-
         });
+  }
+
+  onModifyButtonClick(){
+    this.router.navigate(["decks", "modify"], {queryParams : { id: this.deckInfo!.id }});
   }
 
   onLearnSubmit(){

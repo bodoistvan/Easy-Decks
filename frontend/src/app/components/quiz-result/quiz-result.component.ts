@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { QuizResult } from 'src/app/interfaces/quiz-result';
 
 @Component({
@@ -66,8 +66,5 @@ export class QuizResultComponent implements OnInit {
     }
   }
 
-  onButtonClick(){
-    this.isCollapsed = !this.isCollapsed;
-  }
 
 }

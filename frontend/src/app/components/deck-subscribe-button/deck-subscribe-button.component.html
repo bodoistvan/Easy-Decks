@@ -1,0 +1,6 @@
+<div class="btn-group btn-group-toggle">
+    <label class="btn-outline-danger" ngbButtonLabel>
+        <input type="checkbox" ngbButton (click)="onSubButtonClick()" [(ngModel)]="isSubbed">{{ isSubbed ? 'unsubscribe' : 'subscribe' }}
+    </label>
+</div>
+

@@ -12,11 +12,18 @@ export class QuizResultListComponent implements OnInit {
   @Input() deckId?:string;
   @Input() quizResults:Array<QuizResult> = []
 
+  public activeIndex: number = 0
+  public indexArray: Array<boolean> = [];
+
   constructor(private route:ActivatedRoute) { }
 
   ngOnInit(): void {
-
-
+    this.indexArray.push(true);
+    for (let i = 0; i < this.quizResults.length -1 ; i++)
+      this.indexArray.push(false)
   }
+
+
+  
 
 }

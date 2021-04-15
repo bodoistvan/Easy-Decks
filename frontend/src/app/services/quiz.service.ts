@@ -33,8 +33,8 @@ export class QuizService {
     )
   }
 
-  createQuiz(deckId: string, amount: number, language: string){
-    return this.http.post<any>(`${this.baseUrl}/create`, {deckId : deckId, amount, language}).pipe(
+  createQuiz( body: any){
+    return this.http.post<any>(`${this.baseUrl}/create`, body).pipe(
       catchError(this.handleError<any>("creating quiz"))
     ) 
   }
