@@ -32,10 +32,10 @@ export class DeckSearchComponent implements OnInit {
           let name = params["name"];
 
           if (lang1 == undefined)
-            lang1 = "hu"
+            lang1 = ".*"
 
           if (lang2 == undefined)
-            lang2 = "gb"
+            lang2 = ".*"
             
           if (name == undefined)
             name = ""

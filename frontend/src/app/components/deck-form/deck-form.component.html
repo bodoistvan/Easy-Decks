@@ -37,6 +37,8 @@
         <label class="custom-control-label" for="publicCheckBox">Public</label>
       </div>
 
+      <app-dif-dots [isInput]="true" (setValue)="setDifValue($event)"></app-dif-dots>
+
     </div>
     <br />
     <table class="table" formArrayName="cards">
@@ -52,7 +54,7 @@
         <ng-container *ngFor="let cardGroup of cards.controls; let i=index">
           
             <tr [formGroupName]=i>
-                <th scope="row">{{i + 1}}</th>
+                <th scope="row"><em *ngIf="selectedCardId == cardGroup.value.id; else seqNum" class="selectedCard fas fa-exclamation"></em><ng-template #seqNum>{{i + 1}}</ng-template></th>
                 <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 1)]" type="text" formControlName="lang1" (change)=modelChanged(i)></td>
                 <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 2)]" type="text" formControlName="lang2" (change)=modelChanged(i)></td>
                 <td><div style="width: 2.5rem;" (click)=deleteButtonClick(i) 

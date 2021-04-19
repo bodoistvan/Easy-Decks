@@ -7,12 +7,14 @@
         <div class="form-group col-md-2">
           <label for="inputState">First Language</label>
           <select id="inputState" class="form-control" formControlName="lang1">
+            <option value=".*">Any</option>
             <option *ngFor="let opt of flagInfo" value="{{opt.dataName}}">{{opt.displayName}} </option>
           </select>
         </div>
         <div class="form-group col-md-2">
             <label for="inputState2">Second Language</label>
             <select id="inputState2" class="form-control" formControlName="lang2">
+              <option value=".*">Any</option>
               <option *ngFor="let opt of flagInfo" value="{{opt.dataName}}">{{opt.displayName}} </option>
             </select>
         </div>

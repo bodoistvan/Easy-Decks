@@ -80,24 +80,39 @@ exports.getDecks = Model =>
         let name = req.query.name || ".*";
         
         if (lang1 == 'undefined')
-            lang1 = undefined;
+            lang1 = ".*";
 
         if (lang2 == 'undefined')
-            lang2 = undefined;
+            lang2 = ".*";
         
         if (name == 'undefined')
             name = ".*";
 
         const searhObject = 
                 { 
-                    _owner: userId, 
-                    lang1: lang1, 
-                    lang2:lang2 
+                    _owner: userId,
+                    $or: 
+                    [
+                        {
+                            $and: 
+                                [
+                                    {lang1 : { $regex : lang1}},
+                                    {lang2 : { $regex : lang2}}
+                                ]
+                        },
+                        {
+                                $and: [
+                                    {lang1 : { $regex : lang2}},
+                                    {lang2 : { $regex : lang1}}
+                                ]
+                        }
+                    ]
                 };
         Object.keys(searhObject).forEach(key => searhObject[key] === undefined && delete searhObject[key])
-        console.log(searhObject)
+        
 
-        const decks = await Model.Deck.find({ ...searhObject, name: { $regex: name }}).limit(limit);
+        const decks = await Model.Deck.find({ ...searhObject, name: { $regex:  new RegExp( name.toLowerCase(), "i") }}).limit(limit);
+
 
         if (decks === undefined){
             res.status(404);

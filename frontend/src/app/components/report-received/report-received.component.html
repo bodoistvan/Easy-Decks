@@ -11,7 +11,7 @@
     <div class="report-body" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
         <div class="row p-2 px-4">
             <p class="col-6 col-sm-7 col-md-9 report-type">type: {{report!.type | uppercase }} </p>
-            <button class="col-6 col-sm-5 col-md-3 btn btn-outline-info float-right">See Deck</button>
+            <button class="col-6 col-sm-5 col-md-3 btn btn-outline-info float-right" (click)="onSeeDeckClick()">See Deck</button>
             <p class="col-12 report-text">comment: {{report!.text}} </p>
         </div>
       
@@ -27,7 +27,7 @@
         </form>
         <div class="d-flex justify-content-around mb-3">
             <button class="btn btn-danger" (click)="ignoreReport()">Ignore</button>
-            <button class="btn btn-outline-success" (click)="acceptReport()">Save And Submit</button>
+            <button class="btn btn-outline-success" (click)="acceptReport()">{{ shouldSaveCard ? 'Save Card And Accept' : 'Accept'}}</button>
         </div>
     </div>
 

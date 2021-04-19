@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Deck } from 'src/app/interfaces/deck';
 
 @Component({
   selector: 'app-home',

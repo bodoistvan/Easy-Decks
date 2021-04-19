@@ -19,11 +19,14 @@ export class DeckFormComponent implements OnInit {
   constructor(private fb: FormBuilder, private deckService:DecksService, private route:ActivatedRoute, private flagInfoService:FlagInfoService) { }
 
   private deckId?:string;
+  
+  public selectedCardId:string = "";
 
   ngOnInit(): void {
 
     this.route.queryParams.subscribe(params => {
       this.deckId = params["id"];
+      this.selectedCardId = params["selected"];
       
       if (this.deckId !=null){
         this.deckService.getDeckInfoByIdAll(this.deckId).subscribe(data => {
@@ -36,7 +39,7 @@ export class DeckFormComponent implements OnInit {
           this.deckForm.get("lang2")?.disable(); 
 
         }, err => console.error(err));
-    }
+      }
    })
 
    this.flagInfoService.getFlagInfo().subscribe(data=> this.flagInfo = data);
@@ -125,7 +128,7 @@ export class DeckFormComponent implements OnInit {
     name: [''],
     lang1: ['hu'],
     lang2: ['gb'],
-    level: ['ADVANCED'],
+    level: [3],
     public: ['false'],
     cards: this.fb.array([
       this.fb.group({
@@ -200,5 +203,9 @@ export class DeckFormComponent implements OnInit {
   onSubmitPatch():void {
     console.log(this.deckId!);
     this.deckService.patchDeckById(this.deckId!, this.deckForm.value).subscribe(rep => console.log(rep));
+  }
+
+  setDifValue(val : number){
+    this.deckForm.patchValue({level: val});
   }
 }

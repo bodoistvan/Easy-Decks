@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Report } from 'src/app/interfaces/report';
 import { CardService } from 'src/app/services/card.service';
 import { ReportServiceService } from 'src/app/services/report-service.service';
@@ -15,7 +16,12 @@ export class ReportReceivedComponent implements OnInit {
   @Input() report?:Report
   @Input() active?:boolean
 
-  constructor(private fb: FormBuilder, private reportService:ReportServiceService, private cardService:CardService) { }
+  constructor(
+     private fb: FormBuilder,
+     private reportService:ReportServiceService, 
+     private cardService:CardService,
+     private router:Router
+     ) { }
 
   public cardForm = this.fb.group({
     id: [],
@@ -51,6 +57,21 @@ export class ReportReceivedComponent implements OnInit {
 
   }
 
+  get shouldSaveCard():boolean{
+    const lang1 = this.cardForm.get("lang1") as FormControl; 
+    const lang2 = this.cardForm.get("lang2") as FormControl; 
+
+    if (lang1.dirty || lang2.dirty){
+      return true;
+    }
+
+    return false;
+  }
+
+  onSeeDeckClick(){
+    this.router.navigate(["decks", "modify"], {queryParams: { id: this.report!.deck, selected: this.report!.card.id }});
+  }
+
   statusLang(index: number){
 
     if (index == 1){
@@ -65,12 +86,14 @@ export class ReportReceivedComponent implements OnInit {
   }
 
   ignoreReport(){
-    console.log(this.report!.id)
     this.reportService.submitReport(this.report!.id,"ignore").subscribe((data) => {console.log(data)}, err=> console.log(err));
   }
 
   acceptReport(){
-    this.cardService.updateCard(this.report!.card.id, this.cardForm.value).subscribe((data) => {console.log(data)}, err=> console.log(err));
+    if (this.shouldSaveCard == true){
+        this.cardService.updateCard(this.report!.card.id, this.cardForm.value).subscribe((data) => {console.log(data)}, err=> console.log(err));
+    }
+    
     this.reportService.submitReport(this.report!.id,"accept").subscribe((data) => {console.log(data)}, err=> console.log(err));
   }
 
