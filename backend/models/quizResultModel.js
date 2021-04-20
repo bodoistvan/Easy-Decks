@@ -27,10 +27,20 @@ const quizResultSchema = new Schema({
             lang2: String,
             status: String
         }
-    ]
+    ],
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    }
     
 });
 
+quizResultSchema.pre(/^find/, function(next) {
+    // this points to the current query
+    this.find({ active: { $ne: false } });
+    next();
+});
 
-const Report = db.model('QuizResult', quizResultSchema );
-module.exports = Report;
+const QuizResult = db.model('QuizResult', quizResultSchema );
+module.exports = QuizResult;

@@ -30,6 +30,11 @@ const cardStatSchema = new Schema({
     wrongCounter: {
         type: Number,
         default: 0
+    },
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
     }
 });
 
@@ -40,6 +45,12 @@ cardStatSchema.methods.correctpp = function() {
 cardStatSchema.methods.wrongpp = function() {
    this.wrongCounter = this.wrongCounter + 1; 
 }
+
+cardStatSchema.pre(/^find/, function(next) {
+    // this points to the current query
+    this.find({ active: { $ne: false } });
+    next();
+});
 
 const CardStat = db.model('CardStat', cardStatSchema );
 module.exports = CardStat;

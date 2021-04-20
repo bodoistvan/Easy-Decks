@@ -10,6 +10,7 @@ router.use(authController.protect(Model));
 
 router.route("/:id")
     .get(deckController.getDeckById(Model))
+    .delete(deckController.deleteDeck(Model))
     .patch(deckController.patchDeckById(Model));
 
 router.route("/:id/all")

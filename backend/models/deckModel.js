@@ -1,7 +1,8 @@
 const Schema = require('mongoose').Schema;
 const db = require('../db');
 
-const Deck = db.model('Deck', {
+const deckSchema = new Schema(
+{
     _owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -27,12 +28,23 @@ const Deck = db.model('Deck', {
         type: Boolean,
         require: true
     },
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    },
     _cards: [{
         type: Schema.Types.ObjectId,
         ref: 'Card'
     }]
 });
 
+deckSchema.pre(/^find/, function(next) {
+    // this points to the current query
+    this.find({ active: { $ne: false } });
+    next();
+});
 
+const Deck = db.model('Deck', deckSchema );
 
 module.exports = Deck;

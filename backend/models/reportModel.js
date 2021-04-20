@@ -28,6 +28,11 @@ const reportSchema = new Schema({
     status: {
         type: String,
         default: "active" //accepted, ignored
+    },
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
     }
 
 });

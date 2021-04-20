@@ -21,6 +21,64 @@ const showBookMarks = async ({ cards: cards, deckId: deckId, userId: userId, Mod
                  
 }
 
+exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
+
+    //const userId = req.user.id;
+    const deckId = req.params.id;
+
+    Model.Card.find({ _deck : deckId}).exec((err, cards) =>{
+        if (err)
+            return;
+
+        cards.forEach(card => {
+            card.active = false;
+            card.save();
+        })
+    })
+    
+
+    Model.QuizResult.find({ _deck : deckId}).exec((err, quizResults) =>{
+        if (err)
+            return;
+
+        quizResults.forEach(quizResult => {
+            quizResult.active = false;
+            quizResult.save();
+        })
+    })
+
+    Model.Report.find({ _deck : deckId}).exec((err, reports) =>{
+        if (err)
+            return;
+
+        reports.forEach(report => {
+            report.active = false;
+            report.save();
+        })
+    })
+
+    Model.CardStat.find({ _deck : deckId}).exec((err, cardStats) =>{
+        if (err)
+            return;
+
+        cardStats.forEach(cardStat => {
+            cardStat.active = false;
+            cardStat.save();
+        })
+    })
+
+    Model.Deck.findOne({_id : deckId}).exec((err, deck) => {
+        if (err)
+            return
+
+        deck.active = false;
+        deck.save();
+
+    })
+
+    res.send("deleted")
+
+});
 
 exports.createDeck = Model => 
     catchAsync(async(req, res, next) => {
