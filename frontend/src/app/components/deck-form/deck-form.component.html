@@ -25,19 +25,23 @@
         </select>
       </div>
 
-      <div class="form-group col-6 col-md-3">
+      <div class="form-group col-5 col-md-3">
         <label  for="lang2Select">Second Language</label>
         <select class="form-control" formControlName="lang2" id="lang2Select">
           <option *ngFor="let flag of flagInfo" [value]=flag.dataName>{{flag.displayName}}</option>
         </select>
       </div>
 
-      <div class="custom-control custom-checkbox col-sm-12 ml-3">
+      <div class="custom-control custom-checkbox col-5 ml-3">
         <input type="checkbox" formControlName="public" class="custom-control-input" id="publicCheckBox">
         <label class="custom-control-label" for="publicCheckBox">Public</label>
       </div>
 
-      <app-dif-dots [isInput]="true" (setValue)="setDifValue($event)"></app-dif-dots>
+      <div class="col-6 d-flex justify-content-left align-items-center">
+        <p class="m-0">Difficulty:</p>
+        <app-dif-dots class="col-6" [isInput]="true" (setValue)="setDifValue($event)"></app-dif-dots>
+      </div>
+      
 
     </div>
     <br />
@@ -69,8 +73,9 @@
     </table >
 
     
-    <div *ngIf="formType == 'create'; else elseBlockSubmit">
-        <button type="submit" (click)="onSubmitCreate()" class="btn btn-primary">Submit</button>
+    <div class="col-12 d-flex justify-content-around" *ngIf="formType == 'create'; else elseBlockSubmit">
+          <button type="submit" (click)="onCancelCreate()" class="btn btn-outline-danger px-4 py-2">Cancel</button>
+          <button type="submit" (click)="onSubmitCreate()" class="btn btn-primary px-4 py-2">Create</button>
     </div>
     <ng-template #elseBlockSubmit>
         <div class="row">
@@ -84,8 +89,7 @@
     </ng-template>
 
   </form>
-  
-  <pre>{{ deckForm.value | json }}</pre>
+
   
 </div>
 

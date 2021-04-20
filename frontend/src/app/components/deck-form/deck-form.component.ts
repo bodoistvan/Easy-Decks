@@ -1,6 +1,6 @@
 import {  Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FlagInfo } from 'src/app/interfaces/flag-info';
 import { DecksService } from 'src/app/services/decks.service';
 import { FlagInfoService } from 'src/app/services/flag-info.service';
@@ -16,7 +16,12 @@ export class DeckFormComponent implements OnInit {
 
   public flagInfo:FlagInfo[] = [];
 
-  constructor(private fb: FormBuilder, private deckService:DecksService, private route:ActivatedRoute, private flagInfoService:FlagInfoService) { }
+  constructor(
+    private fb: FormBuilder, 
+    private deckService:DecksService, 
+    private route:ActivatedRoute,
+    private router:Router,
+    private flagInfoService:FlagInfoService) { }
 
   private deckId?:string;
   
@@ -196,6 +201,10 @@ export class DeckFormComponent implements OnInit {
     this.deckService.createDeck(this.deckForm.value).subscribe( rep => console.log(rep) );
   }
 
+  onCancelCreate():void {
+    this.router.navigate(["home"]);
+  }
+
   onSubmitDelete():void {
     this.deckService.deleteDeckById(this.deckId!).subscribe( rep => console.log(rep));
   }
@@ -208,4 +217,7 @@ export class DeckFormComponent implements OnInit {
   setDifValue(val : number){
     this.deckForm.patchValue({level: val});
   }
+
+
+
 }
