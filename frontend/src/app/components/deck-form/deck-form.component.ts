@@ -1,9 +1,11 @@
 import {  Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FlagInfo } from 'src/app/interfaces/flag-info';
 import { DecksService } from 'src/app/services/decks.service';
 import { FlagInfoService } from 'src/app/services/flag-info.service';
+import { YouSureComponent } from '../you-sure/you-sure.component';
 
 @Component({
   selector: 'app-deck-form',
@@ -21,7 +23,9 @@ export class DeckFormComponent implements OnInit {
     private deckService:DecksService, 
     private route:ActivatedRoute,
     private router:Router,
-    private flagInfoService:FlagInfoService) { }
+    private flagInfoService:FlagInfoService,
+    private modalService: NgbModal
+    ) { }
 
   private deckId?:string;
   
@@ -49,6 +53,10 @@ export class DeckFormComponent implements OnInit {
 
    this.flagInfoService.getFlagInfo().subscribe(data=> this.flagInfo = data);
 
+  }
+
+  get deckName(){
+    return this.deckForm.get("name");
   }
 
   public testBool = false;
@@ -130,10 +138,10 @@ export class DeckFormComponent implements OnInit {
 
   public deckForm = this.fb.group({
     id: [''],
-    name: [''],
+    name: ['', [ Validators.required, Validators.minLength(6) ]],
     lang1: ['hu'],
     lang2: ['gb'],
-    level: [3],
+    difficulty: [3],
     public: ['false'],
     cards: this.fb.array([
       this.fb.group({
@@ -198,7 +206,16 @@ export class DeckFormComponent implements OnInit {
   }
 
   onSubmitCreate():void {
-    this.deckService.createDeck(this.deckForm.value).subscribe( rep => console.log(rep) );
+    this.deckName?.markAsTouched();
+ 
+    if (this.deckForm.valid == true){
+      this.deckService.createDeck(this.deckForm.value).subscribe( rep => {
+        this.router.navigate(["home"]);
+      });
+    }
+
+
+    
   }
 
   onCancelCreate():void {
@@ -206,18 +223,38 @@ export class DeckFormComponent implements OnInit {
   }
 
   onSubmitDelete():void {
-    this.deckService.deleteDeckById(this.deckId!).subscribe( rep => console.log(rep));
+
+    const modalRef = this.modalService.open(YouSureComponent, {centered: true});
+    modalRef.componentInstance.text = "Are you sure you want to delete this deck?"
+    modalRef.componentInstance.onSubmit.subscribe(() => this.deleteDeck());
+    //modalRef.componentInstance.onSubmit = this.deleteDeck.bind(this);
+    console.log(modalRef.componentInstance);
+
+    //this.deckService.deleteDeckById(this.deckId!).subscribe( rep => console.log(rep));
+  }
+
+  deleteDeck(){
+    console.log("deleting...");
   }
 
   onSubmitPatch():void {
     console.log(this.deckId!);
-    this.deckService.patchDeckById(this.deckId!, this.deckForm.value).subscribe(rep => console.log(rep));
+    this.deckService.patchDeckById(this.deckId!, this.deckForm.value).subscribe(
+      newData => {
+        const cards = this.deckForm.get("cards") as FormArray;
+        cards.clear();
+
+        for(let i = 0; i < newData.cards.length + 1; i++){
+          this.addCards()
+        }
+
+        this.deckForm.patchValue(newData);
+      }
+    );
   }
 
   setDifValue(val : number){
-    this.deckForm.patchValue({level: val});
+    this.deckForm.patchValue({difficulty: val});
   }
-
-
 
 }

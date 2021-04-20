@@ -42,6 +42,7 @@ import { DifDotsComponent } from './components/dif-dots/dif-dots.component';
 import { CardReportComponent } from './components/card-report/card-report.component';
 import { QuizInprogressComponent } from './components/quiz-inprogress/quiz-inprogress.component';
 import { DeckSubscribeButtonComponent } from './components/deck-subscribe-button/deck-subscribe-button.component';
+import { YouSureComponent } from './components/you-sure/you-sure.component';
 
 
 
@@ -81,7 +82,8 @@ import { DeckSubscribeButtonComponent } from './components/deck-subscribe-button
     DifDotsComponent,
     CardReportComponent,
     QuizInprogressComponent,
-    DeckSubscribeButtonComponent
+    DeckSubscribeButtonComponent,
+    YouSureComponent
 
 
   ],

@@ -29,7 +29,6 @@ export class DecksService {
   }
   
   getDeckInfoByIdAll(id:string, params?: HttpParams){
-    console.log(params); 
     return this.http.get<DeckWithCards>(`${this.baseUrl}/${id}/all`, { params:params }).pipe(
       catchError(this.handleError<DeckWithCards>("getDeckInfoByIdAll")
     ))

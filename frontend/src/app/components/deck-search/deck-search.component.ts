@@ -19,7 +19,8 @@ export class DeckSearchComponent implements OnInit {
   public searchForm = this.fb.group({
     name: [""],
     lang1 : ["hu"],
-    lang2 : ["gb"]
+    lang2 : ["gb"],
+    status : ["owned"]
   })
 
   ngOnInit(): void {
@@ -30,6 +31,7 @@ export class DeckSearchComponent implements OnInit {
           let lang1 = params["lang1"];
           let lang2 = params["lang2"];
           let name = params["name"];
+          let status = params["status"];
 
           if (lang1 == undefined)
             lang1 = ".*"
@@ -39,8 +41,11 @@ export class DeckSearchComponent implements OnInit {
             
           if (name == undefined)
             name = ""
+
+          if (status == undefined)
+            status = "owned"
     
-          const queryParams = {name: name, lang1: lang1, lang2:lang2 }
+          const queryParams = {name: name, lang1: lang1, lang2:lang2, status: status }
           this.searchForm.patchValue(queryParams);
           
         });
@@ -49,7 +54,13 @@ export class DeckSearchComponent implements OnInit {
   onSearchSubmit(){
     const searhQuery = this.searchForm.value;
 
-    this.router.navigate(["home"], {queryParams : { name: searhQuery.name, lang1: searhQuery.lang1, lang2: searhQuery.lang2 } });
+    this.router.navigate(["home"], {queryParams : 
+      { 
+        name: searhQuery.name, 
+        lang1: searhQuery.lang1, 
+        lang2: searhQuery.lang2, 
+        status: searhQuery.status
+      } });
   }
 
 

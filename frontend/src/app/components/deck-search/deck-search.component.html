@@ -1,26 +1,44 @@
 <form class="mt-3" [formGroup]="searchForm" >
+    <div class="col-12 mb-4 p-0">
+      <em class="search-icon fas fa-search"></em>
+    </div>
     <div class="form-row">
-        <div class="form-group col-md-5">
+        <div class="form-group col-12 col-md-6 col-lg-4">
           <label for="inputCity">Name</label>
           <input type="text" class="form-control" id="inputCity" formControlName="name">
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-6 col-md-3 col-lg-2">
           <label for="inputState">First Language</label>
           <select id="inputState" class="form-control" formControlName="lang1">
             <option value=".*">Any</option>
             <option *ngFor="let opt of flagInfo" value="{{opt.dataName}}">{{opt.displayName}} </option>
           </select>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-6 col-md-3 col-lg-2">
             <label for="inputState2">Second Language</label>
             <select id="inputState2" class="form-control" formControlName="lang2">
               <option value=".*">Any</option>
               <option *ngFor="let opt of flagInfo" value="{{opt.dataName}}">{{opt.displayName}} </option>
             </select>
         </div>
-        <div class="form-group col-md-2 d-flex align-items-end">
-            <button (click)="onSearchSubmit()" id="inputState3" type="submit" class="btn btn-primary">Search</button>
+        <!-- <div class="col-6">
+          <p class="col-12 m-0 p-0">Difficulty</p>
+          <app-dif-dots class="col-12" style=""></app-dif-dots>
+        </div> -->
+        <div class="form-group col-6 col-md-3 col-lg-2">
+          <label for="inputStatus">Status</label>
+          <select id="inputStatus" class="form-control" formControlName="status">
+            <option value="all">All</option>
+            <option value="owned">Owned</option>
+            <option value="subscribed">Subscribed</option>
+            <option value="explore">Explore</option>
+          </select>
         </div>
+        
+        <div class="form-group col-6 col-md-9 col-lg-2 d-flex justify-content-end align-items-end">
+            <button class="btn btn-primary col-12 col-md-3 col-lg-12" (click)="onSearchSubmit()" id="inputState3" type="submit" >Search</button>
+        </div>
+        
       </div>
 </form>
 

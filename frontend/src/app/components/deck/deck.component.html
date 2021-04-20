@@ -4,12 +4,12 @@
         </div>
         <ul class="list-group list-group-flush">
          
-          <li class="list-group-item"><app-dif-dots class="" [currentValue]="3"></app-dif-dots> </li>
-          <li class="list-group-item">
-            <div class="d-flex justify-content-between">
-              <img class="col-4" src="/assets/images/flags/wide/{{lang1}}.svg">
-              <div class="col-4 text-center">{{count}}</div>
-              <img class="col-4" src="/assets/images/flags/wide/{{lang2}}.svg">
+          <li class="list-group-item py-3 pl-3"><app-dif-dots class="my-2" [currentValue]="difficulty"></app-dif-dots> </li>
+          <li class="list-group-item px-0">
+            <div class="d-flex justify-content-around align-items-center">
+              <img class="col-4 card-flag" src="/assets/images/flags/wide/{{lang1}}.svg">
+              <div class="col-2 text-center"><h6 class="m-0">{{count}}</h6></div>
+              <img class="col-4 card-flag" src="/assets/images/flags/wide/{{lang2}}.svg">
             </div>
           </li>
         </ul>

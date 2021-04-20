@@ -19,9 +19,9 @@ const Deck = db.model('Deck', {
         type: String,
         required: true
     },
-    level: {
-        type: String,
-        required: true
+    difficulty: {
+        type: Number,
+        default: 3
     },
     public: {
         type: Boolean,

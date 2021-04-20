@@ -28,7 +28,7 @@ exports.createDeck = Model =>
         const userId = req.user._id + "";
         const ownerId = userId;
 
-        let filter = ["name", "lang1", "lang2", "level", "cards", "public"];
+        let filter = ["name", "lang1", "lang2", "difficulty", "cards", "public"];
 
         if ( checkProperties(req.body, filter) === false )
             return next("param err...");
@@ -40,7 +40,7 @@ exports.createDeck = Model =>
                 name : req.body.name,
                 lang1 : req.body.lang1,
                 lang2 : req.body.lang2,
-                level :  req.body.level,
+                difficulty :  req.body.difficulty,
                 public: req.body.public
             });
         
@@ -75,22 +75,18 @@ exports.getDecks = Model =>
 
         const userId = req.user._id + "";
         const limit = req.query.limit || 0;
-        let lang1 = req.query.lang1;
-        let lang2 = req.query.lang2;
+        let lang1 = req.query.lang1 || ".*";
+        let lang2 = req.query.lang2 || ".*";
         let name = req.query.name || ".*";
-        
-        if (lang1 == 'undefined')
-            lang1 = ".*";
 
-        if (lang2 == 'undefined')
-            lang2 = ".*";
-        
-        if (name == 'undefined')
-            name = ".*";
+        const type = req.query.status || "owned";
 
-        const searhObject = 
+        const user = await Model.User.findOne({ _id: userId});
+
+        const subscriptions = user._subscriptions;
+
+        const searhObjectLang = 
                 { 
-                    _owner: userId,
                     $or: 
                     [
                         {
@@ -108,10 +104,23 @@ exports.getDecks = Model =>
                         }
                     ]
                 };
-        Object.keys(searhObject).forEach(key => searhObject[key] === undefined && delete searhObject[key])
-        
 
-        const decks = await Model.Deck.find({ ...searhObject, name: { $regex:  new RegExp( name.toLowerCase(), "i") }}).limit(limit);
+        let searchStatus = {};
+        if (type == "owned"){
+            searchStatus = { _owner : userId };
+        } else if (type == "subscribed"){
+            searchStatus = { _id : subscriptions, public : true }
+        } else if (type == "explore"){
+            searchStatus = { $and : [ { _owner : { $ne : userId} }, { _id : { $nin : subscriptions} }, {public: true} ]};
+        } else if ( type == "all"){
+            searchStatus = { $or : [{public : true}, {_owner: userId}] } 
+        } else {
+            searchStatus = { _owner : userId };
+        }
+        const sob = { $and: [{...searchStatus},{...searhObjectLang}, {name: { $regex:  new RegExp( name.toLowerCase(), "i") }} ] }
+        
+        console.log({...sob});
+        const decks = await Model.Deck.find({ ...sob }).limit(limit);
 
 
         if (decks === undefined){
@@ -125,7 +134,7 @@ exports.getDecks = Model =>
                 name: deck.name,
                 lang1: deck.lang1,
                 lang2: deck.lang2,
-                level: deck.level,
+                difficulty: deck.difficulty,
                 count: deck._cards.length
             }) ))
 
@@ -180,7 +189,7 @@ exports.getDeckById = Model => catchAsync( async(req,res,next) => {
             name: deck.name,
             lang1: deck.lang1,
             lang2: deck.lang2,
-            level: deck.level,
+            difficulty: deck.difficulty,
             status
         })
     } else {
@@ -249,7 +258,7 @@ exports.getDeckByIdAll = Model =>
             name: deck.name,
             lang1: deck.lang1,
             lang2: deck.lang2,
-            level: deck.level,
+            difficulty: deck.difficulty,
             public: deck.public,
             cards: cards
         })
@@ -260,9 +269,11 @@ exports.getDeckByIdAll = Model =>
 exports.patchDeckById = Model => 
     catchAsync( async (req, res, next)=>{
         
-        const ownerId = req.user._id;
 
-        const myfilter = ["id", "level", "public", "cards"];
+        const ownerId = req.user._id;
+        const difficulty = req.body.difficulty || 3;
+
+        const myfilter = ["id", "difficulty", "public", "cards"];
 
         if ( checkProperties(req.body, myfilter) === false )
             return next(new AppError("bad params", 400 ));
@@ -278,7 +289,11 @@ exports.patchDeckById = Model =>
 
         //delete cards
         
-        deck.level = req.body.level;
+        if (deck.difficulty < 1 || deck.difficulty > 5) {
+            return next(new AppError("bad parameter: diff" + difficulty))
+        }
+
+        deck.difficulty = difficulty;
         deck.public = req.body.public;
         
         
@@ -320,11 +335,25 @@ exports.patchDeckById = Model =>
          })) );
 
         deck._cards = [ ...deck._cards, ...createdCards.map(card => card.id)];
-    
+         
 
         await deck.save();
 
-        res.json( { shouldBeUpdatedCardsModel});
+        let newCards = await Model.Card.find( {_deck: deck._id} );
+
+        if (newCards != undefined){
+            newCards = newCards.map(card => ({ id: card._id, lang1: card.lang1, lang2: card.lang2 }))
+        }
+
+        res.json( { 
+            id: deck._id,
+            name: deck.name,
+            lang1: deck.lang1,
+            lang2: deck.lang2,
+            difficulty: deck.difficulty,
+            public: deck.public,
+            cards: newCards
+         });
 
     });
 
@@ -423,6 +452,5 @@ exports.unsubsribeDeck = (Model) => catchAsync( async (req,res,next) => {
 
     res.status(201);
     res.json({subbedDeckId, deckId, userId,_subscriptions: user._subscriptions});
-
 
 });

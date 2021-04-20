@@ -3,6 +3,6 @@ export interface DeckInfo {
     name: string,
     lang1: string,
     lang2: string,
-    level: string,
+    difficulty: number,
     status: string
 }   

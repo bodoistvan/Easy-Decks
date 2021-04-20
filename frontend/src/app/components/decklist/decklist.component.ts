@@ -20,18 +20,24 @@ export class DecklistComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
 
-      const lang1 = params["lang1"];
-      const lang2 = params["lang2"];
-      const name = params["name"];
+      const lang1 = params["lang1"] || ".*";
+      const lang2 = params["lang2"] || ".*";
+      const name = params["name"] || ".*";
+      const status = params["status"] || "owned";
 
       this.queryParams = {name: name, lang1: lang1, lang2:lang2 }
-      const objParams = new HttpParams().append('lang1', lang1).append('lang2', lang2).append('name', name);
-      console.log(objParams);
+      const objParams = new HttpParams().append('lang1', lang1).append('lang2', lang2).append('name', name).append('status', status);
       this.decksService.getDecks(objParams).subscribe( data => this.decks = data );
       
     });
 
   }
+
+  createOnClick(){
+    this.router.navigate(["decks","create"])
+  }
+
+
 
   
 }

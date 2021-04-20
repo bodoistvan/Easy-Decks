@@ -11,7 +11,7 @@ export class DeckComponent implements OnInit {
   @Input() name: string = "";
   @Input() lang1: string = "";
   @Input() lang2: string = "";
-  @Input() level: string = "";
+  @Input() difficulty: number = 1;
   @Input() count: number = 0;
   @Input() id: string = "";
 
@@ -19,7 +19,7 @@ export class DeckComponent implements OnInit {
   constructor(private router:Router) { }
 
   ngOnInit(): void {
-
+    console.log(this.difficulty);
   }
 
   onNameClick(){
