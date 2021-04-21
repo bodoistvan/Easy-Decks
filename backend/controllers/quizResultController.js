@@ -6,7 +6,7 @@ exports.getQuizResults = (Model) => catchAsync( async(req,res,next)=>{
     const userId = req.user.id;
     const deckId = req.params.id;
 
-    const quizResults = await Model.QuizResult.find({ _user: userId ,_deck: deckId });
+    const quizResults = await Model.QuizResult.find({ _user: userId ,_deck: deckId }).sort( { startedAt: -1 } );
 
     if (quizResults == undefined){
         return next(new AppError("no result", 404));

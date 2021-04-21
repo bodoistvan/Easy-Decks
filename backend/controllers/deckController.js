@@ -23,7 +23,7 @@ const showBookMarks = async ({ cards: cards, deckId: deckId, userId: userId, Mod
 
 exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
 
-    //const userId = req.user.id;
+    const userId = req.user.id;
     const deckId = req.params.id;
 
     Model.Card.find({ _deck : deckId}).exec((err, cards) =>{
@@ -37,7 +37,7 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
     })
     
 
-    Model.QuizResult.find({ _deck : deckId}).exec((err, quizResults) =>{
+    Model.QuizResult.find({ _deck : deckId, _user : userId}).exec((err, quizResults) =>{
         if (err)
             return;
 
@@ -47,7 +47,7 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
         })
     })
 
-    Model.Report.find({ _deck : deckId}).exec((err, reports) =>{
+    Model.Report.find({ _deck : deckId, _owner : userId}).exec((err, reports) =>{
         if (err)
             return;
 
@@ -57,7 +57,7 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
         })
     })
 
-    Model.CardStat.find({ _deck : deckId}).exec((err, cardStats) =>{
+    Model.CardStat.find({ _deck : deckId, _user: userId}).exec((err, cardStats) =>{
         if (err)
             return;
 
@@ -179,22 +179,41 @@ exports.getDecks = Model =>
         
         console.log({...sob});
         const decks = await Model.Deck.find({ ...sob }).limit(limit);
-
-
+   
         if (decks === undefined){
             res.status(404);
             res.send("Not Found any decks");
         } else {
 
+            const cardPromises = [];
+            decks.forEach( (deck) => {
+                const myPromise = new Promise((resolve, reject) => {
+                    Model.Card.find( {_deck: deck._id} ).exec((err, cards) =>{
+                        if (err)
+                            reject();
+
+                        deck.cardsCount = cards.length;
+                        resolve();
+                        
+                    });
+                }) 
+
+                cardPromises.push( myPromise );
+                
+            });
+            await Promise.all(cardPromises)
+
             res.status(200);
             res.json( decks.map( deck=> ( { 
-                id:deck._id,
-                name: deck.name,
-                lang1: deck.lang1,
-                lang2: deck.lang2,
-                difficulty: deck.difficulty,
-                count: deck._cards.length
+                    id:deck._id,
+                    name: deck.name,
+                    lang1: deck.lang1,
+                    lang2: deck.lang2,
+                    difficulty: deck.difficulty,
+                    count: deck.cardsCount
             }) ))
+           
+            
 
         }
 });
@@ -308,6 +327,26 @@ exports.getDeckByIdAll = Model =>
                     cards = await showBookMarks( { cards: cards, deckId: deckId, userId: userId, Model: Model} );
                 }
             }
+
+            const cardPromises = [];
+            cards.forEach(card => {
+                const cardPromise = new Promise((resolve, reject) => {
+                    Model.Report.findOne({ 'card._id' : card.id  , status: "active" }).exec((err,report) =>{
+                        if (err)
+                            reject();
+
+                        if (report != undefined){
+                            card.isReported = true
+                        } else {
+                            card.isReported = false;
+                        }
+                        resolve();
+                    });
+                })
+                cardPromises.push(cardPromise);
+            })
+            await Promise.all(cardPromises);
+     
         }
 
         res.status(200);

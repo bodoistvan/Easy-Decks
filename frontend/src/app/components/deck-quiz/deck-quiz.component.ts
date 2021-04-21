@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { interval } from 'rxjs';
 import { Quiz } from 'src/app/interfaces/quiz';
@@ -114,13 +114,22 @@ export class DeckQuizComponent implements OnInit, OnDestroy {
   public answerForm = this.fb.group({
     "id" : [""],
     "word" : [""],
-    "answer" : [{value: "", disabled:false}]
+    "answer" : ["", [Validators.required]]
   })
+
+  getAnswer(){
+    return this.answerForm.get("answer");
+  }
 
   onQuestionSubmit(){
     const id = this.answerForm.value.id;
     const fg = this.answerForm;
     const answer = fg.get("answer") as FormControl ;
+
+    if(this.answerForm.valid == false){
+      answer.markAsTouched();
+      return;
+    } 
 
     this.quizService.answerQuizQuestion(this.deckId!, { id, word: answer.value }).subscribe(res => {
       this.result = res;
@@ -181,6 +190,7 @@ export class DeckQuizComponent implements OnInit, OnDestroy {
         this.currentQuestion = this.quizQuestion!.questions![0];
       }
       answer.enable();
+      answer.markAsUntouched()
 
       const element = this.el.nativeElement.querySelector('#answeringQuestionBlock');
 

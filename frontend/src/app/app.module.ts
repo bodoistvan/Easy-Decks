@@ -43,6 +43,7 @@ import { CardReportComponent } from './components/card-report/card-report.compon
 import { QuizInprogressComponent } from './components/quiz-inprogress/quiz-inprogress.component';
 import { DeckSubscribeButtonComponent } from './components/deck-subscribe-button/deck-subscribe-button.component';
 import { YouSureComponent } from './components/you-sure/you-sure.component';
+import { DeckInfoHeaderComponent } from './components/deck-info-header/deck-info-header.component';
 
 
 
@@ -83,7 +84,8 @@ import { YouSureComponent } from './components/you-sure/you-sure.component';
     CardReportComponent,
     QuizInprogressComponent,
     DeckSubscribeButtonComponent,
-    YouSureComponent
+    YouSureComponent,
+    DeckInfoHeaderComponent
 
 
   ],

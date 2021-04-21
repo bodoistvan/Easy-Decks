@@ -18,7 +18,7 @@
     </div>
 
     <div class="cardsBody col-12">
-
+      <p *ngIf="ShowList?.length == 0" class="text-center col-12">No card found.</p>
       <div class="cardsRow row" *ngFor="let card of ShowList">
         <div class="col-6">{{card.lang1}}</div>
         <div class="col-6">{{card.lang2}}</div>

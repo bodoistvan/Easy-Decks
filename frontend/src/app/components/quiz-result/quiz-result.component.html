@@ -1,8 +1,13 @@
 <div class="quizresult p-0">
     <div class="quizresult-header" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
-        <h4>{{result.resultPercent}}%</h4>
-        <h4 class="d-none d-md-block">{{result.startedAt | date:'yyyy.MM.dd HH:mm'}}</h4>
-        <h4 class="d-md-none">{{result.startedAt | date:'yyyy.MM.dd'}}</h4>
+        <div class="col-1">
+            <h4>{{result.resultPercent}}%</h4>
+        </div>
+        <div class="col-9">
+            <h4 class="d-none d-md-block text-center">{{result.startedAt | date:'yyyy.MM.dd HH:mm'}}</h4>
+            <h4 class="d-md-none text-center">{{result.startedAt | date:'yyyy.MM.dd'}}</h4>
+        </div>
+        
         <em class="arrow fas" [ngClass]="{ 'fa-chevron-up' : isCollapsed, 'fa-chevron-down' : !isCollapsed }"></em>
     </div>
 

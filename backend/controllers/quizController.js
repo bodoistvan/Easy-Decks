@@ -109,7 +109,7 @@ class QuizStorage {
     }
 
     pushQuiz( quiz ){
-        const preQuiz = this.findQuizByUserId( quiz.userId );
+        const preQuiz = this.findQuizByUserIdDeckId( quiz.userId, quiz.deckId );
         if (preQuiz){
             console.log("letezett");
             this.deleteQuiz( preQuiz.id, preQuiz.startedAt );
@@ -144,8 +144,8 @@ class QuizStorage {
         return {error: "no quiz found by id"};
     }
 
-    findQuizByUserId( userId ){
-        return this.quizes.find( q => q.userId + "" == userId + "" ); 
+    findQuizByUserIdDeckId( userId, deckId ){
+        return this.quizes.find( q => (q.userId + "" == userId + "" && q.deckId + "" == deckId + "" )); 
     }
 
     //answer -> { id, word }
@@ -378,11 +378,15 @@ exports.getAllQuizes = () => catchAsync(async (req,res,next) =>{
 exports.getInProgress = () => catchAsync(async (req,res,next) =>{
 
     const userId = req.user.id;
+    const deckId = req.params.deckId;
 
-    const quiz = quizStorage.findQuizByUserId( userId );
+    const quiz = quizStorage.findQuizByUserIdDeckId( userId, deckId );
 
-    if (!quiz)
+    if (!quiz){
+        console.log("nincs");
         return next(new AppError("no quiz found", 404));
+    }
+        
 
     res.json(quiz);
 

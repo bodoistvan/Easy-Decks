@@ -112,6 +112,8 @@ export class DeckLearnComponent implements OnInit {
   onRebortButtonClick(){
     const modalRef = this.modalService.open(CardReportComponent, {centered: true});
     modalRef.componentInstance.cardId = this.getCard().id;
+    modalRef.componentInstance.onReport.subscribe(() => this.getCard().isReported = true);
+    
   }
 
   mofidyRange(step:number):void{

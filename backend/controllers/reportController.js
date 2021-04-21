@@ -52,7 +52,7 @@ exports.findReportsByOwner = (Model) => catchAsync( async (req,res,next) => {
 
     const userId = req.user.id;
 
-    const reports = await Model.Report.find( { _owner: userId, status:"active" } );
+    const reports = await Model.Report.find( { _owner: userId, status:"active" } ).sort( { createdAt: -1 } );
 
     const foundReports = reports.map( report => ({ id : report._id,
         owner: report._owner,
@@ -75,7 +75,7 @@ exports.findReportsByreportedBy = (Model) => catchAsync( async (req,res,next) =>
 
     const userId = req.user.id;
 
-    const reports = await Model.Report.find( { _reportedBy: userId } );
+    const reports = await Model.Report.find( { _reportedBy: userId } ).sort( { createdAt: -1 } );
 
     const foundReports = reports.map( report => ({ id : report._id,
         owner: report._owner,

@@ -15,7 +15,7 @@ router.route('/create')
    // .get(quizController.getQuestions())
     .post(quizController.createQuiz(Model));
 
-router.route('/inprogress')
+router.route('/inprogress/:deckId')
     .get(quizController.getInProgress());
 
 router.route('/:id')

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DeckInfo } from 'src/app/interfaces/deck-info';
 import { QuizResult } from 'src/app/interfaces/quiz-result';
 import { DecksService } from 'src/app/services/decks.service';
 import { QuizResultService } from 'src/app/services/quiz-result.service';
 import { QuizService } from 'src/app/services/quiz.service';
+import { YouSureComponent } from '../you-sure/you-sure.component';
 
 @Component({
   selector: 'app-deck-info',
@@ -14,9 +16,15 @@ import { QuizService } from 'src/app/services/quiz.service';
 })
 export class DeckInfoComponent implements OnInit {
 
-  constructor(private deckService:DecksService, private route: ActivatedRoute,
-     private fb:FormBuilder, private quizService: QuizService, private quizResultServive:QuizResultService,
-     private router:Router) { }
+  constructor(
+     private deckService:DecksService,
+     private route: ActivatedRoute,
+     private fb:FormBuilder, 
+     private quizService: QuizService, 
+     private quizResultServive:QuizResultService,
+     private router:Router,
+     private modalService:NgbModal
+    ) { }
 
   public active:number = 1;
   public deckInfo?:DeckInfo;
@@ -61,6 +69,25 @@ export class DeckInfoComponent implements OnInit {
   }
 
   onQuizSubmit(){
+    const deckId = this.deckInfo!.id;
+    if (deckId != undefined){
+
+        this.quizService.getQuizInprogress( deckId ).subscribe( (res) => {
+
+          if (res != undefined){
+            const modalRef = this.modalService.open(YouSureComponent, {centered: true});
+            modalRef.componentInstance.onSubmit.subscribe(()=> this.createQuiz())
+            modalRef.componentInstance.text = "There is a quiz in progress. Are you sure you want to overrite it?"
+          } else {
+            this.createQuiz();
+          }
+          
+        } )
+
+    }
+  }
+
+  private createQuiz(){
     const body = {
       deckId :this.deckInfo!.id, 
       amount : this.quizStartForm.value.amount * 1,
@@ -72,7 +99,7 @@ export class DeckInfoComponent implements OnInit {
         {
           const quizId = res.id;
           this.router.navigate(["decks", "quiz"], {queryParams : { id: quizId } });
-        });
+    });
   }
 
   onModifyButtonClick(){
@@ -91,6 +118,10 @@ export class DeckInfoComponent implements OnInit {
 
   onlqClick(index: number){
     this.lqActive = index;
+  }
+
+  onSwitchToQuiz(){
+    this.active = 2;
   }
 
 

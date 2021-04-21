@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReportServiceService } from 'src/app/services/report-service.service';
@@ -11,6 +11,7 @@ import { ReportServiceService } from 'src/app/services/report-service.service';
 export class CardReportComponent implements OnInit {
 
   @Input() cardId?:string;
+  @Output() onReport: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public activeModal: NgbActiveModal, 
@@ -27,10 +28,8 @@ export class CardReportComponent implements OnInit {
   })
 
   reportButtonClick(){
-
     const report = { cardId: this.cardId!, ...this.reportForm.value}
-
-    this.reportService.createReport(report).subscribe();
+    this.reportService.createReport(report).subscribe(()=>this.onReport.emit());
     this.activeModal.close('Close click')
   }
 

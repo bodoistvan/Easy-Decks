@@ -234,7 +234,7 @@ export class DeckFormComponent implements OnInit {
   }
 
   deleteDeck(){
-    this.deckService.deleteDeckById(this.deckId!).subscribe( rep => console.log(rep));
+    this.deckService.deleteDeckById(this.deckId!).subscribe( () => this.router.navigate(["home"]));
   }
 
   onSubmitPatch():void {

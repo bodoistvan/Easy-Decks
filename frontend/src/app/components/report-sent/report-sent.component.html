@@ -1,12 +1,22 @@
 <div class="mb-1">
 
-    <div class="report-header" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+    <div class="report-header" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+        aria-controls="collapseExample">
         <div class="px-3 d-flex justify-content-between align-items-center">
-            <p class="d-none d-md-block">{{ report!.type | uppercase }} | {{ report!.card.lang1}}</p>
-            <p class="d-none d-md-block">{{ report!.createdAt | date:'yyyy.MM.dd HH:mm'}}</p>
-            <p class="d-md-none">{{ report!.createdAt | date:'yyyy.MM.dd'}}</p>
-            <p>{{ report!.status | uppercase }}</p>
-            <i class="arrow fas" [ngClass]="{ 'fa-chevron-up' : !isCollapsed, 'fa-chevron-down' : isCollapsed }"></i>
+            <div class="col-4">
+                <p class="d-none d-md-block">{{ report!.type | uppercase }} | {{ report!.card.lang1}}</p>
+            </div>
+            <div class="col-4">
+                <p class="d-none d-md-block">{{ report!.createdAt | date:'yyyy.MM.dd HH:mm'}}</p>
+                <p class="d-md-none">{{ report!.createdAt | date:'yyyy.MM.dd'}}</p>
+            </div>
+            <div class="col-3">
+                <p>{{ report!.status | uppercase }}</p>
+            </div>
+            <div class="col-1"> <i class="arrow fas"
+                    [ngClass]="{ 'fa-chevron-up' : !isCollapsed, 'fa-chevron-down' : isCollapsed }"></i>
+            </div>
+
         </div>
     </div>
 
@@ -15,7 +25,7 @@
             <p class="col-6 col-sm-7 col-md-9 report-type">type: {{report!.type | uppercase }} </p>
             <button class="col-6 col-sm-5 col-md-3 btn btn-outline-danger float-right">Delete Report</button>
             <p class="col-12 report-text">comment: {{report!.text}} </p>
-        </div>     
+        </div>
     </div>
 
 </div>

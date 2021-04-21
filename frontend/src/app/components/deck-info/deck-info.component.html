@@ -2,24 +2,23 @@
 
 <div class="container">
     <div class="border">
-    <div class="d-flex justify-content-between px-2 align-items-center">
+    <div class="d-flex justify-content-between px-2 align-items-start">
 
-        <div class=""><h1>{{deckInfo? deckInfo.name : ""}}</h1></div>
-        <div *ngIf="deckInfo != undefined ?  (deckInfo.status == 'owner' ? true : false) : false" (click)="onModifyButtonClick()"><a class="btn btn-dark m-2"><em class="fas fa-cogs"></em></a></div>
-        <div *ngIf="deckInfo != undefined ? deckInfo.status == 'subscribed' || deckInfo.status == 'unsubscribed' : false">
-          <app-deck-subscribe-button [isSubbed]="deckInfo != undefined ? deckInfo.status == 'subscribed' : false" [deckId]="deckInfo != undefined? deckInfo.id : undefined" (refresh)="getInfo($event)"></app-deck-subscribe-button>
-        </div> 
-        <div *ngIf="deckInfo != undefined ?  (deckInfo.status == 'private' ? true :false) : false" class="d-flex align-items-center"><p class="private">private</p></div>
-    </div>
-    
-    <div class="d-flex justify-content-start align-items-center mb-2">
-            <div class="ml-2 mr-2"><img alt="" class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}"></div>
-            <div class="mr-2"><img alt="" class="formFlag" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}"></div>
-            <app-dif-dots [currentValue]="3" ></app-dif-dots>
+        <div class="col-9">
+          <app-deck-info-header name="{{deckInfo?.name}}" [difficulty]="deckInfo? deckInfo.difficulty : 1" lang1="{{deckInfo?.lang1}}" lang2="{{deckInfo?.lang2}}" ></app-deck-info-header>
+        </div>
+
+        <div class=" col-3 p-1 d-flex align-items-start">
+          <div class="col-12 p-0 d-flex justify-content-end" *ngIf="deckInfo != undefined ?  (deckInfo.status == 'owner' ? true : false) : false" (click)="onModifyButtonClick()"><a class="btn btn-dark"><em class="fas fa-cogs"></em></a></div>
+          <div class="col-12 p-0 d-flex justify-content-end" *ngIf="deckInfo != undefined ? deckInfo.status == 'subscribed' || deckInfo.status == 'unsubscribed' : false">
+            <app-deck-subscribe-button class="" [isSubbed]="deckInfo != undefined ? deckInfo.status == 'subscribed' : false" [deckId]="deckInfo != undefined? deckInfo.id : undefined" (refresh)="getInfo($event)"></app-deck-subscribe-button>
+          </div> 
+          <div class="col-12" *ngIf="deckInfo != undefined ?  (deckInfo.status == 'private' ? true :false) : false" class="d-flex align-items-start"><p class="private">private</p></div>
+        </div>
     </div>
 
-    <div *ngIf="deckInfo != undefined ? deckInfo.status == 'owner' || deckInfo.status == 'subscribed' : false" class="mt-2">
-        <ul ngbNav #nav="ngbNav" id="lq-nav" [(activeId)]="active" class="nav-tabs">
+    <div *ngIf="deckInfo != undefined ? deckInfo.status == 'owner' || deckInfo.status == 'subscribed' : false">
+        <ul ngbNav #nav="ngbNav" id="lq-nav" [(activeId)]="active" class="nav-tabs mt-4">
             <li [ngbNavItem]="1" (click)="onlqClick(0)" >
             <a ngbNavLink class="lq-nav-active">Learn</a>
             <ng-template ngbNavContent>
@@ -97,7 +96,7 @@
       <div class="col-12 col-lg-6">
         <div class="row">
           <div class="col-12 mb-2">
-            <app-quiz-inprogress></app-quiz-inprogress>
+            <app-quiz-inprogress (createQuiz)="onSwitchToQuiz()"></app-quiz-inprogress>
           </div>
         </div>
         <div class="row">
@@ -110,7 +109,7 @@
               <div *ngIf="lastResults != undefined; then showResult else noResult"></div>
               <ng-template #showResult><app-quiz-result-list [quizResults]="lastResults!" ></app-quiz-result-list></ng-template>
       
-              <ng-template #noResult> <h5 class="text-center">No result found</h5> </ng-template>
+              <ng-template #noResult> <p class="text-center m-0">No result found.</p> </ng-template>
             </div>
           </div>
         </div>

@@ -27,9 +27,9 @@ export class QuizService {
     )
   }
 
-  getQuizInprogress(){
-    return this.http.get<Quiz>(`${this.baseUrl}/inprogress`).pipe(
-      catchError(this.handleError<Quiz>("getQuizInprogress"))
+  getQuizInprogress( deckId:string ){
+    return this.http.get<Quiz>(`${this.baseUrl}/inprogress/${deckId}`).pipe(
+      catchError(this.handleError<Quiz>("getQuizInprogress") )
     )
   }
 
