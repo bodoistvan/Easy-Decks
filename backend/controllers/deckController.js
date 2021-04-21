@@ -26,6 +26,15 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
     const userId = req.user.id;
     const deckId = req.params.id;
 
+    const deck = await Model.Deck.findOne({_id : deckId});
+
+    if (deck._owner + "" != userId + ""){
+        return next(new AppError("autherror", 403));
+    }
+
+    deck.active = false;
+    deck.save();
+
     Model.Card.find({ _deck : deckId}).exec((err, cards) =>{
         if (err)
             return;
@@ -37,7 +46,7 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
     })
     
 
-    Model.QuizResult.find({ _deck : deckId, _user : userId}).exec((err, quizResults) =>{
+    Model.QuizResult.find({ _deck : deckId }).exec((err, quizResults) =>{
         if (err)
             return;
 
@@ -47,7 +56,7 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
         })
     })
 
-    Model.Report.find({ _deck : deckId, _owner : userId}).exec((err, reports) =>{
+    Model.Report.find({ _deck : deckId }).exec((err, reports) =>{
         if (err)
             return;
 
@@ -57,9 +66,9 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
         })
     })
 
-    Model.CardStat.find({ _deck : deckId, _user: userId}).exec((err, cardStats) =>{
+    Model.CardStat.find({ _deck : deckId }).exec((err, cardStats) =>{
         if (err)
-            return;
+            return; 
 
         cardStats.forEach(cardStat => {
             cardStat.active = false;
@@ -67,14 +76,7 @@ exports.deleteDeck = Model => catchAsync(async(req, res, next) => {
         })
     })
 
-    Model.Deck.findOne({_id : deckId}).exec((err, deck) => {
-        if (err)
-            return
-
-        deck.active = false;
-        deck.save();
-
-    })
+    
 
     res.send("deleted")
 
@@ -299,7 +301,6 @@ exports.getDeckByIdAll = Model =>
 
         if (req.query.type!= undefined){
             const qlist = req.query.type.split(',');
-            console.log("qlits: " + qlist)
             if( qlist.indexOf('statistic') != -1){
 
                 const cardStat = await Model.CardStat.find( { _user: userId, _deck: deckId } );
@@ -317,7 +318,7 @@ exports.getDeckByIdAll = Model =>
         } else {
             cards = await Model.Card.find({ _deck: deckId })
         }
-
+        
         if (cards != undefined){
             cards = cards.map(card => ({ id: card._id, lang1: card.lang1, lang2: card.lang2 }))
 
@@ -327,13 +328,16 @@ exports.getDeckByIdAll = Model =>
                     cards = await showBookMarks( { cards: cards, deckId: deckId, userId: userId, Model: Model} );
                 }
             }
-
+           
             const cardPromises = [];
             cards.forEach(card => {
                 const cardPromise = new Promise((resolve, reject) => {
                     Model.Report.findOne({ 'card._id' : card.id  , status: "active" }).exec((err,report) =>{
-                        if (err)
+                        if (err) {
+                            console.log(err)
                             reject();
+                        }
+                            
 
                         if (report != undefined){
                             card.isReported = true
@@ -345,8 +349,9 @@ exports.getDeckByIdAll = Model =>
                 })
                 cardPromises.push(cardPromise);
             })
+            
             await Promise.all(cardPromises);
-     
+            
         }
 
         res.status(200);
@@ -396,7 +401,33 @@ exports.patchDeckById = Model =>
         
         const cardsShouldBeDeletedIdArray = req.body.cards.filter(card => (card.action=="delete" && card.id != undefined && card.id != "")).map(card => card.id);
         
-        await Model.Card.deleteMany( { _id: { $in: cardsShouldBeDeletedIdArray }, _deck: deck._id });
+        Model.Card.find( { _id: { $in: cardsShouldBeDeletedIdArray }, _deck: deck._id }).exec((err, cards) =>{
+            if (err)
+                return
+
+            if (cards != undefined){
+                cards.forEach( card => {
+                    card.active = false;
+                    card.save()
+                    Model.Report.find( { 'card._id' : card.id} ).exec( (error, reports) => {
+                        if (error) {
+                            console.log(error)
+                            return
+                        }
+
+                        if (reports != undefined){
+                            reports.forEach( report=> {
+                                
+                                report.active = false;
+                                console.log(report)
+                                report.save();
+                            })
+                        }
+                    })
+                } )
+            }
+            
+        });
 
         deck._cards = deck._cards.filter(cardid => !cardsShouldBeDeletedIdArray.includes(cardid + ""));
         

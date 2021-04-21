@@ -31,16 +31,15 @@ const reportSchema = new Schema({
     },
     active: {
         type: Boolean,
-        default: true,
-        select: false
+        default: true
     }
 
 });
 
-reportSchema.post(/^find/, function() {
-    console.log(this._id)
-    //next();
-  });
+reportSchema.pre(/^find/, function(next) {
+    this.find({ active: { $ne: false } });
+    next();
+});
 
 const Report = db.model('Report', reportSchema );
 module.exports = Report;

@@ -54,13 +54,41 @@ exports.findReportsByOwner = (Model) => catchAsync( async (req,res,next) => {
 
     const reports = await Model.Report.find( { _owner: userId, status:"active" } ).sort( { createdAt: -1 } );
 
+    const reportPromises = [];
+
+    if (reports != undefined){
+        reports.forEach( report => {
+            const reportPromise = new Promise((resolve, reject)=> {
+                Model.Card.findOne ({ _id: report.card._id }).exec((err, card)=>{
+                    if (err)
+                        reject();
+
+                    if (card != undefined){
+                        if ( (report.card.lang1 + "" != card.lang1 + "") || (report.card.lang2 + "" != card.lang2 + "")){
+                            report.newCard = { lang1 : card.lang1, lang2 : card.lang2 }
+                            report.changed = true;
+                        } else {
+                            report.changed = false;
+                        }
+                    }
+                    resolve()
+                })
+            })
+            reportPromises.push(reportPromise);
+        });
+    }
+
+    await Promise.all(reportPromises);
+
     const foundReports = reports.map( report => ({ id : report._id,
         owner: report._owner,
         deck: report._deck,
         card: {id: report.card._id, lang1: report.card.lang1, lang2: report.card.lang2},
+        newCard: report.newCard,
         reportedBy: report._reportedBy,
         text: report.text,
         createdAt: report.createdAt,
+        changed: report.changed,
         type: report.type,
         status: report.status
      }))

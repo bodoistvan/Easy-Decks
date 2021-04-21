@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Report } from 'src/app/interfaces/report';
@@ -15,6 +15,8 @@ export class ReportReceivedComponent implements OnInit {
   public isCollapsed = true;
   @Input() report?:Report
   @Input() active?:boolean
+  @Output() cardSaved: EventEmitter<any> = new EventEmitter()
+  @Output() reportSubmit: EventEmitter<any> = new EventEmitter()
 
   constructor(
      private fb: FormBuilder,
@@ -38,6 +40,11 @@ export class ReportReceivedComponent implements OnInit {
         this.isCollapsed = false;
       }
     }
+  }
+
+  setCollapsed(newState:boolean){
+    this.isCollapsed = newState;
+    console.log(this.report?.id);
   }
 
   redoClicked(index: number){
@@ -86,15 +93,17 @@ export class ReportReceivedComponent implements OnInit {
   }
 
   ignoreReport(){
-    this.reportService.submitReport(this.report!.id,"ignore").subscribe((data) => {console.log(data)}, err=> console.log(err));
+    this.reportService.submitReport(this.report!.id,"ignore").subscribe((data) => {this.reportSubmit.emit(this.report!.id)});
   }
 
   acceptReport(){
     if (this.shouldSaveCard == true){
-        this.cardService.updateCard(this.report!.card.id, this.cardForm.value).subscribe((data) => {console.log(data)}, err=> console.log(err));
+        this.cardService.updateCard(this.report!.card.id, this.cardForm.value).subscribe((data) => {
+          this.cardSaved.emit({ ...this.cardForm.value })
+        });
     }
     
-    this.reportService.submitReport(this.report!.id,"accept").subscribe((data) => {console.log(data)}, err=> console.log(err));
+    this.reportService.submitReport(this.report!.id,"accept").subscribe((data) => this.reportSubmit.emit(this.report!.id));
   }
 
 }
