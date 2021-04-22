@@ -23,7 +23,7 @@
     <div class="report-body" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
         <div class="row p-2 px-4">
             <p class="col-6 col-sm-7 col-md-9 report-type">type: {{report!.type | uppercase }} </p>
-            <button class="col-6 col-sm-5 col-md-3 btn btn-outline-danger float-right">Delete Report</button>
+            <button class="col-6 col-sm-5 col-md-3 btn btn-outline-danger float-right" (click)="onDeleteClick()">Delete Report</button>
             <p class="col-12 report-text">comment: {{report!.text}} </p>
         </div>
     </div>

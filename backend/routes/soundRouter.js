@@ -5,11 +5,11 @@ const authController = require('../controllers/authController')
 
 const router = express.Router();
 
-//router.use(authController.protect(Model));
+router.use(authController.protect(Model));
 
 
-router.route('/')
-    .get(soundController.download(Model));
+router.route('/card/:id/:index')
+    .get(soundController.textToSpeech(Model));
 
 
 module.exports = router;

@@ -68,29 +68,18 @@ export class DeckFormComponent implements OnInit {
 
   deleteButtonClick(i:number){
 
-
     let fg = this.cards.at(i) as FormGroup;
-
     let card = fg.value;
 
-    console.log(card);
     if ( card.action === undefined){
-
       fg.addControl('action', new FormControl("delete"));
-
     } else {
       if (card.action == "delete"){
-
         if (this.cards.at(i).get(`lang1`)?.dirty || this.cards.at(i).get(`lang2`)?.dirty) {
-
           card.action = "update";
-
         } else {
-
           card.action = "none";
-
         }
- 
       } else{
           card.action="delete";
         }
@@ -103,7 +92,6 @@ export class DeckFormComponent implements OnInit {
     const action = this.cards.at(index).value.action || "";
     if (action == "delete")
       return true; 
-
     return false;
 
   }
@@ -213,9 +201,6 @@ export class DeckFormComponent implements OnInit {
         this.router.navigate(["home"]);
       });
     }
-
-
-    
   }
 
   onCancelCreate():void {

@@ -17,4 +17,16 @@ export class ReportsInfoSentComponent implements OnInit {
     this.reportSevice.getSentReports().subscribe(data => this.reports = data);
   }
 
+  deleteReport(id:any){
+    if (this.reports.length > 0){
+      const report = this.reports.find( report =>  report.id + "" == id + "");
+      if (report != undefined){
+        const index = this.reports.indexOf(report);
+        this.reports.splice(index, 1);
+  
+      }
+    }
+  }
+  
+
 }

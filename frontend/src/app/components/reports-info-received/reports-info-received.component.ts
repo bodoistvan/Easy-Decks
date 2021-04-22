@@ -21,7 +21,6 @@ export class ReportsInfoReceivedComponent implements OnInit {
   }
 
   reportSubmitted( id:string ){
-    console.log(id);
     if (this.reports.length > 0){
       const report = this.reports.find( report =>  report.id + "" == id + "");
       if (report != undefined){
@@ -34,8 +33,6 @@ export class ReportsInfoReceivedComponent implements OnInit {
 
       }
     }
-    
-    
   }
 
   cardSaved(card:any){

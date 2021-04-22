@@ -7,6 +7,9 @@ const router = express.Router();
 
 router.use(authController.protect(Model));
 
+router.route("/:id")
+    .delete(reportController.deleteReport(Model))
+
 router.route("/:id/accept")
     .post(reportController.submitReport(Model, "accepted"))
 

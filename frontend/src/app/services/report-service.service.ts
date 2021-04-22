@@ -38,6 +38,12 @@ export class ReportServiceService {
     )
   }
 
+  public deleteReport( id:string ){
+    return this.http.delete<any>(`${this.baseUrl}/${id}`).pipe(
+      catchError(this.handleError<any>("deleteReport"))
+    )
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
   

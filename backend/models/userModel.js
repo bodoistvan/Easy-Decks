@@ -2,6 +2,7 @@ const Schema = require('mongoose').Schema;
 const db = require('../db/index');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const flagInfo = require('./FlagInfoModel');
 
 const userSchema = new Schema(
     {
@@ -28,6 +29,11 @@ const userSchema = new Schema(
             type: Boolean,
             default: true,
             select: false
+        },
+        voices: {
+          type : flagInfo.getVoiceShema(),
+          required: true,
+          default: {}
         },
         _subscriptions: [{
             type: Schema.Types.ObjectId,

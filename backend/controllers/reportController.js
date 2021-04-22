@@ -142,3 +142,24 @@ exports.submitReport = (Model, status) => catchAsync( async (req,res,next) => {
     res.send();
 
 });
+
+exports.deleteReport = Model => catchAsync( async (req,res,next) => {
+
+    const userId = req.user.id;
+    const reportId = req.params.id;
+
+    const report = await Model.Report.findOne({ _id: reportId});
+    
+    if (!report)
+        return next(new AppError("report not found by id", 404));
+
+    if (report._reportedBy + "" != userId + ""){
+        return next(new AppError("auth error", 403));
+    }
+
+    report.active = false;
+    await report.save();
+
+    res.code(200).send();
+
+});
