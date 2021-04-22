@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "ng serve --open | cd ../backend/ && nodemon index.js",
+    "dev": "ng serve --open | cd ../backend/ && npm run",
     "node": "cd ../backend/ && npm run dev"
   },
   "private": true,

@@ -208,14 +208,9 @@ export class DeckFormComponent implements OnInit {
   }
 
   onSubmitDelete():void {
-
     const modalRef = this.modalService.open(YouSureComponent, {centered: true});
     modalRef.componentInstance.text = "Are you sure you want to delete this deck?"
     modalRef.componentInstance.onSubmit.subscribe(() => this.deleteDeck());
-    //modalRef.componentInstance.onSubmit = this.deleteDeck.bind(this);
-    console.log(modalRef.componentInstance);
-
-    //this.deckService.deleteDeckById(this.deckId!).subscribe( rep => console.log(rep));
   }
 
   deleteDeck(){

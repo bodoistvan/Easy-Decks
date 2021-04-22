@@ -6,8 +6,9 @@ const flagInfo =
         displayName: "Hungary",
         dataName: "hu",
         voices: [
-            {name: "hu-HU-TamasNeural", voice: "hu-HU-TamasNeural" },
-            {name: "hu-HU-NoemiNeural", voice: "hu-HU-NoemiNeural" }
+            {name: "hu-HU-NoemiNeural", voice: "hu-HU-NoemiNeural" },
+            {name: "hu-HU-TamasNeural", voice: "hu-HU-TamasNeural" }
+            
         ]
     },
     {

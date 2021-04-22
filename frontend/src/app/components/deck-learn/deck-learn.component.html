@@ -32,8 +32,8 @@
                     </div>
                 </div>
                 <div class="row d-flex justify-content-around">
-                    <app-learn-card class="col-12 col-md-5 mt-2" [word]="getCard().lang1"></app-learn-card>
-                    <app-learn-card class="col-12 col-md-5 mt-2" [word]="getCard().lang2"></app-learn-card>
+                    <app-learn-card [id]="getCard().id" [index]="1" class="col-12 col-md-5 mt-2" [word]="getCard().lang1"></app-learn-card>
+                    <app-learn-card [id]="getCard().id" [index]="2" class="col-12 col-md-5 mt-2" [word]="getCard().lang2"></app-learn-card>
                 </div>
             </div>
 

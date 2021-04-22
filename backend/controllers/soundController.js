@@ -6,40 +6,6 @@ const sdk = require("microsoft-cognitiveservices-speech-sdk");
 const subscriptionKey = "79202d23004d4b7aa4e7c635ae7e45a3";
 const serviceRegion = "westeurope";
 
-exports.download = (Model) => catchAsync(async (req, res, next) => {
-
-    res.send("ok");
-
-    var sdk = require("microsoft-cognitiveservices-speech-sdk");
-
-    // replace with your own subscription key,
-    // service region (e.g., "westus"), and
-    // the name of the file you save the synthesized audio.
-    var subscriptionKey = "79202d23004d4b7aa4e7c635ae7e45a3";
-    var serviceRegion = "westeurope"; // e.g., "westus"
-    var filename = "YourAudioFile2222.wav";
-
-    // we are done with the setup
-
-    // now create the audio-config pointing to our stream and
-    // the speech config specifying the language.
-    var audioConfig = sdk.AudioConfig.fromAudioFileOutput(filename);
-    var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
-
-    //speechConfig.speechSynthesisLanguage = "hu-HU";
-
-    //speechConfig.speechSynthesisLanguage = "hu-HU"
-    // speechConfig.setProperty("gender", "Female")
-    speechConfig.speechSynthesisVoiceName = "hu-HU-NoemiNeural";
-
-    console.log(speechConfig);
-
-    // create the speech synthesizer.
-    var synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
-
-
-
-});
 
 module.exports.textToSpeech = Model => catchAsync(async (req, res, next) => {
 
@@ -93,6 +59,8 @@ module.exports.textToSpeech = Model => catchAsync(async (req, res, next) => {
                      'Content-Type': 'audio/x-wav  ',
                      'Content-Length': sound.length
                  });
+
+                 console.log(sound)
 
                  res.end(sound);
 

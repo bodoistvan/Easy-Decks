@@ -99,8 +99,9 @@ export class ReportReceivedComponent implements OnInit {
   acceptReport(){
     if (this.shouldSaveCard == true){
         this.cardService.updateCard(this.report!.card.id, this.cardForm.value).subscribe((data) => {
-          this.cardSaved.emit({ ...this.cardForm.value })
+         
         });
+      this.cardSaved.emit({ ...this.cardForm.value })
     }
     
     this.reportService.submitReport(this.report!.id,"accept").subscribe((data) => this.reportSubmit.emit(this.report!.id));
