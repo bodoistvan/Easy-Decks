@@ -15,9 +15,9 @@ const flagInfo =
         displayName: "Germany",
         dataName: "de",
         voices: [
-            {name: "de-AT-IngridNeural", voice: "de-AT-IngridNeural"},
-            {name: "de-AT-JonasNeural", voice: "de-AT-JonasNeural" },
             {name: "de-DE-KatjaNeural", voice: "de-DE-KatjaNeural" },
+            {name: "de-AT-JonasNeural", voice: "de-AT-JonasNeural" },
+            {name: "de-AT-IngridNeural", voice: "de-AT-IngridNeural"},
             {name: "de-DE-ConradNeural", voice: "de-DE-ConradNeural" },
             {name: "de-CH-LeniNeural", voice: "de-AT-JonasNeural" },
             {name: "de-AT-JonasNeural", voice: "de-CH-JanNeural" }

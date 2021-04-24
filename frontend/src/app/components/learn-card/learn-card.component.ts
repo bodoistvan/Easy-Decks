@@ -1,3 +1,4 @@
+import { MapType } from '@angular/compiler';
 import { Component, Input, OnInit } from '@angular/core';
 import { async } from '@angular/core/testing';
 import { SoundService } from 'src/app/services/sound.service';
@@ -13,7 +14,7 @@ export class LearnCardComponent implements OnInit {
   @Input() id?:string
   @Input() index?:number;
 
-  private audio?:ArrayBuffer;
+  private audios:Map<string, ArrayBuffer> = new Map();
 
   constructor(
     private soundService:SoundService
@@ -25,29 +26,29 @@ export class LearnCardComponent implements OnInit {
   async onSoundClick(){
 
     if( this.id != undefined && this.index != undefined){
-      if (this.audio == undefined){
+      if (this.audios?.get(this.id) == undefined){
         this.soundService.getCardSound( this.id, this.index).subscribe(async(data) =>{
-          this.audio = data;
-
-          const context = new AudioContext()
-          const buffer = await context.decodeAudioData(this.audio.slice(0));
-          const source = context.createBufferSource();
-          source.buffer = buffer;
-          source.connect(context.destination);
-          //this.source.loop = true;
-          source.start();
-          console.log(source);
+          this.audios?.set(this.id!, data);
+          if (this.audios != undefined && this.audios?.get(this.id!) != undefined && this.id != undefined){
+            const context = new AudioContext()
+            const buffer = await context.decodeAudioData(this.audios.get(this.id)!.slice(0));
+            const source = context.createBufferSource();
+            source.buffer = buffer;
+            source.connect(context.destination);
+            source.start();
+          }
+          
           
         })
       } else {
-        const context = new AudioContext()
-          
-          const buffer = await context.decodeAudioData(this.audio.slice(0));
+        if (this.audios != undefined && this.audios?.get(this.id!) != undefined && this.id != undefined){
+          const context = new AudioContext()
+          const buffer = await context.decodeAudioData(this.audios.get(this.id)!.slice(0));
           const source = context.createBufferSource();
           source.buffer = buffer;
           source.connect(context.destination);
-          //this.source.loop = true;
           source.start();
+        }
       }
       
     }
