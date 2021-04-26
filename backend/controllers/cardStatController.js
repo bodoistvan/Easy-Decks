@@ -40,3 +40,35 @@ exports.bookMark = (Model) => catchAsync( async (req,res,next) => {
     res.json(cardStat);
         
 });
+
+exports.resetStat = Model => catchAsync( async (req,res,next) => {
+
+    const userId = req.user.id;
+    const deckId = req.params.deckId;
+    console.log(deckId)
+    const deck = await Model.Deck.findOne({ _id: deckId});
+    
+    console.log(deck);
+    if (!deck)
+        return (new AppError("deck not found", 404));
+
+    
+    
+    await Model.CardStat.find({ _deck: deckId, _user: userId }).exec((err, stats) => {
+        if (err)
+            return
+        
+        if (stats != undefined){
+            stats.forEach( stat => {
+                stat.correctCounter = 0;
+                stat.wrongCounter = 0;
+                stat.save();
+                console.log("ment");
+            })
+        }
+    })
+
+    console.log("vege");
+    res.send();
+
+})

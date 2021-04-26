@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Card } from 'src/app/interfaces/card';
+import { CardStatService } from 'src/app/services/card-stat.service';
 import { DecksService } from 'src/app/services/decks.service';
+import { YouSureComponent } from '../you-sure/you-sure.component';
 
 @Component({
   selector: 'app-deck-info-cards',
@@ -10,7 +13,12 @@ import { DecksService } from 'src/app/services/decks.service';
 })
 export class DeckInfoCardsComponent implements OnInit {
 
-  constructor(private fb:FormBuilder, private deckService: DecksService) { }
+  constructor(
+    private fb:FormBuilder,
+    private deckService: DecksService,
+    private modalService: NgbModal,
+    private cardStatSevice: CardStatService
+    ) { }
 
   @Input() deckId?:string;
 
@@ -33,6 +41,27 @@ export class DeckInfoCardsComponent implements OnInit {
   public CardSelect = this.fb.group({
     selected: ["bookmarked"]
   })
+
+  getSelected(){
+    return this.CardSelect.get("selected")?.value;
+  }
+
+  onResetStatisticClick() {
+    const modalRef = this.modalService.open(YouSureComponent, {centered: true});
+    modalRef.componentInstance.onSubmit.subscribe(()=> this.resetStatisctic())
+    modalRef.componentInstance.text = "Are you sure you want to reset your statistic?"
+  }
+
+  resetStatisctic(){
+    if (this.deckId != undefined){
+      this.cardStatSevice.resetStat(this.deckId).subscribe(()=> {
+        if (this.getSelected() == 'statistic'){
+          this.ShowList = [];
+        }
+      })
+    }
+    
+  }
 
   onSelectedClick(){
     const selected = this.CardSelect.value.selected;

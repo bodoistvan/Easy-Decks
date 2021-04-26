@@ -29,3 +29,13 @@ exports.getAllUser = Model => catchAsync( async (req,res,next) => {
     res.json({users});
 
 })
+
+exports.getUserInfo = (Model) => catchAsync( async (req,res,next) => {
+   const user = req.user;
+    res.json(
+        {
+            voices: user.voices,
+            name: user.name,
+            email: user.email
+        });
+});

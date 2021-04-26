@@ -12,4 +12,10 @@ router.route('/')
 router.route('/login')
     .post(authController.login(Model));
 
+router.route('/info')
+    .get(
+        authController.protect(Model),
+        userController.getUserInfo(Model)
+        );
+
 module.exports = router;

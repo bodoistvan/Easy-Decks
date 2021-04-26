@@ -2,28 +2,20 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { UserInfo } from '../interfaces/user-info';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CardStatService {
+export class UserService {
 
-  private baseUrl: string = "http://localhost:3000/api/cardStat"
+  constructor(private http: HttpClient) {   }
 
-  constructor(private http: HttpClient) { }
+  private baseUrl: string = "http://localhost:3000/api/users"
 
-  bookMarkStat(cardId: string, value: boolean){
-    return this.http.post<any>(`${this.baseUrl}/${cardId}/bookmark/${value}`, {} )
-      .pipe(
-        catchError(this.handleError<any>("bookmarkStat") 
-      )
-    )
-  }
-
-  resetStat(deckId: string) {
-    return this.http.put(`${this.baseUrl}/${deckId}/reset`, {}).pipe(
-      catchError(this.handleError<any>("resetStat")
-      )
+  getUserInfo() : Observable<UserInfo> {
+    return this.http.get<UserInfo>(`${this.baseUrl}/info`).pipe(
+      catchError(this.handleError<any>("getUserInfo"))
     )
   }
 
