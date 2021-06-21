@@ -1,0 +1,17 @@
+<div class="p-2 border border-warning col-12">
+    <div *ngIf="quiz != undefined; else other" class="d-flex justify-content-between align-items-center" >
+       
+        <p class="">Found a Quiz. (started: {{ quiz!.startedAt | date: 'HH:mm' }})</p> 
+        <button class="" (click)="onContinueClick()" class="btn btn-outline-secondary px-2">Continue</button> 
+            
+    </div>
+    
+    <ng-template #other >
+
+        <div class="d-flex justify-content-between align-items-center">
+            <p>No quiz found. </p>
+            <button class="" (click)="onCreateClick()" class="btn btn-outline-secondary px-2">Create Quiz</button> 
+        </div>
+        
+    </ng-template>
+</div>

@@ -1,0 +1,3 @@
+<div *ngFor="let report of reports; index as i;">
+    <app-report-sent [report]="report" (reportDeleted)="deleteReport($event)" [active]="i == 0"></app-report-sent>
+</div>

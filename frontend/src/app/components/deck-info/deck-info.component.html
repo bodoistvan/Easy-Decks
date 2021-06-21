@@ -1,0 +1,136 @@
+<navbar></navbar>
+
+<div class="container">
+    <div class="border">
+    <div class="d-flex justify-content-between px-2 align-items-start">
+
+        <div class="col-9">
+          <app-deck-info-header name="{{deckInfo?.name}}" [difficulty]="deckInfo? deckInfo.difficulty : 1" lang1="{{deckInfo?.lang1}}" lang2="{{deckInfo?.lang2}}" ></app-deck-info-header>
+        </div>
+
+        <div class=" col-3 p-1 d-flex align-items-start">
+          <div class="col-12 p-0 d-flex justify-content-end" *ngIf="deckInfo != undefined ?  (deckInfo.status == 'owner' ? true : false) : false" (click)="onModifyButtonClick()"><a class="btn btn-dark"><em class="fas fa-cogs"></em></a></div>
+          <div class="col-12 p-0 d-flex justify-content-end" *ngIf="deckInfo != undefined ? deckInfo.status == 'subscribed' || deckInfo.status == 'unsubscribed' : false">
+            <app-deck-subscribe-button class="" [isSubbed]="deckInfo != undefined ? deckInfo.status == 'subscribed' : false" [deckId]="deckInfo != undefined? deckInfo.id : undefined" (refresh)="getInfo($event)"></app-deck-subscribe-button>
+          </div> 
+          <div class="col-12" *ngIf="deckInfo != undefined ?  (deckInfo.status == 'private' ? true :false) : false" class="d-flex align-items-start"><p class="private">private</p></div>
+        </div>
+    </div>
+
+    <div *ngIf="deckInfo != undefined ? deckInfo.status == 'owner' || deckInfo.status == 'subscribed' : false">
+        <ul ngbNav #nav="ngbNav" id="lq-nav" [(activeId)]="active" class="nav-tabs mt-4">
+            <li [ngbNavItem]="1" (click)="onlqClick(0)" >
+            <a ngbNavLink class="lq-nav-active">Learn</a>
+            <ng-template ngbNavContent>
+                <form [formGroup]=learnStartForm >
+                    <div class="form-group d-flex justify-content-around align-items-center mb-0 flex-wrap">
+
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="type">
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="all">All Cards
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="bookmarked">Bookmarked
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="statistic">Statistic
+                            </label>
+                        </div>
+
+                      <button (click)="onLearnSubmit()" type="submit" class="btn btn-dark ml-1 mb-2">Let's Learn</button>
+                    </div>  
+                </form>
+            </ng-template>
+            </li>
+            <li [ngbNavItem]="2" (click)="onlqClick(1)">
+            <a ngbNavLink [ngClass]="{'lq-nav-active' : true}">Quiz</a>
+            <ng-template ngbNavContent>
+                <form [formGroup]=quizStartForm>
+                    <div class="form-group d-flex mb-0 justify-content-around align-items-center flex-wrap">
+                      
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="amount">
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="5">&nbsp;5&nbsp;
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="10">10
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="20">20
+                            </label>
+                          </div>
+
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="language">
+                            <label ngbButtonLabel class="btn-outline-secondary flagLabel">
+                              <input ngbButton type="radio" value="lang1"><img alt=""  class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang1'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang1+'.svg' : '#'  }}">
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary flagLabel">
+                              <input ngbButton type="radio" value="lang2"><img alt=""  class="flagToggle" [ngClass]="{'flagActive': selectedLang == 'lang2'}" src="{{deckInfo? '/assets/images/flags/wide/'+deckInfo.lang2+'.svg' : '#'  }}">
+                            </label>
+                        </div>
+
+                        <div class="btn-group btn-group-toggle mb-2" ngbRadioGroup formControlName="type">
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="all">All
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="bookmarked">Marked
+                            </label>
+                            <label ngbButtonLabel class="btn-outline-secondary">
+                              <input ngbButton type="radio" value="statistic">Statistic
+                            </label>
+                        </div>
+
+                      <button (click)="onQuizSubmit()" type="submit" class="btn btn-dark mb-2">Start Quiz</button>
+                    </div>  
+                </form>
+            </ng-template>
+            </li>
+        </ul>
+      
+        <div id="lq-body" [ngbNavOutlet]="nav" class="pt-2"></div>
+        </div>
+    </div>
+   
+    <div *ngIf="deckInfo != undefined ? deckInfo.status == 'owner' || deckInfo.status == 'subscribed' : false" class="row mt-4">
+      <div class="col-12 col-lg-6">
+        <div class="row">
+          <div class="col-12 mb-2">
+            <app-quiz-inprogress (createQuiz)="onSwitchToQuiz()"></app-quiz-inprogress>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="p-2 border">
+              <div class="d-flex justify-content-between align-items-center">
+                  <h3>Last Quiz Results:</h3>
+                  <button (click)=onShowAllResult() class="mb-2 btn btn-outline-secondary">Show all quiz results</button>
+              </div>
+              <div *ngIf="lastResults != undefined; then showResult else noResult"></div>
+              <ng-template #showResult><app-quiz-result-list [quizResults]="lastResults!" ></app-quiz-result-list></ng-template>
+      
+              <ng-template #noResult> <p class="text-center m-0">No result found.</p> </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="row">
+            <div class="col-12">
+              <app-deck-info-cards class="col-12 p-0" *ngIf="deckInfo != undefined;" [deckId]=deckInfo.id></app-deck-info-cards>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <div class="private-msg mt-4" *ngIf="deckInfo != undefined ? deckInfo.status == 'private' : false">
+        <p>This deck is currently private. Services are not available.</p>
+    </div>
+
+    <div class="private-msg mt-4" *ngIf="deckInfo != undefined ? deckInfo.status == 'unsubscribed' : false">
+      <p>You haven't subscribed to this deck yet. Only subscribed users can access to services.</p>
+    </div>
+
+</div>
+

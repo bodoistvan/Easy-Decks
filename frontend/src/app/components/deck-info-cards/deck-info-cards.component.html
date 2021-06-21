@@ -1,0 +1,32 @@
+<div class="container p-2 border">
+
+    <div class="row d-flex justify-content-around align-items-center p-0 pb-2">
+        <h3 class="mr-4">Cards</h3>
+        <form [formGroup]="CardSelect">
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="selected" >
+              <label ngbButtonLabel class="btn-outline-secondary">
+                <input ngbButton type="radio" value="statistic" (change)="onSelectedClick()"> Statistic
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary">
+                <input ngbButton type="radio" value="bookmarked" (change)="onSelectedClick()">Bookmarked
+              </label>
+              <label ngbButtonLabel class="btn-outline-secondary">
+                <input ngbButton type="radio" value="all" (change)="onSelectedClick()"> Show All
+              </label>
+            </div>
+          </form>
+    </div>
+
+    <div class="cardsBody col-12">
+      <p *ngIf="ShowList?.length == 0" class="text-center col-12">No card found.</p>
+      <div class="cardsRow row" *ngFor="let card of ShowList">
+        <div class="col-6">{{card.lang1}}</div>
+        <div class="col-6">{{card.lang2}}</div>
+      </div>
+    </div>
+
+    <div *ngIf="getSelected() == 'statistic'" class="d-flex justify-content-center">
+      <Button class="btn btn-outline-danger m-0 mt-2"(click)="onResetStatisticClick()">Reset Statistic</Button>
+    </div>
+
+</div>

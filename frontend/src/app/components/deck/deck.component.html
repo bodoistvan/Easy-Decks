@@ -1,0 +1,24 @@
+<div class="card mb-4">
+  <div class="card-header">
+    <p (click)="onNameClick()">{{name}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+
+    <li class="list-group-item py-3 pl-3">
+      <app-dif-dots class="my-2" [currentValue]="difficulty"></app-dif-dots>
+    </li>
+    <li class="list-group-item px-0">
+      <div class="d-flex justify-content-around col-12 p-2">
+        <div class="formFlagCanvas col-4">
+          <img class="formFlag" src="/assets/images/flags/wide/{{lang1}}.svg">
+        </div>
+        <div class="col-2 d-flex align-items-center justify-content-center">
+          <h6 class="m-0">{{count}}</h6>
+        </div>
+        <div class="formFlagCanvas col-4">
+          <img class="formFlag" src="/assets/images/flags/wide/{{lang2}}.svg">
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

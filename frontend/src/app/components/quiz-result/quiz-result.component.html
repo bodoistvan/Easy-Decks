@@ -1,0 +1,32 @@
+<div class="quizresult p-0">
+    <div class="quizresult-header" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+        <div class="col-1">
+            <h4>{{result.resultPercent}}%</h4>
+        </div>
+        <div class="col-9">
+            <h4 class="d-none d-md-block text-center">{{result.startedAt | date:'yyyy.MM.dd HH:mm'}}</h4>
+            <h4 class="d-md-none text-center">{{result.startedAt | date:'yyyy.MM.dd'}}</h4>
+        </div>
+        
+        <em class="arrow fas" [ngClass]="{ 'fa-chevron-up' : isCollapsed, 'fa-chevron-down' : !isCollapsed }"></em>
+    </div>
+
+    <div class="quizresult-body px-2" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+        <div class="row">
+            <div class="col-12 order-2 order-md-1 col-md-3">
+                <h5 class="mt-1"><em class="far fa-clock"></em>&nbsp;{{ timer | date:'mm:ss'}}</h5>
+                <h6>{{result.amount}} Cards</h6>
+                    
+            </div>
+            <div class="col-12 order-1 order-md-2 col-md-9 cards">
+             
+                    <div *ngFor="let card of result.results" class="result-card row " [ngClass]="{ 'result-correct' : card.status=='correct', 'result-wrong' : card.status=='wrong' }" >
+                        <div class="col-12 col-md-6 m-0 pl-2">{{ card.lang1 }}</div>
+                        <div class="col-12 col-md-6 m-0 pl-2 pr-0"> {{ card.lang2 }}</div>
+                    </div> 
+              
+            </div>
+        </div>
+    </div>
+
+</div>

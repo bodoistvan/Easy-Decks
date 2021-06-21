@@ -1,0 +1,30 @@
+.myClass
+    
+    color: red
+    background: yellow
+    &:hover
+        color: black
+        background: green
+    i
+        font-size: 5rem
+
+.flagBg
+    position: relative
+    p
+        opacity: 100%
+        text-transform: uppercase
+        font-size: 6rem
+        height: 20rem
+        visibility: hidden
+
+.myFlag
+    opacity: 1
+    height: 20rem
+    width: 40rem
+    position: absolute
+    z-index: -1
+    object-fit: cover
+    &1
+        clip-path: polygon(0 0, 100% 0, 0 100% )
+    &2
+        clip-path: polygon( 100% 100%, 100% 0, 0 100% ) 

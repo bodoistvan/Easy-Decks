@@ -1,0 +1,57 @@
+<navbar></navbar>
+
+<div class="container">
+
+
+
+    <div class="col-9">
+        <app-deck-info-header name="{{deck?.name}}" [difficulty]="deck? deck.difficulty : 1" lang1="{{deck?.lang1}}"
+            lang2="{{deck?.lang2}}"></app-deck-info-header>
+    </div>
+
+    <hr>
+
+    <div class="learn-body">
+        <div class="col-12">
+            <div class="mb-3">
+                <div class="row d-flex justify-content-between align-items-center">
+                    <div *ngIf="getCard().isReported;else notReported" class="ml-4">
+                        <h4 class="text-danger d-none d-sm-block"><i class="fas fa-exclamation"></i>&nbsp;This card was reported.</h4>
+                        <h4 class="text-danger d-sm-none"><i class="fas fa-exclamation"></i></h4>
+                    </div>
+                    <ng-template #notReported>
+                        <div></div>
+                    </ng-template>
+                    <div class="d-flex justify-content-end">
+                        <div (click)=onRebortButtonClick() class="btn border myBookMark mr-2">
+                            <em class="far fa-flag"></em>
+                        </div>
+                        <div (click)=onBookMarkButtonClick() class="btn border myBookMark mr-3">
+                            <em [ngClass]="(isBookMarked())?'fas':'far'" class="fa-bookmark"></em>
+                        </div>   
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-around">
+                    <app-learn-card [id]="getCard().id" [index]="1" class="col-12 col-md-5 mt-2" [word]="getCard().lang1"></app-learn-card>
+                    <app-learn-card [id]="getCard().id" [index]="2" class="col-12 col-md-5 mt-2" [word]="getCard().lang2"></app-learn-card>
+                </div>
+            </div>
+
+            <form [formGroup]="learnForm" class="container-fluid">
+                <div class="d-flex justify-content-center align-items-center">
+                    <button (click)="mofidyRange(-1)" class="mr-1 btn btn-outline-primary p-2 pl-3 pr-3"><i
+                            class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+                    <div class="d-flex col-10 col-sm-8 col-md-5 row pt-4">
+                        <input type="range" style="width: 100%;" (change)="rangeChange()" class="form-range" min="0"
+                            [max]="maxRange" id="customRange2" formControlName="range">
+
+                        <div style="width: 100%; text-align: center;">{{range + 1}}</div>
+                    </div>
+                    <button (click)="mofidyRange(1)" class="ml-1 btn btn-outline-primary p-2 pl-3 pr-3"><i
+                            class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

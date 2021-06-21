@@ -1,0 +1,10 @@
+<div class="col-12 p-0 row">
+    <div class="col-12 col-md-6 p-0 ">
+       <div class="col-12 p-0 "><h1>{{name}}</h1></div>
+       <div class="col-12 p-0 mt-2 "><app-dif-dots [currentValue]="difficulty" ></app-dif-dots></div>
+    </div>
+    <div class="col-12 col-md-6  d-flex justify-content-start p-0">
+      <div class="col-6 formFlagCanvas"><img alt="" class="formFlag" src="{{lang1? '/assets/images/flags/wide/'+lang1+'.svg' : '#'}}"></div>
+      <div class="col-6 formFlagCanvas"><img alt="" class="formFlag" src="{{lang2? '/assets/images/flags/wide/'+lang2+'.svg' :'#'}}"></div>  
+    </div>
+</div>

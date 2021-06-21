@@ -1,0 +1,23 @@
+<navbar shouldBeActive="profile"></navbar>
+
+
+  <form  [formGroup]=voiceForm>
+
+    <div class="row">
+        <div class="form-group col-6">
+        <label for=""></label>
+        <select (change)="onLanguageSelect()" class="form-control" formControlName="name">
+          <option value="{{flag.dataName}}" *ngFor="let flag of flagInfo">{{flag.displayName}}</option>
+        </select>
+      </div>
+    
+      <div class="form-group col-6">
+        <label for=""></label>
+        <select class="form-control" formControlName="voice">
+          <option value="{{voice.voice}}"  *ngFor="let voice of getVoices()">{{voice.name}}</option>
+        </select>
+      </div>
+    </div>
+  </form>
+
+  
