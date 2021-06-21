@@ -1,10 +1,11 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+
 const fs = require('fs');
 const sdk = require("microsoft-cognitiveservices-speech-sdk");
 
-const subscriptionKey = "79202d23004d4b7aa4e7c635ae7e45a3";
-const serviceRegion = "westeurope";
+const subscriptionKey = process.env.AZURE_TTS_API_KEY;
+const serviceRegion = process.env.AZURE_TTS_API_REGION;
 
 
 module.exports.textToSpeech = Model => catchAsync(async (req, res, next) => {
@@ -50,8 +51,6 @@ module.exports.textToSpeech = Model => catchAsync(async (req, res, next) => {
     synthesizer.speakTextAsync(word.text,
         function (result) {
             if (result.reason === sdk.ResultReason.SynthesizingAudioCompleted) {
-                console.log("synthesis finished.");
-                console.log(result.privAudioData)
                 
                  var sound = Buffer.from(result.privAudioData);
 
@@ -59,8 +58,6 @@ module.exports.textToSpeech = Model => catchAsync(async (req, res, next) => {
                      'Content-Type': 'audio/x-wav  ',
                      'Content-Length': sound.length
                  });
-
-                 console.log(sound)
 
                  res.end(sound);
 
@@ -77,8 +74,5 @@ module.exports.textToSpeech = Model => catchAsync(async (req, res, next) => {
             synthesizer.close();
             synthesizer = undefined;
         });
-
-
-    console.log(req.user);
 
 })

@@ -11,7 +11,6 @@ import { DeckComponent } from './components/deck/deck.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { DecklistComponent } from './components/decklist/decklist.component';
-import { NewDeckComponent } from './components/new-deck/new-deck.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DeckSearchComponent } from './components/deck-search/deck-search.component';
 import { DeckInfoComponent } from './components/deck-info/deck-info.component';
@@ -57,7 +56,6 @@ import { DeckInfoHeaderComponent } from './components/deck-info-header/deck-info
     NavbarComponent,
     DeckComponent,
     DecklistComponent,
-    NewDeckComponent,
     DeckSearchComponent,
     DeckInfoComponent,
     FooterComponent,
@@ -86,8 +84,6 @@ import { DeckInfoHeaderComponent } from './components/deck-info-header/deck-info
     DeckSubscribeButtonComponent,
     YouSureComponent,
     DeckInfoHeaderComponent
-
-
   ],
   imports: [
     BrowserModule,

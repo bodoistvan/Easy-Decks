@@ -17,23 +17,19 @@ export class NavbarComponent implements OnInit {
     name: "Home",
     url: "home"
   },
+  
   {
     id: 1,
-    name: "Profile",
-    url: "profile"
-  },
-  {
-    id: 2,
     name: "Reports",
     url: "reports"
   },
   {
-    id: 3,
-    name: "Explore",
-    url: "explore"
+    id: 2,
+    name: "Profile",
+    url: "profile"
   },
   {
-    id: 4,
+    id: 3,
     name: "Logout",
     url: "logout"
   }

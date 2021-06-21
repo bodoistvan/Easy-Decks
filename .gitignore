@@ -7,3 +7,5 @@ backend/node_modules
 *.out
 *.pid
 *.gz
+.env
+*.wav

@@ -37,7 +37,4 @@ export class DecklistComponent implements OnInit {
     this.router.navigate(["decks","create"])
   }
 
-
-
-  
 }

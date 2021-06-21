@@ -13,7 +13,7 @@ router.route("/:id")
     .delete(deckController.deleteDeck(Model))
     .patch(deckController.patchDeckById(Model));
 
-router.route("/:id/all")
+router.route("/:id/all") 
     .get(deckController.getDeckByIdAll(Model))
 
 router.route("/:id/subscribe")

@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --open && nodemon ../backend/index.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "ng serve --open | cd ../backend/ && npm run",
+    "dev": "ng serve --open | nodemon index.js",
     "node": "cd ../backend/ && npm run dev"
   },
   "private": true,
