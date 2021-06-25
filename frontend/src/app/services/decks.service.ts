@@ -6,7 +6,7 @@ import { Card } from '../interfaces/card';
 import { Deck } from '../interfaces/deck' 
 import { DeckInfo } from '../interfaces/deck-info';
 import { DeckWithCards } from '../interfaces/deck-with-cards';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +14,7 @@ export class DecksService {
 
   constructor(private http: HttpClient) {}
 
-  private baseUrl: string = "http://localhost:3000/api/decks"
+  private baseUrl: string = environment.API_URL + "/api/decks"
 
   getDecks(objParams:any): Observable<Deck[]>{
     return this.http.get<Deck[]>(`${this.baseUrl}`, { params : objParams }).pipe(

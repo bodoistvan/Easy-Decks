@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { QuizResult } from '../interfaces/quiz-result';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class QuizResultService {
 
-  private baseUrl:string = "http://localhost:3000/api/quizResults"
+  private baseUrl:string = environment.API_URL + "/api/quizResults"
   constructor(private http:HttpClient) { }
   
   getQuizResultsByDeckId(id:string){

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Report } from '../interfaces/report';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +11,7 @@ export class ReportServiceService {
 
   constructor(private http: HttpClient) {   }
 
-  private baseUrl: string = "http://localhost:3000/api/reports"
+  private baseUrl: string = environment.API_URL + "/api/reports"
 
   public getReceivedRerports():Observable<Report[]>{
       return this.http.get<Report[]>(`${this.baseUrl}/owner`).pipe(

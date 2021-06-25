@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserInfo } from '../interfaces/user-info';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +11,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {   }
 
-  private baseUrl: string = "http://localhost:3000/api/users"
+  private baseUrl: string = environment.API_URL + "/api/users"
 
   getUserInfo() : Observable<UserInfo> {
     return this.http.get<UserInfo>(`${this.baseUrl}/info`).pipe(

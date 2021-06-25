@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class AuthService {
 
   constructor(private http:HttpClient, private router:Router) { }
 
-  private baseUrl:string = "http://localhost:3000/api/users";
+  private baseUrl:string = environment.API_URL + "/api/users";
 
   login(email:string, password:string ) {
     return this.http.post<any>(`${this.baseUrl}/login`, {email, password}).pipe(

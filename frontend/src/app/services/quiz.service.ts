@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Quiz } from '../interfaces/quiz';
 import { QuizQuestion } from '../interfaces/quiz-question';
 import { QuizQuestionResult } from '../interfaces/quiz-question-result';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +13,7 @@ export class QuizService {
 
   constructor(private http: HttpClient) {   }
 
-  private baseUrl: string = "http://localhost:3000/api/quizes"
+  private baseUrl: string = environment.API_URL + "/api/quizes"
 
   getQuizQuestionsById(id:string){
     return this.http.get<Quiz>( `${this.baseUrl}/${id}`  ).pipe(

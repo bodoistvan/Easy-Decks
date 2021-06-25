@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { FlagInfo } from '../interfaces/flag-info';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class FlagInfoService {
 
   private flagInfos:FlagInfo[] = [];
-  private baseUrl = "http://localhost:3000/api/flaginfo";
+  private baseUrl = environment.API_URL + "/api/flaginfo";
 
   constructor (private http:HttpClient) {
 

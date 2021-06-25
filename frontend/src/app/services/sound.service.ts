@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthInterceptorService } from '../auth-interceptor.service';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +11,7 @@ export class SoundService {
 
   constructor(private http: HttpClient) {   }
 
-  private baseUrl: string = "http://localhost:3000/api/sounds"
+  private baseUrl: string = environment.API_URL + "/api/sounds"
 
   getCardSound( id:string, index: number) : Observable<ArrayBuffer> {
     return this.http.get(`${this.baseUrl}/card/${id}/${index}`, {responseType : 'arraybuffer'})

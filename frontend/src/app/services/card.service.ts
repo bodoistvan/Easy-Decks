@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Card } from '../interfaces/card';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +11,7 @@ export class CardService {
 
   constructor(private http: HttpClient) {}
 
-  private baseUrl: string = "http://localhost:3000/api/cards"
+  private baseUrl: string = environment.API_URL + "/api/cards"
 
   public updateCard(id: string, card:any){
     return this.http.patch<Card>(`${this.baseUrl}/${id}`, card).pipe(
