@@ -43,6 +43,7 @@ import { QuizInprogressComponent } from './components/quiz-inprogress/quiz-inpro
 import { DeckSubscribeButtonComponent } from './components/deck-subscribe-button/deck-subscribe-button.component';
 import { YouSureComponent } from './components/you-sure/you-sure.component';
 import { DeckInfoHeaderComponent } from './components/deck-info-header/deck-info-header.component';
+import { RegisterPageComponent } from './components/register-page/register-page.component';
 
 
 
@@ -83,7 +84,8 @@ import { DeckInfoHeaderComponent } from './components/deck-info-header/deck-info
     QuizInprogressComponent,
     DeckSubscribeButtonComponent,
     YouSureComponent,
-    DeckInfoHeaderComponent
+    DeckInfoHeaderComponent,
+    RegisterPageComponent
   ],
   imports: [
     BrowserModule,
