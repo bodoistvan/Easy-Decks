@@ -58,7 +58,13 @@ export class AuthService {
       //const expiration = localStorage.getItem("expires_at");
     // const expiresAt = JSON.parse(expiration);
       return "" //moment(expiresAt);
-  }   
+  } 
+
+  registerUser(user: any){
+    return this.http.post(this.baseUrl, user).pipe(
+      catchError(this.handleError("register new user", {}))
+    )
+  }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

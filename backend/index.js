@@ -20,6 +20,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+
 app.use('/api/users', userRouter)
 app.use('/api/decks', deckRouter)
 app.use('/api/quizes', quizRouter)
@@ -29,6 +30,8 @@ app.use('/api/reports', reportRouter)
 app.use('/api/sounds', soundRouter)
 app.use('/api/flagInfo', flagInfoRouter)
 app.use('/api/cards', cardRouter)
+
+app.use('/', express.static('../frontend/dist/easydecks'));
 
 app.use(globalErrorHandler);
 
