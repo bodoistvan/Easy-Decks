@@ -20,29 +20,28 @@
       </div>
 
       <div class="form-group col-6 col-md-3">
-        <label for="lang1Select">Frist Language</label>
+        <label for="lang1Select">1st Language</label>
         <select class="form-control" formControlName="lang1" id="lang1Select">
           <option *ngFor="let flag of flagInfo" [value]=flag.dataName>{{flag.displayName}}</option>
         </select>
       </div>
 
-      <div class="form-group col-5 col-md-3">
-        <label  for="lang2Select">Second Language</label>
+      <div class="form-group col-6 col-md-3">
+        <label  for="lang2Select">2nd Language</label>
         <select class="form-control" formControlName="lang2" id="lang2Select">
           <option *ngFor="let flag of flagInfo" [value]=flag.dataName>{{flag.displayName}}</option>
         </select>
       </div>
 
-      <div class="custom-control custom-checkbox col-5 ml-3">
-        <input type="checkbox" formControlName="public" class="custom-control-input" id="publicCheckBox">
-        <label class="custom-control-label" for="publicCheckBox">Public</label>
-      </div>
-
-      <div class="col-6 d-flex justify-content-left align-items-center">
+      <div class="col-12 col-md-6 d-flex justify-content-left align-items-center pb-2">
         <p class="m-0">Difficulty:</p>
         <app-dif-dots class="col-6" [isInput]="true" (setValue)="setDifValue($event)" [currentValue]="this.deckForm.get('difficulty')?.value" ></app-dif-dots>
       </div>
       
+      <div class="custom-control custom-checkbox col-5 ml-3">
+        <input type="checkbox" formControlName="public" class="custom-control-input" id="publicCheckBox">
+        <label class="custom-control-label" for="publicCheckBox">Public</label>
+      </div>
 
     </div>
     <br />
@@ -59,7 +58,12 @@
         <ng-container *ngFor="let cardGroup of cards.controls; let i=index">
           
             <tr [formGroupName]=i>
-                <th scope="row"><em *ngIf="selectedCardId == cardGroup.value.id; else seqNum" class="selectedCard fas fa-exclamation"></em><ng-template #seqNum>{{i + 1}}</ng-template></th>
+                <th scope="row" class="b-danger">
+                  <div class="b-danger">
+                    <em *ngIf="selectedCardId == cardGroup.value.id; else seqNum" class="selectedCard fas fa-exclamation"></em>
+                    <ng-template class="b-danger" #seqNum><span class="border">{{i + 1}}</span></ng-template>
+                  </div>
+                </th>
                 <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 1)]" type="text" formControlName="lang1" (change)=modelChanged(i)></td>
                 <td><input class="form-control" [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 2)]" type="text" formControlName="lang2" (change)=modelChanged(i)></td>
                 <td><div style="width: 2.5rem;" (click)=deleteButtonClick(i) 
