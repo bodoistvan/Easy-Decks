@@ -46,6 +46,8 @@ export class DeckFormComponent implements OnInit {
           this.deckForm.get("name")?.disable(); 
           this.deckForm.get("lang1")?.disable(); 
           this.deckForm.get("lang2")?.disable(); 
+          
+          console.log(this.cards);
 
         }, err => console.error(err));
       }
@@ -143,6 +145,10 @@ export class DeckFormComponent implements OnInit {
   
   get cards(){
     return this.deckForm.get('cards') as FormArray;
+  }
+
+  getCardFormGroup(index:number){
+    return this.cards?.controls[index] as FormGroup;
   }
   
   addCards(){

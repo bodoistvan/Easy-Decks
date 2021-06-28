@@ -45,7 +45,7 @@
 
     </div>
     <br />
-    <table class="table" formArrayName="cards">
+    <!-- <table class="table" formArrayName="cards">
       <thead>
         <tr>
           <th scope="col">&nbsp;</th>
@@ -75,18 +75,47 @@
         
           </ng-container>
       </tbody>
-    </table >
+    </table > -->
+    <div class="words-container">
+      <ng-container *ngFor="let cardGroup of cards.controls; let i=index">
+        <div [formGroup]="getCardFormGroup(i)" class="words-container-row col-12 p-0 m-0 row mb-1 py-1 border">
+          <div class="words-container-counter order-1 order-sm-1 col-6 col-sm-1 p-0 m-0 pl-4 d-flex justify-content-start align-items-center">
+            <em *ngIf="selectedCardId == cardGroup.value.id; else seqNum" class="selectedCard fas fa-exclamation"></em>
+            <ng-template class="b-danger" #seqNum><span>{{i + 1}}</span></ng-template>
+          </div>
+          <div class="words-container-words order-3 order-sm-2 col-12 col-sm-10 p-0 m-0 row">
+            <div class="words-container-word col-12 col-md-6 p-0 d-flex justify-content-center">
+              <input class="form-control col-11 my-1"
+                [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 1)]" type="text"
+                formControlName="lang1" (change)=modelChanged(i)>
+            </div>
+            <div class="words-container-word col-12 col-md-6 p-0 d-flex justify-content-center">
+              <input class="form-control col-11 my-1"
+                [ngClass]="['','btn-danger','btn-primary','btn-outline-success'][getCardActionAt(i, 2)]" type="text"
+                formControlName="lang2" (change)=modelChanged(i)>
+            </div>
+          </div>
+          <div class="words-container-delete order-2 order-sm-3 col-6 col-sm-1 p-0 m-0 d-flex justify-content-center align-items-center">
+            <div style="width: 2.5rem;" (click)=deleteButtonClick(i) class="btn"
+              [ngClass]="(isCardShouldBeDeleted(i))?'btn-warning':'btn-danger'">
+              <i [ngClass]="(isCardShouldBeDeleted(i))?'fa-undo':'fa-times'" class="fas"></i>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
 
-    
+    <br>
+
     <div class="col-12 d-flex justify-content-around" *ngIf="formType == 'create'; else elseBlockSubmit">
           <button (click)="onCancelCreate()" class="btn btn-outline-danger px-4 py-2">Cancel</button>
           <button type="submit" [disabled]="!deckForm?.valid && deckName?.touched" (click)="onSubmitCreate()" class="btn btn-primary px-4 py-2">Create</button>
     </div>
     <ng-template #elseBlockSubmit>
         <div class="row">
-            <div class="col-11 d-flex justify-content-around align-items-center">
+            <div class="col-12 d-flex justify-content-around align-items-center">
                 <button (click)="onSubmitDelete()" class="btn btn-outline-danger">Delete Deck</button>
-                <button (click)="onSubmitPatch()" class="btn btn-success p-3 pr-4 pl-4">Update Deck</button>
+                <button (click)="onSubmitPatch()" class="btn btn-success">Update Deck</button>
             </div>
         </div> 
         
@@ -96,6 +125,7 @@
 
 </div>
 
-<pre>{{ deckForm.value | json }}</pre>
+<br><br>
+<!-- <pre>{{ deckForm.value | json }}</pre> -->
 
 
