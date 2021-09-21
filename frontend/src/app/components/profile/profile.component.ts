@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FlagInfo } from 'src/app/interfaces/flag-info';
 import { UserInfo } from 'src/app/interfaces/user-info';
@@ -10,13 +10,19 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.sass']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
+  @ViewChild('audioOption') audioPlayerRef?: ElementRef ;
 
   constructor(
     private fb:FormBuilder,
     private flagInfoService:FlagInfoService,
     private userService:UserService
     ) { }
+
+  ngAfterViewInit(): void {
+    this.audioPlayerRef?.nativeElement.play();
+    console.log(this.audioPlayerRef);
+  }
 
   public flagInfo?:FlagInfo[];
   public userInfo?:UserInfo;
@@ -26,6 +32,7 @@ export class ProfileComponent implements OnInit {
       this.flagInfo = data;
       this.voiceForm.get("name")?.patchValue(this.flagInfo[0].dataName);
       this.refreshDefault()
+   
     });
 
     this.userService.getUserInfo().subscribe((data)=> {
@@ -68,5 +75,8 @@ export class ProfileComponent implements OnInit {
     name: [""],
     voice: [""], 
   })
+
+
+
 
 }

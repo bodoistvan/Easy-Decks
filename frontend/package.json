@@ -24,6 +24,8 @@
     "@angular/router": "~11.2.1",
     "@auth0/angular-jwt": "^5.0.2",
     "@ng-bootstrap/ng-bootstrap": "^9.1.0",
+    "audio-loader": "^1.0.3",
+    "audio-play": "^2.3.1",
     "bootstrap": "^4.5.0",
     "bootstrap-select": "^1.13.18",
     "jquery": "^3.6.0",

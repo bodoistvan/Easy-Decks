@@ -3,6 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { async } from '@angular/core/testing';
 import { SoundService } from 'src/app/services/sound.service';
 
+
+
 @Component({
   selector: 'app-learn-card',
   templateUrl: './learn-card.component.html',
@@ -21,7 +23,10 @@ export class LearnCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
   }
+  
+  context = new AudioContext()
 
   async onSoundClick(){
 
@@ -30,11 +35,10 @@ export class LearnCardComponent implements OnInit {
         this.soundService.getCardSound( this.id, this.index).subscribe(async(data) =>{
           this.audios?.set(this.id!, data);
           if (this.audios != undefined && this.audios?.get(this.id!) != undefined && this.id != undefined){
-            const context = new AudioContext()
-            const buffer = await context.decodeAudioData(this.audios.get(this.id)!.slice(0));
-            const source = context.createBufferSource();
+            const buffer = await this.context.decodeAudioData(this.audios.get(this.id)!.slice(0));
+            const source = this.context.createBufferSource();
             source.buffer = buffer;
-            source.connect(context.destination);
+            source.connect(this.context.destination);
             source.start();
           }
           
@@ -53,5 +57,8 @@ export class LearnCardComponent implements OnInit {
       
     }
   }
+
+
+  
 
 }

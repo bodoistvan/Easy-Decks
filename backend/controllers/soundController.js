@@ -59,6 +59,8 @@ module.exports.textToSpeech = Model => catchAsync(async (req, res, next) => {
                      'Content-Length': sound.length
                  });
 
+                 console.log("sending sound")
+
                  res.end(sound);
 
 
